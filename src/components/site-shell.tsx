@@ -39,41 +39,34 @@ function Footer() {
           <p>© {new Date().getFullYear()} Flonancial</p>
 
           <div className="flex flex-wrap gap-6">
-            <Link
-              href="/privacy"
-              className="underline underline-offset-4 hover:text-white"
-            >
-              Privacy
-            </Link>
+  <Link
+    href="/privacy"
+    className="underline underline-offset-4 hover:text-white"
+  >
+    Privacy
+  </Link>
 
-            <Link
-              href="/security"
-              className="underline underline-offset-4 hover:text-white"
-            >
-              Security
-            </Link>
+  <Link
+    href="/about"
+    className="underline underline-offset-4 hover:text-white"
+  >
+    About
+  </Link>
 
-            <Link
-              href="/about"
-              className="underline underline-offset-4 hover:text-white"
-            >
-              About
-            </Link>
+  <Link
+    href="/disclaimer"
+    className="underline underline-offset-4 hover:text-white"
+  >
+    Disclaimer
+  </Link>
 
-            <Link
-              href="/disclaimer"
-              className="underline underline-offset-4 hover:text-white"
-            >
-              Disclaimer
-            </Link>
-
-            <a
-              href="mailto:hello@flonancial.co.uk"
-              className="underline underline-offset-4 hover:text-white"
-            >
-              hello@flonancial.co.uk
-            </a>
-          </div>
+  <a
+    href="mailto:hello@flonancial.co.uk"
+    className="underline underline-offset-4 hover:text-white"
+  >
+    hello@flonancial.co.uk
+  </a>
+</div>
         </div>
       </div>
     </footer>
