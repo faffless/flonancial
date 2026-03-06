@@ -1,0 +1,32 @@
+in powershell, you want to start with:
+
+cd C:\Users\WCale\Desktop\nofaff
+
+and then:
+npm run dev
+
+and browser address is:
+http://localhost:3000
+
+Update my site (GitHub + Vercel)
+
+1 Edit locally (project folder on my desktop)
+
+2 Test locally: run npm run dev → open http://localhost:3000
+
+3 Stage changes: git add -A
+
+git add -A
+git commit -m "remove smll fix"
+git push
+
+4 Commit: git commit -m "what I changed"
+
+5 Push to GitHub: git push → check GitHub repo commits: https://github.com/faffless/faffless (Commits page)
+
+6 Check Vercel deployed same commit: https://vercel.com → Project → Deployments → newest deployment shows same commit hash/message and is Ready
+
+7 Refresh live site: https://faffless.io (hard refresh if images: Ctrl+Shift+R / Cmd+Shift+R)
+
+5059090370406
+
