@@ -1,14 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
+type Business = {
+  id: number;
+  name: string;
+};
+
 export default function AddUpdatePage() {
+  const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [businessId, setBusinessId] = useState("");
   const [quarterStart, setQuarterStart] = useState("");
   const [quarterEnd, setQuarterEnd] = useState("");
   const [turnover, setTurnover] = useState("");
   const [expenses, setExpenses] = useState("");
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    async function loadBusinesses() {
+      const supabase = createClient();
+      const { data, error } = await supabase.from("businesses").select("id, name");
+
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+
+      setBusinesses(data || []);
+
+      if (data && data.length > 0) {
+        setBusinessId(String(data[0].id));
+      }
+    }
+
+    loadBusinesses();
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -17,7 +44,7 @@ export default function AddUpdatePage() {
     const supabase = createClient();
 
     const { error } = await supabase.from("quarterly_updates").insert({
-      business_id: 1,
+      business_id: Number(businessId),
       quarter_start: quarterStart,
       quarter_end: quarterEnd,
       turnover: Number(turnover),
@@ -41,6 +68,14 @@ export default function AddUpdatePage() {
       <h1>Add update</h1>
 
       <form onSubmit={handleSubmit} style={{ display: "grid", gap: "12px", maxWidth: "400px" }}>
+        <select value={businessId} onChange={(e) => setBusinessId(e.target.value)}>
+          {businesses.map((business) => (
+            <option key={business.id} value={business.id}>
+              {business.name}
+            </option>
+          ))}
+        </select>
+
         <input
           type="date"
           value={quarterStart}
