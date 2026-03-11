@@ -13,8 +13,19 @@ export default function AddBusinessPage() {
 
     const supabase = createClient();
 
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      setMessage("You need to log in");
+      return;
+    }
+
     const { error } = await supabase.from("businesses").insert({
       name,
+      user_id: user.id,
     });
 
     if (error) {
