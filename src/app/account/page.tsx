@@ -99,11 +99,3 @@ export default function AccountPage() {
     </SiteShell>
   );
 }
-```
-
-Save it, then in PowerShell:
-```
-git add .
-git commit -m "fix account"
-git push
-```
