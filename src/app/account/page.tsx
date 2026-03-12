@@ -21,28 +21,23 @@ function AccountContent() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-
       if (!user) {
         router.replace("/login");
         return;
       }
-
       setUserEmail(user.email ?? "");
       setLoading(false);
     }
-
     loadUser();
   }, [router, supabase]);
 
   useEffect(() => {
     const hmrc = searchParams.get("hmrc");
     const hmrcError = searchParams.get("hmrc_error");
-
     if (hmrc === "connected") {
       setMessage("HMRC sandbox connected.");
       return;
     }
-
     if (hmrcError) {
       setMessage(`HMRC connection failed: ${hmrcError}`);
     }
@@ -51,15 +46,12 @@ function AccountContent() {
   async function handleSignOut() {
     setWorking(true);
     setMessage("Signing out...");
-
     const { error } = await supabase.auth.signOut();
-
     if (error) {
       setMessage(error.message);
       setWorking(false);
       return;
     }
-
     router.refresh();
     router.push("/login");
   }
@@ -79,7 +71,6 @@ function AccountContent() {
               Your current tester login details and HMRC sandbox connection.
             </p>
           </div>
-
           <Link
             href="/dashboard"
             className="text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
@@ -106,7 +97,6 @@ function AccountContent() {
               <p className="mt-2 text-sm leading-6 text-white/70">
                 Connect your HMRC sandbox test user to Flonancial.
               </p>
-
               <div className="mt-4 flex flex-wrap gap-3">
                 
                   href="/api/hmrc/start"
@@ -114,14 +104,12 @@ function AccountContent() {
                 >
                   Connect HMRC sandbox
                 </a>
-
                 
                   href="/api/hmrc/business-details"
                   className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.07] hover:text-white"
                 >
                   Check HMRC business details
                 </a>
-
                 
                   href="/api/hmrc/obligations"
                   className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.07] hover:text-white"
@@ -138,7 +126,6 @@ function AccountContent() {
               >
                 Go to dashboard
               </Link>
-
               <button
                 type="button"
                 onClick={handleSignOut}
@@ -168,10 +155,3 @@ export default function AccountPage() {
     </SiteShell>
   );
 }
-```
-
-Save, then:
-```
-git add .
-git commit -m "fix account suspense"
-git push
