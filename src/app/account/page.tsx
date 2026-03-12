@@ -1,8 +1,3 @@
-The file on your computer still has the bad version. Let's just rewrite it cleanly. 
-
-In Notepad, select **all the text** (Ctrl+A), delete it, then paste this exact code in:
-
-```tsx
 "use client";
 
 import Link from "next/link";
