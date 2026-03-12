@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { SiteShell } from "@/components/site-shell";
+import { SiteHeader } from "@/components/site-header";
 
 type SA = "yes" | "no" | "not_sure";
 type Exempt = "yes" | "no" | "not_sure";
@@ -51,7 +51,7 @@ export default function HomePage() {
           "Enter your gross self-employment and property income to get an immediate indication.",
         bullets: [
           "Use gross income before expenses and before tax.",
-          "No login required.",
+          "No login needed for the checker.",
           "Informational only — not tax advice.",
         ],
       };
@@ -146,139 +146,224 @@ export default function HomePage() {
       : "Use your latest submitted Self Assessment figures where possible.";
 
   return (
-    <SiteShell>
-      <section className="mx-auto w-full max-w-[1000px] px-6 pt-1 pb-8 sm:px-8 lg:px-10">
-        <header className="mb-3">
-          <div className="flex items-center gap-4 sm:gap-5">
-            <div className="shrink-0">
-              <div className="flex h-14 w-14 items-center justify-center sm:h-16 sm:w-16 md:h-20 md:w-20">
-                <img
-                  src="/brand/0015.png"
-                  alt="Flonancial"
-                  className="h-full w-full object-contain"
-                />
+    <main className="min-h-screen text-white">
+      <SiteHeader
+        navItems={[
+          { href: "/about", label: "About" },
+          { href: "/mtd-guide", label: "MTD Guide" },
+          { href: "/tax-news", label: "UK Tax News" },
+          { href: "/dashboard", label: "Dashboard" },
+          { href: "/login", label: "Login" },
+        ]}
+      />
+
+      <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
+        <div className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-6 sm:p-8">
+          <div className="mx-auto max-w-4xl text-center">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+              MTD quick check
+            </p>
+
+            <h1 className="mx-auto mt-4 max-w-4xl text-[2.3rem] font-semibold leading-[1.04] tracking-[-0.05em] text-white sm:text-[2.9rem] lg:text-[3.5rem]">
+              Making Tax Digital<br />Does it apply to you?
+            </h1>
+
+            <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-white/72 sm:text-lg">
+              A simple UK checker for self-employment and property income,<br /> with
+              a practical path toward MTD-ready record keeping.
+            </p>
+
+            <div className="mt-7 flex justify-center">
+              <a
+                href="#checker"
+                className="rounded-2xl border border-white/10 bg-white px-5 py-3 text-sm font-medium text-black transition hover:opacity-90"
+              >
+                Start the check
+              </a>
+            </div>
+
+            <div className="mt-5 text-center text-sm text-white/55">
+              Takes about 30 seconds
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-5 grid gap-3 md:grid-cols-3">
+          <ValueCard
+            title="Check your likely position"
+            text="Get a quick indication based on gross self-employment and property income."
+          />
+          <ValueCard
+            title="Understand what changes next"
+            text="See the likely timing and what MTD may require in practice."
+          />
+          <ValueCard
+            title="Move toward digital readiness"
+            text="Use Flonancial as a simple early step toward compatible record keeping."
+          />
+        </div>
+
+        <div
+          id="checker"
+          className="mt-6 rounded-[30px] border border-white/10 bg-white/[0.03] p-4 sm:p-5"
+        >
+          <div className="border-b border-white/10 pb-4 text-center">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+              Checker
+            </p>
+            <h2 className="mt-2 text-2xl font-medium tracking-[-0.03em] text-white">
+              Start with your gross income figures
+            </h2>
+            <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-white/65">
+              This gives you a practical first view before you think about
+              software, record keeping, or later MTD steps.
+            </p>
+          </div>
+
+          <div className="mt-5 grid gap-3 md:grid-cols-2">
+            <QuestionCard title="1. Gross self-employment income">
+              <MoneyInput
+                id="self-employment-income"
+                value={selfEmploymentIncome}
+                onChange={setSelfEmploymentIncome}
+                placeholder="e.g. 42000"
+                hint="Use gross income before expenses and before tax."
+              />
+            </QuestionCard>
+
+            <QuestionCard title="2. Gross property income">
+              <MoneyInput
+                id="property-income"
+                value={propertyIncome}
+                onChange={setPropertyIncome}
+                placeholder="e.g. 12000"
+                hint="Enter your share of gross property income before expenses."
+              />
+            </QuestionCard>
+
+            <QuestionCard title="3. Do you currently file a Self Assessment tax return?">
+              <OptionGrid<SA>
+                value={sa}
+                onChange={setSa}
+                options={[
+                  { value: "yes", label: "Yes" },
+                  { value: "no", label: "No" },
+                  { value: "not_sure", label: "Not sure" },
+                ]}
+              />
+              <p className="mt-2 text-xs leading-5 text-white/45">
+                This does not change the threshold, but it helps with the next
+                practical step.
+              </p>
+            </QuestionCard>
+
+            <QuestionCard title="4. Do you think you may be exempt?">
+              <OptionGrid<Exempt>
+                value={exempt}
+                onChange={setExempt}
+                options={[
+                  { value: "no", label: "No" },
+                  { value: "yes", label: "Yes" },
+                  { value: "not_sure", label: "Not sure" },
+                ]}
+              />
+              <p className="mt-2 text-xs leading-5 text-white/45">
+                Some people may qualify for exemption in specific circumstances.
+              </p>
+            </QuestionCard>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="max-w-3xl">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                  Live result
+                </p>
+
+                <h3 className="mt-2 text-3xl font-medium tracking-[-0.03em] text-white">
+                  {result.label}
+                </h3>
+
+                <p className="mt-4 text-sm leading-6 text-white/72">
+                  {result.summary}
+                </p>
+              </div>
+
+              <div className="min-w-[180px] rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/75">
+                <div>Qualifying income</div>
+                <div className="mt-2 text-2xl text-white">{formatGBP(total)}</div>
               </div>
             </div>
 
-            <div className="min-w-0 flex-1">
-              <h1 className="text-xl font-normal leading-[1.1] tracking-[-0.01em] text-white sm:text-[1.6rem] md:text-[1.8rem] lg:text-[2.1rem]">
-                Check whether Making Tax Digital applies to you:
-              </h1>
-            </div>
+            <ul className="mt-4 space-y-2 text-sm text-white/82">
+              {result.bullets.map((b) => (
+                <li key={b} className="flex gap-2">
+                  <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-sky-400" />
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+
+            {(sa || selfEmploymentIncome || propertyIncome) && (
+              <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                  Practical note
+                </p>
+                <p className="mt-2 text-sm leading-6 text-white/70">
+                  {practicalNote}
+                </p>
+              </div>
+            )}
           </div>
-        </header>
-
-        <div className="grid gap-3 md:grid-cols-2">
-          <QuestionCard title="1. Gross self-employment income">
-            <MoneyInput
-              id="self-employment-income"
-              value={selfEmploymentIncome}
-              onChange={setSelfEmploymentIncome}
-              placeholder="e.g. 42000"
-              hint="Use gross income before expenses and before tax."
-            />
-          </QuestionCard>
-
-          <QuestionCard title="2. Gross property income">
-            <MoneyInput
-              id="property-income"
-              value={propertyIncome}
-              onChange={setPropertyIncome}
-              placeholder="e.g. 12000"
-              hint="Enter your share of gross property income before expenses."
-            />
-          </QuestionCard>
-
-          <QuestionCard title="3. Do you currently file a Self Assessment tax return?">
-            <OptionGrid<SA>
-              value={sa}
-              onChange={setSa}
-              options={[
-                { value: "yes", label: "Yes" },
-                { value: "no", label: "No" },
-                { value: "not_sure", label: "Not sure" },
-              ]}
-            />
-            <p className="mt-2 text-xs leading-5 text-white/45">
-              This does not change the threshold, but it helps with the next
-              practical step.
-            </p>
-          </QuestionCard>
-
-          <QuestionCard title="4. Do you think you may be exempt?">
-            <OptionGrid<Exempt>
-              value={exempt}
-              onChange={setExempt}
-              options={[
-                { value: "no", label: "No" },
-                { value: "yes", label: "Yes" },
-                { value: "not_sure", label: "Not sure" },
-              ]}
-            />
-            <p className="mt-2 text-xs leading-5 text-white/45">
-              Some people may qualify for exemption in specific circumstances.
-            </p>
-          </QuestionCard>
         </div>
 
-        <div className="mt-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-                Live result
-              </p>
-
-              <h2 className="mt-2 text-xl font-normal tracking-tight text-white sm:text-2xl">
-                {result.label}
-              </h2>
-            </div>
-
-            <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/80">
-              <div>Qualifying income</div>
-              <div className="mt-1 text-lg text-white">{formatGBP(total)}</div>
-            </div>
-          </div>
-
-          <p className="mt-3 max-w-3xl text-sm leading-6 text-white/72">
-            {result.summary}
-          </p>
-
-          <ul className="mt-3 space-y-2 text-sm text-white/82">
-            {result.bullets.map((b) => (
-              <li key={b} className="flex gap-2">
-                <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-sky-400" />
-                <span>{b}</span>
-              </li>
-            ))}
-          </ul>
-
-          {(sa || selfEmploymentIncome || propertyIncome) && (
-            <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.02] p-4">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-                Practical note
-              </p>
-              <p className="mt-2 text-sm leading-6 text-white/70">
-                {practicalNote}
-              </p>
-            </div>
-          )}
-
-          <div className="mt-3 flex flex-wrap gap-4 text-sm">
-  <Link
-    href="/about"
-    className="text-white/70 underline underline-offset-4 transition hover:text-white"
-  >
-    About Flonancial.co.uk
-  </Link>
-</div>
-        </div>
-
-        <p className="mt-3 text-center text-xs text-white/45">
+        <p className="mt-4 text-center text-xs text-white/45">
           Informational only — not tax advice. Always check current HMRC
           guidance.
         </p>
       </section>
-    </SiteShell>
+
+      <footer className="mt-10 border-t border-white/10">
+        <div className="mx-auto w-full max-w-[1000px] px-6 sm:px-8 lg:px-10">
+          <div className="flex flex-col gap-4 py-8 text-sm text-white/60 sm:flex-row sm:items-center sm:justify-between">
+            <p>© {new Date().getFullYear()} Flonancial</p>
+
+            <div className="flex flex-wrap gap-6">
+              <Link href="/privacy" className="hover:text-white">
+                Privacy
+              </Link>
+
+              <Link href="/about" className="hover:text-white">
+                About
+              </Link>
+
+              <Link href="/disclaimer" className="hover:text-white">
+                Disclaimer
+              </Link>
+
+              <a href="mailto:hello@flonancial.co.uk" className="hover:text-white">
+                hello@flonancial.co.uk
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  );
+}
+
+function ValueCard({
+  title,
+  text,
+}: {
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-center">
+      <p className="text-base font-medium text-white">{title}</p>
+      <p className="mt-2 text-sm leading-6 text-white/65">{text}</p>
+    </div>
   );
 }
 
@@ -290,8 +375,8 @@ function QuestionCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03]">
-      <div className="px-4 py-3">
+    <div className="rounded-2xl border border-white/10 bg-white/[0.02]">
+      <div className="px-4 py-3 text-center">
         <div className="text-base font-medium text-white">{title}</div>
       </div>
 
@@ -310,7 +395,7 @@ function OptionGrid<T extends string>({
   options: { value: T; label: string }[];
 }) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap justify-center gap-2">
       {options.map((o) => {
         const active = value === o.value;
 
@@ -368,7 +453,7 @@ function MoneyInput({
         />
       </div>
 
-      <p className="mt-2 text-xs leading-5 text-white/45">{hint}</p>
+      <p className="mt-2 text-center text-xs leading-5 text-white/45">{hint}</p>
     </div>
   );
 }

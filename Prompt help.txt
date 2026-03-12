@@ -1,0 +1,84 @@
+Here's your handoff prompt:
+
+---
+
+**Flonancial – AI handoff prompt**
+
+I'm building Flonancial, a UK web app working toward HMRC MTD (Making Tax Digital) compatibility for self-employed individuals.
+
+**Working style:**
+- Keep responses bite-size
+- Trust the actual code over any summary I give
+- If you want me to replace a file, give me the whole file in one code block
+- Keep instruction text short
+- Do not casually overwrite my homepage
+- My homepage at src/app/page.tsx is special and should usually be preserved
+- Reuse SiteShell for non-homepage pages unless there is a strong reason not to
+- Start by asking me for the smallest number of files needed to judge the next best step
+
+**Stack:**
+- Next.js + Vercel + Supabase
+- Existing site live and in GitHub
+- Shared wrapper at src/components/site-shell.tsx
+
+**Repo map:**
+- src/app/page.tsx — homepage, preserve
+- src/app/dashboard/page.tsx — tester dashboard
+- src/app/add-business/page.tsx — create business
+- src/app/edit-business/[id]/page.tsx — edit/delete business
+- src/app/add-update/page.tsx — create update from generated periods
+- src/app/edit-update/[id]/page.tsx — edit/finalise update
+- src/app/login/page.tsx — auth page
+- src/app/account/page.tsx — account/sign out
+- src/components/site-shell.tsx — shared wrapper
+- src/components/site-header.tsx — header
+- src/components/delete-update-button.tsx — delete draft update
+- src/utils/supabase/client.ts — browser supabase
+- src/utils/supabase/server.ts — server supabase
+
+**Supabase schema:**
+
+businesses:
+- id, user_id, name, trading_name, business_type, start_date, accounting_year_end, created_at
+
+quarterly_updates:
+- id, user_id, business_id, period_key, quarter_start, quarter_end, turnover, expenses, status, submitted_at, created_at
+
+RLS enabled on both. Owner-only select/insert/update/delete policies.
+
+**Current working features:**
+- Login/auth
+- Dashboard with tax year progress per business (submitted quarters out of 4, progress bar)
+- Add/edit/delete business (delete only if no updates)
+- Business fields: name, trading_name, business_type, start_date, accounting_year_end (stored as MM-DD e.g. "04-05")
+- Add quarterly update — periods generated from accounting_year_end, anchored to HMRC tax year, falls back to start_date if no year end set
+- Edit quarterly update — save draft or finalise (locks record)
+- Delete draft update
+- period_key written on insert and on save/finalise (format: "YYYY-MM-DD_YYYY-MM-DD")
+- Dashboard shows period_key, tax year label, per-business quarter progress
+
+**HMRC sandbox setup:**
+- Registered on HMRC Developer Hub
+- App called Flonancial in sandbox environment
+- Client ID and secret are in .env.local (never paste these)
+- Subscribed sandbox APIs: Self Employment Business (MTD) v5.0, Obligations (MTD) v3.0, Individual Calculations (MTD) v8.0, Self Assessment Accounts (MTD) v4.0, Business Details (MTD), Create Test User v1.0, Self Assessment Test Support (MTD) v1.0
+- Have a sandbox test Individual user created with MTD for Self Assessment enrolled — have their username, password, and NINO saved locally
+
+**What needs doing next (in order):**
+1. OAuth flow — get an access token for the test user against the HMRC sandbox
+2. Call Business Details (MTD) to retrieve the HMRC-side business ID for the test user
+3. Store that business ID against the business record in Supabase (need to add hmrc_business_id column)
+4. Call Obligations (MTD) to fetch what quarters HMRC expects
+5. Submit a quarterly update to HMRC via Self Employment Business (MTD)
+6. Eventually: production credentials + real user OAuth
+
+**Important context:**
+- This is a private tester phase — only I am using it
+- Strategic goal is a real MTD-compatible product, not just a demo
+- I am not a coder so instructions need to be spelled out clearly
+- When giving me code changes, always give the whole file in one block
+- Ask me only for the files you actually need
+
+---
+
+ALso they dont use 'middleware' its called proxy now.

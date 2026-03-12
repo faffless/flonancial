@@ -1,111 +1,734 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { SiteShell } from "@/components/site-shell";
 import { createClient } from "@/utils/supabase/client";
 
 type Business = {
   id: number;
   name: string;
+  trading_name: string | null;
+  business_type: string | null;
+  start_date: string | null;
+  accounting_year_end: string | null;
+  hmrc_business_id: string | null;
 };
 
+type ExistingUpdate = {
+  id: number;
+  business_id: number;
+  period_key: string | null;
+  quarter_start: string;
+  quarter_end: string;
+  status: string | null;
+};
+
+type PeriodOption = {
+  key: string;
+  quarterStart: string;
+  quarterEnd: string;
+  label: string;
+  source: "hmrc" | "local";
+  status?: string | null;
+  dueDate?: string | null;
+};
+
+type HmrcObligation = {
+  business_id: number;
+  business_name: string;
+  hmrc_business_id: string;
+  type_of_business: string;
+  period_key: string | null;
+  status: string | null;
+  quarter_start: string | null;
+  quarter_end: string | null;
+  due_date: string | null;
+  received_date: string | null;
+};
+
+type HmrcObligationsResponse = {
+  obligations?: HmrcObligation[];
+  error?: string;
+  status?: number;
+};
+
+function formatCurrencyPreview(value: string) {
+  if (value === "") return "£0.00";
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return "£0.00";
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(parsed);
+}
+
+function toInputDate(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function formatDate(value: string) {
+  return new Date(`${value}T00:00:00`).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function formatBusinessType(value: string | null) {
+  if (!value) return "Not set";
+  if (value === "sole_trader") return "Sole trader";
+  if (value === "uk_property") return "UK property";
+  if (value === "overseas_property") return "Overseas property";
+  if (value === "other") return "Other";
+  return value;
+}
+
+function formatAccountingYearEnd(value: string | null) {
+  if (!value) return "Not set";
+  if (value === "04-05") return "5 April";
+  if (value === "03-31") return "31 March";
+  if (value === "12-31") return "31 December";
+  return value;
+}
+
+function makePeriodKey(quarterStart: string, quarterEnd: string) {
+  return `${quarterStart}_${quarterEnd}`;
+}
+
+function generatePeriodsFromYearEnd(
+  startDate: string,
+  accountingYearEnd: string,
+  count = 8
+): PeriodOption[] {
+  const [endMonth, endDay] = accountingYearEnd.split("-").map(Number);
+
+  const probe = new Date(2000, endMonth - 1, endDay + 1);
+  const periodStartMonth = probe.getMonth() + 1;
+  const periodStartDay = probe.getDate();
+
+  const businessStart = new Date(`${startDate}T00:00:00`);
+
+  let yearStart = new Date(
+    businessStart.getFullYear(),
+    periodStartMonth - 1,
+    periodStartDay
+  );
+
+  if (yearStart > businessStart) {
+    yearStart.setFullYear(yearStart.getFullYear() - 1);
+  }
+
+  const periods: PeriodOption[] = [];
+  const cursor = new Date(yearStart);
+
+  for (let i = 0; i < count + 12; i++) {
+    const periodStart = new Date(cursor);
+    const periodEnd = new Date(cursor);
+    periodEnd.setMonth(periodEnd.getMonth() + 3);
+    periodEnd.setDate(periodEnd.getDate() - 1);
+
+    const quarterStart = toInputDate(periodStart);
+    const quarterEnd = toInputDate(periodEnd);
+
+    if (periodStart >= businessStart) {
+      periods.push({
+        key: makePeriodKey(quarterStart, quarterEnd),
+        quarterStart,
+        quarterEnd,
+        label: `${formatDate(quarterStart)} to ${formatDate(quarterEnd)}`,
+        source: "local",
+      });
+
+      if (periods.length >= count) break;
+    }
+
+    cursor.setMonth(cursor.getMonth() + 3);
+  }
+
+  return periods;
+}
+
+function generatePeriodsFallback(startDate: string, count = 8): PeriodOption[] {
+  const periods: PeriodOption[] = [];
+  const cursor = new Date(`${startDate}T00:00:00`);
+
+  for (let i = 0; i < count; i++) {
+    const periodStart = new Date(cursor);
+    const periodEnd = new Date(cursor);
+    periodEnd.setMonth(periodEnd.getMonth() + 3);
+    periodEnd.setDate(periodEnd.getDate() - 1);
+
+    const quarterStart = toInputDate(periodStart);
+    const quarterEnd = toInputDate(periodEnd);
+
+    periods.push({
+      key: makePeriodKey(quarterStart, quarterEnd),
+      quarterStart,
+      quarterEnd,
+      label: `${formatDate(quarterStart)} to ${formatDate(quarterEnd)}`,
+      source: "local",
+    });
+
+    cursor.setMonth(cursor.getMonth() + 3);
+  }
+
+  return periods;
+}
+
+function generateLocalPeriods(
+  startDate: string,
+  accountingYearEnd: string | null
+): PeriodOption[] {
+  if (accountingYearEnd && accountingYearEnd !== "other") {
+    return generatePeriodsFromYearEnd(startDate, accountingYearEnd);
+  }
+  return generatePeriodsFallback(startDate);
+}
+
 export default function AddUpdatePage() {
+  const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
+
   const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [existingUpdates, setExistingUpdates] = useState<ExistingUpdate[]>([]);
+  const [hmrcObligations, setHmrcObligations] = useState<HmrcObligation[]>([]);
   const [businessId, setBusinessId] = useState("");
-  const [quarterStart, setQuarterStart] = useState("");
-  const [quarterEnd, setQuarterEnd] = useState("");
+  const [periodKey, setPeriodKey] = useState("");
   const [turnover, setTurnover] = useState("");
   const [expenses, setExpenses] = useState("");
   const [message, setMessage] = useState("");
+  const [loadingBusinesses, setLoadingBusinesses] = useState(true);
+  const [loadingHmrc, setLoadingHmrc] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const selectedBusiness =
+    businesses.find((business) => String(business.id) === businessId) ?? null;
+
+  const localPeriods =
+    selectedBusiness?.start_date
+      ? generateLocalPeriods(
+          selectedBusiness.start_date,
+          selectedBusiness.accounting_year_end
+        )
+      : [];
+
+  const hmrcPeriods: PeriodOption[] = hmrcObligations
+    .filter(
+      (item) =>
+        item.business_id === Number(businessId) &&
+        item.status === "open" &&
+        item.quarter_start &&
+        item.quarter_end
+    )
+    .map((item) => ({
+      key:
+        item.period_key ||
+        makePeriodKey(item.quarter_start as string, item.quarter_end as string),
+      quarterStart: item.quarter_start as string,
+      quarterEnd: item.quarter_end as string,
+      label: `${formatDate(item.quarter_start as string)} to ${formatDate(
+        item.quarter_end as string
+      )}`,
+      source: "hmrc",
+      status: item.status,
+      dueDate: item.due_date,
+    }));
+
+  // CHANGED: HMRC-linked businesses only ever use HMRC periods — no local fallback
+  const generatedPeriods = selectedBusiness?.hmrc_business_id
+    ? hmrcPeriods
+    : localPeriods;
+
+  const existingDraftPeriodKeys = new Set(
+    existingUpdates
+      .filter(
+        (update) =>
+          String(update.business_id) === businessId && update.status === "draft"
+      )
+      .map(
+        (update) =>
+          update.period_key ||
+          makePeriodKey(update.quarter_start, update.quarter_end)
+      )
+  );
+
+  const availablePeriods = generatedPeriods.filter(
+    (period) => !existingDraftPeriodKeys.has(period.key)
+  );
+
+  const selectedPeriod =
+    availablePeriods.find((period) => period.key === periodKey) ?? null;
 
   useEffect(() => {
     async function loadBusinesses() {
-      const supabase = createClient();
-      const { data, error } = await supabase.from("businesses").select("id, name");
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
 
-      if (error) {
-        setMessage(error.message);
+      if (userError || !user) {
+        router.replace("/login");
         return;
       }
 
-      setBusinesses(data || []);
+      const { data: businessesData, error: businessesError } = await supabase
+        .from("businesses")
+        .select(
+          "id, name, trading_name, business_type, start_date, accounting_year_end, hmrc_business_id"
+        )
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: true });
 
-      if (data && data.length > 0) {
-        setBusinessId(String(data[0].id));
+      if (businessesError) {
+        setMessage(businessesError.message);
+        setLoadingBusinesses(false);
+        return;
       }
+
+      const { data: updatesData, error: updatesError } = await supabase
+        .from("quarterly_updates")
+        .select(
+          "id, business_id, period_key, quarter_start, quarter_end, status"
+        )
+        .eq("user_id", user.id);
+
+      if (updatesError) {
+        setMessage(updatesError.message);
+        setLoadingBusinesses(false);
+        return;
+      }
+
+      const loadedBusinesses = businessesData ?? [];
+      setBusinesses(loadedBusinesses);
+      setExistingUpdates(updatesData ?? []);
+
+      if (loadedBusinesses.length > 0) {
+        setBusinessId(String(loadedBusinesses[0].id));
+      }
+
+      setLoadingBusinesses(false);
     }
 
     loadBusinesses();
-  }, []);
+  }, [router, supabase]);
+
+  useEffect(() => {
+    async function loadHmrcObligations() {
+      if (!selectedBusiness?.hmrc_business_id) {
+        setHmrcObligations([]);
+        return;
+      }
+
+      setLoadingHmrc(true);
+
+      const response = await fetch("/api/hmrc/obligations", {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      const data = (await response.json()) as HmrcObligationsResponse;
+
+      if (!response.ok) {
+        setMessage(data.error || "Could not load HMRC obligations.");
+        setHmrcObligations([]);
+        setLoadingHmrc(false);
+        return;
+      }
+
+      setHmrcObligations(data.obligations ?? []);
+      setLoadingHmrc(false);
+    }
+
+    loadHmrcObligations();
+  }, [selectedBusiness?.hmrc_business_id]);
+
+  useEffect(() => {
+    if (availablePeriods.length === 0) {
+      setPeriodKey("");
+      return;
+    }
+
+    const selectedStillValid = availablePeriods.some(
+      (period) => period.key === periodKey
+    );
+
+    if (!selectedStillValid) {
+      setPeriodKey(availablePeriods[0].key);
+    }
+  }, [businessId, periodKey, availablePeriods]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (!businessId) {
+      setMessage("Add a business first");
+      return;
+    }
+
+    if (!selectedBusiness) {
+      setMessage("Select a business");
+      return;
+    }
+
+    if (!selectedBusiness.start_date) {
+      setMessage("Add a business start date first");
+      return;
+    }
+
+    if (!selectedPeriod) {
+      setMessage("Select an available period");
+      return;
+    }
+
+    if (turnover === "" || expenses === "") {
+      setMessage("Enter turnover and expenses");
+      return;
+    }
+
+    const turnoverNumber = Number(turnover);
+    const expensesNumber = Number(expenses);
+
+    if (!Number.isFinite(turnoverNumber) || turnoverNumber < 0) {
+      setMessage("Enter a valid turnover amount");
+      return;
+    }
+
+    if (!Number.isFinite(expensesNumber) || expensesNumber < 0) {
+      setMessage("Enter a valid expenses amount");
+      return;
+    }
+
+    setSaving(true);
     setMessage("Saving...");
 
-    const supabase = createClient();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      setMessage("You need to log in");
+      setSaving(false);
+      router.push("/login");
+      return;
+    }
+
+    const { data: existingDraft, error: existingError } = await supabase
+      .from("quarterly_updates")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("business_id", Number(businessId))
+      .eq("period_key", selectedPeriod.key)
+      .eq("status", "draft")
+      .maybeSingle();
+
+    if (existingError) {
+      setMessage(existingError.message);
+      setSaving(false);
+      return;
+    }
+
+    if (existingDraft) {
+      setMessage("You already have a draft update for that period");
+      setSaving(false);
+      return;
+    }
 
     const { error } = await supabase.from("quarterly_updates").insert({
       business_id: Number(businessId),
-      quarter_start: quarterStart,
-      quarter_end: quarterEnd,
-      turnover: Number(turnover),
-      expenses: Number(expenses),
+      user_id: user.id,
+      period_key: selectedPeriod.key,
+      quarter_start: selectedPeriod.quarterStart,
+      quarter_end: selectedPeriod.quarterEnd,
+      turnover: turnoverNumber,
+      expenses: expensesNumber,
+      status: "draft",
     });
 
     if (error) {
       setMessage(error.message);
+      setSaving(false);
       return;
     }
 
-    setMessage("Saved");
-    setQuarterStart("");
-    setQuarterEnd("");
-    setTurnover("");
-    setExpenses("");
+    router.refresh();
+    router.push("/dashboard");
   }
 
   return (
-    <main style={{ padding: "24px" }}>
-      <h1>Add update</h1>
+    <SiteShell>
+      <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                Private tester
+              </p>
+              <h1 className="mt-2 text-2xl font-normal tracking-tight text-white">
+                Add quarterly update
+              </h1>
+              <p className="mt-3 text-sm leading-6 text-white/70">
+                Record the next available period for one of your saved businesses.
+              </p>
+            </div>
 
-      <form onSubmit={handleSubmit} style={{ display: "grid", gap: "12px", maxWidth: "400px" }}>
-        <select value={businessId} onChange={(e) => setBusinessId(e.target.value)}>
-          {businesses.map((business) => (
-            <option key={business.id} value={business.id}>
-              {business.name}
-            </option>
-          ))}
-        </select>
+            <Link
+              href="/dashboard"
+              className="text-sm text-white/70 transition hover:text-white"
+            >
+              Back to dashboard
+            </Link>
+          </div>
 
-        <input
-          type="date"
-          value={quarterStart}
-          onChange={(e) => setQuarterStart(e.target.value)}
-        />
+          {loadingBusinesses ? (
+            <p className="mt-6 text-sm text-white/70">Loading businesses...</p>
+          ) : businesses.length === 0 ? (
+            <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+              <p className="text-sm text-white/80">
+                You need at least one business before you can add a quarterly
+                update.
+              </p>
+              <div className="mt-4">
+                <Link
+                  href="/add-business"
+                  className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90"
+                >
+                  Add business
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="mt-6 grid gap-4 sm:grid-cols-4">
+                <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                    Business
+                  </p>
+                  <p className="mt-2 text-sm text-white">
+                    {selectedBusiness?.name ?? "Select a business"}
+                  </p>
+                </div>
 
-        <input
-          type="date"
-          value={quarterEnd}
-          onChange={(e) => setQuarterEnd(e.target.value)}
-        />
+                <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                    Business type
+                  </p>
+                  <p className="mt-2 text-sm text-white">
+                    {formatBusinessType(selectedBusiness?.business_type ?? null)}
+                  </p>
+                </div>
 
-        <input
-          type="number"
-          placeholder="Turnover"
-          value={turnover}
-          onChange={(e) => setTurnover(e.target.value)}
-        />
+                <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                    Year end
+                  </p>
+                  <p className="mt-2 text-sm text-white">
+                    {formatAccountingYearEnd(
+                      selectedBusiness?.accounting_year_end ?? null
+                    )}
+                  </p>
+                </div>
 
-        <input
-          type="number"
-          placeholder="Expenses"
-          value={expenses}
-          onChange={(e) => setExpenses(e.target.value)}
-        />
+                <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                    Turnover preview
+                  </p>
+                  <p className="mt-2 text-sm text-white">
+                    {formatCurrencyPreview(turnover)}
+                  </p>
+                </div>
+              </div>
 
-        <button type="submit">Save</button>
-      </form>
+              <form onSubmit={handleSubmit} className="mt-6 max-w-xl space-y-4">
+                <div>
+                  <label
+                    htmlFor="business"
+                    className="mb-2 block text-sm text-white/80"
+                  >
+                    Business
+                  </label>
+                  <select
+                    id="business"
+                    value={businessId}
+                    onChange={(e) => {
+                      setBusinessId(e.target.value);
+                      setMessage("");
+                    }}
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition focus:border-white/25"
+                  >
+                    {businesses.map((business) => (
+                      <option
+                        key={business.id}
+                        value={business.id}
+                        className="bg-[#0D1115] text-white"
+                      >
+                        {business.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-      <p>{message}</p>
-    </main>
+                <div>
+                  <label
+                    htmlFor="period"
+                    className="mb-2 block text-sm text-white/80"
+                  >
+                    Available period
+                  </label>
+                  <select
+                    id="period"
+                    value={periodKey}
+                    onChange={(e) => setPeriodKey(e.target.value)}
+                    disabled={
+                      !selectedBusiness?.start_date ||
+                      availablePeriods.length === 0 ||
+                      loadingHmrc
+                    }
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition focus:border-white/25 disabled:opacity-60"
+                  >
+                    {loadingHmrc ? (
+                      <option value="" className="bg-[#0D1115] text-white">
+                        Loading HMRC periods...
+                      </option>
+                    ) : availablePeriods.length > 0 ? (
+                      availablePeriods.map((period) => (
+                        <option
+                          key={period.key}
+                          value={period.key}
+                          className="bg-[#0D1115] text-white"
+                        >
+                          {period.label}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" className="bg-[#0D1115] text-white">
+                        {selectedBusiness?.hmrc_business_id
+                          ? "No open HMRC periods available"
+                          : "No available periods"}
+                      </option>
+                    )}
+                  </select>
+
+                  {selectedBusiness?.hmrc_business_id ? (
+                    <p className="mt-2 text-xs text-emerald-300/70">
+                      This business is HMRC linked. Only open HMRC obligation periods are shown.
+                    </p>
+                  ) : !selectedBusiness?.accounting_year_end &&
+                    selectedBusiness?.start_date ? (
+                    <p className="mt-2 text-xs text-amber-400/70">
+                      No accounting year end set — periods are estimated from
+                      start date. Edit this business to set one.
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                      Quarter start
+                    </p>
+                    <p className="mt-2 text-sm text-white">
+                      {selectedPeriod
+                        ? formatDate(selectedPeriod.quarterStart)
+                        : "Not available"}
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                      Quarter end
+                    </p>
+                    <p className="mt-2 text-sm text-white">
+                      {selectedPeriod
+                        ? formatDate(selectedPeriod.quarterEnd)
+                        : "Not available"}
+                    </p>
+                  </div>
+                </div>
+
+                {selectedPeriod?.source === "hmrc" ? (
+                  <div className="rounded-xl border border-emerald-400/25 bg-emerald-400/10 p-4">
+                    <p className="text-sm text-emerald-200">
+                      Using HMRC obligation period.
+                    </p>
+                    {selectedPeriod.dueDate ? (
+                      <p className="mt-2 text-xs text-emerald-200/80">
+                        Due date: {formatDate(selectedPeriod.dueDate)}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="turnover"
+                      className="mb-2 block text-sm text-white/80"
+                    >
+                      Turnover
+                    </label>
+                    <input
+                      id="turnover"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                      value={turnover}
+                      onChange={(e) => setTurnover(e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-white/25"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="expenses"
+                      className="mb-2 block text-sm text-white/80"
+                    >
+                      Expenses
+                    </label>
+                    <input
+                      id="expenses"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                      value={expenses}
+                      onChange={(e) => setExpenses(e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-white/25"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    type="submit"
+                    disabled={saving || !selectedPeriod}
+                    className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {saving ? "Saving..." : "Save quarterly update"}
+                  </button>
+
+                  <Link
+                    href="/dashboard"
+                    className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.07] hover:text-white"
+                  >
+                    Cancel
+                  </Link>
+                </div>
+
+                {message ? (
+                  <p className="text-sm text-white/70">{message}</p>
+                ) : null}
+              </form>
+            </>
+          )}
+        </div>
+      </section>
+    </SiteShell>
   );
 }

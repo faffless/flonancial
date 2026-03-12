@@ -1,6 +1,6 @@
 in powershell, you want to start with:
 
-cd C:\Users\WCale\Desktop\nofaff
+cd C:\Users\WCale\Desktop\flonancial
 
 and then:
 npm run dev

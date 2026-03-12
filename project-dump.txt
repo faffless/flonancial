@@ -1,0 +1,1973 @@
+===== src\app\page.tsx =====
+"use client";
+
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { ChevronRight } from "lucide-react";
+import { SiteHeader } from "@/components/site-header";
+
+type SA = "yes" | "no" | "not_sure";
+type Exempt = "yes" | "no" | "not_sure";
+
+const THRESHOLD_2026 = 50000;
+const THRESHOLD_2027 = 30000;
+const THRESHOLD_2028 = 20000;
+
+function parseMoney(value: string): number {
+  if (!value) return 0;
+  const cleaned = value.replace(/,/g, "").trim();
+  const parsed = Number(cleaned);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+}
+
+function formatGBP(value: number): string {
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+export default function HomePage() {
+  const [selfEmploymentIncome, setSelfEmploymentIncome] = useState("");
+  const [propertyIncome, setPropertyIncome] = useState("");
+  const [sa, setSa] = useState<SA | null>(null);
+  const [exempt, setExempt] = useState<Exempt | null>(null);
+
+  const selfEmployment = parseMoney(selfEmploymentIncome);
+  const property = parseMoney(propertyIncome);
+  const total = selfEmployment + property;
+
+  const result = useMemo(() => {
+    const noAnswers =
+      selfEmploymentIncome === "" &&
+      propertyIncome === "" &&
+      !sa &&
+      !exempt;
+
+    if (noAnswers) {
+      return {
+        label: "Start answering the questions",
+        summary:
+          "Enter your gross self-employment and property income to get an immediate indication.",
+        bullets: [
+          "Use gross income before expenses and before tax.",
+          "No login needed for the checker.",
+          "Informational only — not tax advice.",
+        ],
+      };
+    }
+
+    if (exempt === "yes") {
+      return {
+        label: "You may be exempt",
+        summary:
+          "You may not need to use Making Tax Digital for Income Tax if an HMRC exemption applies.",
+        bullets: [
+          "Check HMRC’s exemption rules.",
+          "Do not rely on the income result alone if you think you may be exempt.",
+          "You may still need to deal with Self Assessment in the usual way.",
+        ],
+      };
+    }
+
+    if (total === 0) {
+      return {
+        label: "Not currently in scope",
+        summary:
+          "Based on the figures entered, this checker does not show qualifying self-employment or property income.",
+        bullets: [
+          "Use gross self-employment income and gross property income only.",
+          "Re-check if your income sources change.",
+          "Use your latest tax-year figures for the best result.",
+        ],
+      };
+    }
+
+    if (total > THRESHOLD_2026) {
+      return {
+        label: "In scope from 6 April 2026",
+        summary: `Your qualifying income is ${formatGBP(
+          total
+        )}. Based on current published thresholds, that puts you into Making Tax Digital for Income Tax from 6 April 2026.`,
+        bullets: [
+          "You’ll need digital records.",
+          "You’ll need compatible software.",
+          "You’ll need to send updates through the year and complete the year-end process digitally.",
+        ],
+      };
+    }
+
+    if (total > THRESHOLD_2027) {
+      return {
+        label: "In scope from 6 April 2027",
+        summary: `Your qualifying income is ${formatGBP(
+          total
+        )}. You are below the 2026 entry threshold, but above the published threshold for 6 April 2027.`,
+        bullets: [
+          "You are below £50,000.",
+          "You are above £30,000.",
+          "This is a good time to get your records and software ready.",
+        ],
+      };
+    }
+
+    if (total > THRESHOLD_2028) {
+      return {
+        label: "In scope from 6 April 2028",
+        summary: `Your qualifying income is ${formatGBP(
+          total
+        )}. You are below the first two thresholds, but above the published threshold for 6 April 2028.`,
+        bullets: [
+          "You are below £30,000.",
+          "You are above £20,000.",
+          "Keep an eye on HMRC updates and start preparing early.",
+        ],
+      };
+    }
+
+    return {
+      label: "Not currently in scope on published thresholds",
+      summary: `Your qualifying income is ${formatGBP(
+        total
+      )}. Based on current published thresholds, you are below the announced mandatory entry points.`,
+      bullets: [
+        "You are at or below £20,000.",
+        "Keep records tidy in case your income increases.",
+        "Re-check after each tax year.",
+      ],
+    };
+  }, [selfEmploymentIncome, propertyIncome, sa, exempt, total]);
+
+  const practicalNote =
+    sa === "no"
+      ? "You may still need to register for Self Assessment depending on your circumstances."
+      : sa === "not_sure"
+      ? "Check whether you already file Self Assessment, because your latest return may help you confirm the right figures."
+      : "Use your latest submitted Self Assessment figures where possible.";
+
+  return (
+    <main className="min-h-screen text-white">
+      <SiteHeader
+        navItems={[
+          { href: "/about", label: "about" },
+          { href: "/mtd-guide", label: "mtd guide" },
+          { href: "/tax-news", label: "uk tax news" },
+          { href: "/dashboard", label: "dashboard" },
+          { href: "/login", label: "login" },
+        ]}
+      />
+
+      <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
+        <div className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-6 sm:p-8">
+          <div className="mx-auto max-w-4xl text-center">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+              MTD quick check
+            </p>
+
+            <h1 className="mx-auto mt-4 max-w-4xl text-[2.3rem] font-semibold leading-[1.04] tracking-[-0.05em] text-white sm:text-[2.9rem] lg:text-[3.5rem]">
+              Making Tax Digital<br />Does it apply to you?
+            </h1>
+
+            <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-white/72 sm:text-lg">
+              A simple UK checker for self-employment and property income,<br /> with
+              a practical path toward MTD-ready record keeping.
+            </p>
+
+            <div className="mt-7 flex justify-center">
+              <a
+                href="#checker"
+                className="rounded-2xl border border-white/10 bg-white px-5 py-3 text-sm font-medium text-black transition hover:opacity-90"
+              >
+                Start the check
+              </a>
+            </div>
+
+            <div className="mt-5 text-center text-sm text-white/55">
+              Takes about 30 seconds
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-5 grid gap-3 md:grid-cols-3">
+          <ValueCard
+            title="Check your likely position"
+            text="Get a quick indication based on gross self-employment and property income."
+          />
+          <ValueCard
+            title="Understand what changes next"
+            text="See the likely timing and what MTD may require in practice."
+          />
+          <ValueCard
+            title="Move toward digital readiness"
+            text="Use Flonancial as a simple early step toward compatible record keeping."
+          />
+        </div>
+
+        <div
+          id="checker"
+          className="mt-6 rounded-[30px] border border-white/10 bg-white/[0.03] p-4 sm:p-5"
+        >
+          <div className="border-b border-white/10 pb-4 text-center">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+              Checker
+            </p>
+            <h2 className="mt-2 text-2xl font-medium tracking-[-0.03em] text-white">
+              Start with your gross income figures
+            </h2>
+            <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-white/65">
+              This gives you a practical first view before you think about
+              software, record keeping, or later MTD steps.
+            </p>
+          </div>
+
+          <div className="mt-5 grid gap-3 md:grid-cols-2">
+            <QuestionCard title="1. Gross self-employment income">
+              <MoneyInput
+                id="self-employment-income"
+                value={selfEmploymentIncome}
+                onChange={setSelfEmploymentIncome}
+                placeholder="e.g. 42000"
+                hint="Use gross income before expenses and before tax."
+              />
+            </QuestionCard>
+
+            <QuestionCard title="2. Gross property income">
+              <MoneyInput
+                id="property-income"
+                value={propertyIncome}
+                onChange={setPropertyIncome}
+                placeholder="e.g. 12000"
+                hint="Enter your share of gross property income before expenses."
+              />
+            </QuestionCard>
+
+            <QuestionCard title="3. Do you currently file a Self Assessment tax return?">
+              <OptionGrid<SA>
+                value={sa}
+                onChange={setSa}
+                options={[
+                  { value: "yes", label: "Yes" },
+                  { value: "no", label: "No" },
+                  { value: "not_sure", label: "Not sure" },
+                ]}
+              />
+              <p className="mt-2 text-xs leading-5 text-white/45">
+                This does not change the threshold, but it helps with the next
+                practical step.
+              </p>
+            </QuestionCard>
+
+            <QuestionCard title="4. Do you think you may be exempt?">
+              <OptionGrid<Exempt>
+                value={exempt}
+                onChange={setExempt}
+                options={[
+                  { value: "no", label: "No" },
+                  { value: "yes", label: "Yes" },
+                  { value: "not_sure", label: "Not sure" },
+                ]}
+              />
+              <p className="mt-2 text-xs leading-5 text-white/45">
+                Some people may qualify for exemption in specific circumstances.
+              </p>
+            </QuestionCard>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="max-w-3xl">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                  Live result
+                </p>
+
+                <h3 className="mt-2 text-3xl font-medium tracking-[-0.03em] text-white">
+                  {result.label}
+                </h3>
+
+                <p className="mt-4 text-sm leading-6 text-white/72">
+                  {result.summary}
+                </p>
+              </div>
+
+              <div className="min-w-[180px] rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/75">
+                <div>Qualifying income</div>
+                <div className="mt-2 text-2xl text-white">{formatGBP(total)}</div>
+              </div>
+            </div>
+
+            <ul className="mt-4 space-y-2 text-sm text-white/82">
+              {result.bullets.map((b) => (
+                <li key={b} className="flex gap-2">
+                  <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-sky-400" />
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+
+            {(sa || selfEmploymentIncome || propertyIncome) && (
+              <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                  Practical note
+                </p>
+                <p className="mt-2 text-sm leading-6 text-white/70">
+                  {practicalNote}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <p className="mt-4 text-center text-xs text-white/45">
+          Informational only — not tax advice. Always check current HMRC
+          guidance.
+        </p>
+      </section>
+
+      <footer className="mt-10 border-t border-white/10">
+        <div className="mx-auto w-full max-w-[1000px] px-6 sm:px-8 lg:px-10">
+          <div className="flex flex-col gap-4 py-8 text-sm text-white/60 sm:flex-row sm:items-center sm:justify-between">
+            <p>© {new Date().getFullYear()} Flonancial</p>
+
+            <div className="flex flex-wrap gap-6">
+              <Link href="/privacy" className="hover:text-white">
+                Privacy
+              </Link>
+
+              <Link href="/about" className="hover:text-white">
+                About
+              </Link>
+
+              <Link href="/disclaimer" className="hover:text-white">
+                Disclaimer
+              </Link>
+
+              <a href="mailto:hello@flonancial.co.uk" className="hover:text-white">
+                hello@flonancial.co.uk
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  );
+}
+
+function ValueCard({
+  title,
+  text,
+}: {
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-center">
+      <p className="text-base font-medium text-white">{title}</p>
+      <p className="mt-2 text-sm leading-6 text-white/65">{text}</p>
+    </div>
+  );
+}
+
+function QuestionCard({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.02]">
+      <div className="px-4 py-3 text-center">
+        <div className="text-base font-medium text-white">{title}</div>
+      </div>
+
+      <div className="border-t border-white/10 px-4 py-3">{children}</div>
+    </div>
+  );
+}
+
+function OptionGrid<T extends string>({
+  value,
+  onChange,
+  options,
+}: {
+  value: T | null;
+  onChange: (v: T) => void;
+  options: { value: T; label: string }[];
+}) {
+  return (
+    <div className="flex flex-wrap justify-center gap-2">
+      {options.map((o) => {
+        const active = value === o.value;
+
+        return (
+          <button
+            key={o.value}
+            type="button"
+            onClick={() => onChange(o.value)}
+            className={`rounded-xl border px-4 py-2 text-sm transition ${
+              active
+                ? "border-sky-400 bg-sky-400 text-black"
+                : "border-white/10 bg-white/[0.04] text-white/80 hover:border-white/20 hover:bg-white/[0.07]"
+            }`}
+          >
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function MoneyInput({
+  id,
+  value,
+  onChange,
+  placeholder,
+  hint,
+}: {
+  id: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  hint: string;
+}) {
+  return (
+    <div>
+      <label htmlFor={id} className="sr-only">
+        {id}
+      </label>
+
+      <div className="relative">
+        <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/45">
+          £
+        </span>
+
+        <input
+          id={id}
+          inputMode="decimal"
+          autoComplete="off"
+          value={value}
+          onChange={(e) => onChange(e.target.value.replace(/[^\d.,]/g, ""))}
+          placeholder={placeholder}
+          className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2.5 pl-8 pr-4 text-white outline-none transition placeholder:text-white/25 focus:border-white/25"
+        />
+      </div>
+
+      <p className="mt-2 text-center text-xs leading-5 text-white/45">{hint}</p>
+    </div>
+  );
+}
+
+===== src\app\dashboard\page.tsx =====
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { SiteShell } from "@/components/site-shell";
+import { createClient } from "@/utils/supabase/server";
+
+type Business = {
+  id: number;
+  name: string;
+  created_at: string;
+};
+
+type QuarterlyUpdate = {
+  id: number;
+  business_id: number;
+  quarter_start: string;
+  quarter_end: string;
+  turnover: number;
+  expenses: number;
+  created_at: string;
+};
+
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
+function formatDate(value: string) {
+  return new Date(value).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+export default async function DashboardPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    redirect("/login");
+  }
+
+  const { data: businessesData } = await supabase
+    .from("businesses")
+    .select("id, name, created_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: true });
+
+  const { data: updatesData } = await supabase
+    .from("quarterly_updates")
+    .select("id, business_id, quarter_start, quarter_end, turnover, expenses, created_at")
+    .order("created_at", { ascending: false });
+
+  const businesses: Business[] = businessesData ?? [];
+  const updates: QuarterlyUpdate[] = updatesData ?? [];
+
+  const businessNameById = new Map(
+    businesses.map((business) => [business.id, business.name])
+  );
+
+  const totalTurnover = updates.reduce(
+    (sum, update) => sum + Number(update.turnover),
+    0
+  );
+
+  const totalExpenses = updates.reduce(
+    (sum, update) => sum + Number(update.expenses),
+    0
+  );
+
+  const latestUpdate = updates[0] ?? null;
+
+  return (
+    <SiteShell>
+      <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                Private tester
+              </p>
+              <h1 className="mt-2 text-2xl font-normal tracking-tight text-white">
+                Dashboard
+              </h1>
+              <p className="mt-3 text-sm leading-6 text-white/70">
+                Signed in as {user.email}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/add-business"
+                className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90"
+              >
+                Add business
+              </Link>
+
+              <Link
+                href="/add-update"
+                className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.07] hover:text-white"
+              >
+                Add quarterly update
+              </Link>
+
+              <Link
+                href="/account"
+                className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.07] hover:text-white"
+              >
+                Account
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+              Businesses
+            </p>
+            <p className="mt-2 text-2xl text-white">{businesses.length}</p>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+              Updates
+            </p>
+            <p className="mt-2 text-2xl text-white">{updates.length}</p>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+              Total turnover
+            </p>
+            <p className="mt-2 text-2xl text-white">
+              {formatCurrency(totalTurnover)}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+              Total expenses
+            </p>
+            <p className="mt-2 text-2xl text-white">
+              {formatCurrency(totalExpenses)}
+            </p>
+          </div>
+        </div>
+
+        {latestUpdate ? (
+          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+              Latest update
+            </p>
+            <h2 className="mt-2 text-xl font-normal text-white">
+              {businessNameById.get(latestUpdate.business_id) ??
+                `Business #${latestUpdate.business_id}`}
+            </h2>
+            <p className="mt-2 text-sm text-white/70">
+              {formatDate(latestUpdate.quarter_start)} to{" "}
+              {formatDate(latestUpdate.quarter_end)}
+            </p>
+          </div>
+        ) : null}
+
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
+          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-xl font-normal text-white">Businesses</h2>
+              <span className="text-xs text-white/45">
+                {businesses.length} total
+              </span>
+            </div>
+
+            {businesses.length > 0 ? (
+              <div className="mt-4 space-y-3">
+                {businesses.map((business) => (
+                  <div
+                    key={business.id}
+                    className="rounded-xl border border-white/10 bg-black/20 p-4"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-medium text-white">
+                          {business.name}
+                        </p>
+                        <p className="mt-1 text-xs text-white/45">
+                          Created {formatDate(business.created_at)}
+                        </p>
+                      </div>
+
+                      <Link
+                        href={`/edit-business/${business.id}`}
+                        className="text-sm text-white/70 transition hover:text-white"
+                      >
+                        Edit
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+                <p className="text-sm text-white/80">
+                  No businesses yet. Start by adding your first business.
+                </p>
+
+                <div className="mt-4">
+                  <Link
+                    href="/add-business"
+                    className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90"
+                  >
+                    Add business
+                  </Link>
+                </div>
+              </div>
+            )}
+          </section>
+
+          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-xl font-normal text-white">
+                Quarterly updates
+              </h2>
+              <span className="text-xs text-white/45">
+                {updates.length} total
+              </span>
+            </div>
+
+            {updates.length > 0 ? (
+              <div className="mt-4 space-y-3">
+                {updates.map((update) => (
+                  <div
+                    key={update.id}
+                    className="rounded-xl border border-white/10 bg-black/20 p-4"
+                  >
+                    <p className="text-sm font-medium text-white">
+                      {businessNameById.get(update.business_id) ??
+                        `Business #${update.business_id}`}
+                    </p>
+
+                    <p className="mt-1 text-xs text-white/45">
+                      {formatDate(update.quarter_start)} to{" "}
+                      {formatDate(update.quarter_end)}
+                    </p>
+
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                          Turnover
+                        </p>
+                        <p className="mt-1 text-sm text-white">
+                          {formatCurrency(Number(update.turnover))}
+                        </p>
+                      </div>
+
+                      <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                          Expenses
+                        </p>
+                        <p className="mt-1 text-sm text-white">
+                          {formatCurrency(Number(update.expenses))}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : businesses.length === 0 ? (
+              <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+                <p className="text-sm text-white/80">
+                  Add a business first, then you can add your first quarterly
+                  update.
+                </p>
+              </div>
+            ) : (
+              <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+                <p className="text-sm text-white/80">
+                  No quarterly updates yet. Add your first one now.
+                </p>
+
+                <div className="mt-4">
+                  <Link
+                    href="/add-update"
+                    className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90"
+                  >
+                    Add quarterly update
+                  </Link>
+                </div>
+              </div>
+            )}
+          </section>
+        </div>
+      </section>
+    </SiteShell>
+  );
+}
+
+===== src\app\add-update\page.tsx =====
+"use client";
+
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { SiteShell } from "@/components/site-shell";
+import { createClient } from "@/utils/supabase/client";
+
+type Business = {
+  id: number;
+  name: string;
+};
+
+function formatCurrencyPreview(value: string) {
+  if (value === "") return "£0.00";
+
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return "£0.00";
+
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(parsed);
+}
+
+export default function AddUpdatePage() {
+  const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
+
+  const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [businessId, setBusinessId] = useState("");
+  const [quarterStart, setQuarterStart] = useState("");
+  const [quarterEnd, setQuarterEnd] = useState("");
+  const [turnover, setTurnover] = useState("");
+  const [expenses, setExpenses] = useState("");
+  const [message, setMessage] = useState("");
+  const [loadingBusinesses, setLoadingBusinesses] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const selectedBusiness =
+    businesses.find((business) => String(business.id) === businessId) ?? null;
+
+  useEffect(() => {
+    async function loadBusinesses() {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        router.replace("/login");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("businesses")
+        .select("id, name")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        setMessage(error.message);
+        setLoadingBusinesses(false);
+        return;
+      }
+
+      const loadedBusinesses = data ?? [];
+      setBusinesses(loadedBusinesses);
+
+      if (loadedBusinesses.length > 0) {
+        setBusinessId(String(loadedBusinesses[0].id));
+      }
+
+      setLoadingBusinesses(false);
+    }
+
+    loadBusinesses();
+  }, [router, supabase]);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!businessId) {
+      setMessage("Add a business first");
+      return;
+    }
+
+    if (!quarterStart || !quarterEnd) {
+      setMessage("Enter quarter start and end dates");
+      return;
+    }
+
+    if (quarterEnd < quarterStart) {
+      setMessage("Quarter end must be after quarter start");
+      return;
+    }
+
+    if (turnover === "" || expenses === "") {
+      setMessage("Enter turnover and expenses");
+      return;
+    }
+
+    const turnoverNumber = Number(turnover);
+    const expensesNumber = Number(expenses);
+
+    if (!Number.isFinite(turnoverNumber) || turnoverNumber < 0) {
+      setMessage("Enter a valid turnover amount");
+      return;
+    }
+
+    if (!Number.isFinite(expensesNumber) || expensesNumber < 0) {
+      setMessage("Enter a valid expenses amount");
+      return;
+    }
+
+    setSaving(true);
+    setMessage("Saving...");
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      setMessage("You need to log in");
+      setSaving(false);
+      router.push("/login");
+      return;
+    }
+
+    const { error } = await supabase.from("quarterly_updates").insert({
+      business_id: Number(businessId),
+      quarter_start: quarterStart,
+      quarter_end: quarterEnd,
+      turnover: turnoverNumber,
+      expenses: expensesNumber,
+    });
+
+    if (error) {
+      setMessage(error.message);
+      setSaving(false);
+      return;
+    }
+
+    router.refresh();
+    router.push("/dashboard");
+  }
+
+  return (
+    <SiteShell>
+      <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                Private tester
+              </p>
+              <h1 className="mt-2 text-2xl font-normal tracking-tight text-white">
+                Add quarterly update
+              </h1>
+              <p className="mt-3 text-sm leading-6 text-white/70">
+                Record a quarter for one of your saved businesses.
+              </p>
+            </div>
+
+            <Link
+              href="/dashboard"
+              className="text-sm text-white/70 transition hover:text-white"
+            >
+              Back to dashboard
+            </Link>
+          </div>
+
+          {loadingBusinesses ? (
+            <p className="mt-6 text-sm text-white/70">Loading businesses...</p>
+          ) : businesses.length === 0 ? (
+            <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+              <p className="text-sm text-white/80">
+                You need at least one business before you can add a quarterly
+                update.
+              </p>
+
+              <div className="mt-4">
+                <Link
+                  href="/add-business"
+                  className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90"
+                >
+                  Add business
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="mt-6 grid gap-4 sm:grid-cols-3">
+                <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                    Business
+                  </p>
+                  <p className="mt-2 text-sm text-white">
+                    {selectedBusiness?.name ?? "Select a business"}
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                    Turnover preview
+                  </p>
+                  <p className="mt-2 text-sm text-white">
+                    {formatCurrencyPreview(turnover)}
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                    Expenses preview
+                  </p>
+                  <p className="mt-2 text-sm text-white">
+                    {formatCurrencyPreview(expenses)}
+                  </p>
+                </div>
+              </div>
+
+              <form onSubmit={handleSubmit} className="mt-6 max-w-xl space-y-4">
+                <div>
+                  <label
+                    htmlFor="business"
+                    className="mb-2 block text-sm text-white/80"
+                  >
+                    Business
+                  </label>
+
+                  <select
+                    id="business"
+                    value={businessId}
+                    onChange={(e) => setBusinessId(e.target.value)}
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition focus:border-white/25"
+                  >
+                    {businesses.map((business) => (
+                      <option
+                        key={business.id}
+                        value={business.id}
+                        className="bg-[#0D1115] text-white"
+                      >
+                        {business.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="quarterStart"
+                      className="mb-2 block text-sm text-white/80"
+                    >
+                      Quarter start
+                    </label>
+
+                    <input
+                      id="quarterStart"
+                      type="date"
+                      value={quarterStart}
+                      onChange={(e) => setQuarterStart(e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition focus:border-white/25"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="quarterEnd"
+                      className="mb-2 block text-sm text-white/80"
+                    >
+                      Quarter end
+                    </label>
+
+                    <input
+                      id="quarterEnd"
+                      type="date"
+                      value={quarterEnd}
+                      onChange={(e) => setQuarterEnd(e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition focus:border-white/25"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="turnover"
+                      className="mb-2 block text-sm text-white/80"
+                    >
+                      Turnover
+                    </label>
+
+                    <input
+                      id="turnover"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                      value={turnover}
+                      onChange={(e) => setTurnover(e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-white/25"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="expenses"
+                      className="mb-2 block text-sm text-white/80"
+                    >
+                      Expenses
+                    </label>
+
+                    <input
+                      id="expenses"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="0.00"
+                      value={expenses}
+                      onChange={(e) => setExpenses(e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-white/25"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {saving ? "Saving..." : "Save quarterly update"}
+                  </button>
+
+                  <Link
+                    href="/dashboard"
+                    className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.07] hover:text-white"
+                  >
+                    Cancel
+                  </Link>
+                </div>
+
+                {message ? (
+                  <p className="text-sm text-white/70">{message}</p>
+                ) : null}
+              </form>
+            </>
+          )}
+        </div>
+      </section>
+    </SiteShell>
+  );
+}
+
+===== src\app\add-business\page.tsx =====
+"use client";
+
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { SiteShell } from "@/components/site-shell";
+import { createClient } from "@/utils/supabase/client";
+
+export default function AddBusinessPage() {
+  const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
+
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const trimmedName = name.trim();
+
+    if (!trimmedName) {
+      setMessage("Enter a business name");
+      return;
+    }
+
+    setSaving(true);
+    setMessage("Saving...");
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      setMessage("You need to log in");
+      setSaving(false);
+      router.push("/login");
+      return;
+    }
+
+    const { error } = await supabase.from("businesses").insert({
+      name: trimmedName,
+      user_id: user.id,
+    });
+
+    if (error) {
+      setMessage(error.message);
+      setSaving(false);
+      return;
+    }
+
+    setMessage("Saved");
+    setName("");
+    router.refresh();
+    router.push("/dashboard");
+  }
+
+  return (
+    <SiteShell>
+      <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                Private tester
+              </p>
+              <h1 className="mt-2 text-2xl font-normal tracking-tight text-white">
+                Add business
+              </h1>
+              <p className="mt-3 text-sm leading-6 text-white/70">
+                Create a business record before adding quarterly updates.
+              </p>
+            </div>
+
+            <Link
+              href="/dashboard"
+              className="text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
+            >
+              Back to dashboard
+            </Link>
+          </div>
+
+          <form onSubmit={handleSubmit} className="mt-6 max-w-xl space-y-4">
+            <div>
+              <label
+                htmlFor="name"
+                className="mb-2 block text-sm text-white/80"
+              >
+                Business name
+              </label>
+
+              <input
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Cale Design Services"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-white/25"
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="submit"
+                disabled={saving}
+                className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {saving ? "Saving..." : "Save business"}
+              </button>
+
+              <Link
+                href="/dashboard"
+                className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.07] hover:text-white"
+              >
+                Cancel
+              </Link>
+            </div>
+
+            {message ? (
+              <p className="text-sm text-white/70">{message}</p>
+            ) : null}
+          </form>
+        </div>
+      </section>
+    </SiteShell>
+  );
+}
+
+===== src\app\edit-business\[id]\page.tsx =====
+"use client";
+
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { SiteShell } from "@/components/site-shell";
+import { createClient } from "@/utils/supabase/client";
+
+export default function EditBusinessPage() {
+  const params = useParams<{ id: string }>();
+  const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
+  const businessId = Number(params.id);
+
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    async function loadBusiness() {
+      if (!Number.isFinite(businessId)) {
+        setNotFound(true);
+        setLoading(false);
+        return;
+      }
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.replace("/login");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("businesses")
+        .select("id, name")
+        .eq("id", businessId)
+        .single();
+
+      if (error || !data) {
+        setNotFound(true);
+        setLoading(false);
+        return;
+      }
+
+      setName(data.name);
+      setLoading(false);
+    }
+
+    loadBusiness();
+  }, [businessId, router, supabase]);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const trimmedName = name.trim();
+
+    if (!trimmedName) {
+      setMessage("Enter a business name");
+      return;
+    }
+
+    setSaving(true);
+    setMessage("Saving...");
+
+    const { error } = await supabase
+      .from("businesses")
+      .update({ name: trimmedName })
+      .eq("id", businessId);
+
+    if (error) {
+      setMessage(error.message);
+      setSaving(false);
+      return;
+    }
+
+    router.refresh();
+    router.push("/dashboard");
+  }
+
+  return (
+    <SiteShell>
+      <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                Private tester
+              </p>
+              <h1 className="mt-2 text-2xl font-normal tracking-tight text-white">
+                Edit business
+              </h1>
+              <p className="mt-3 text-sm leading-6 text-white/70">
+                Rename a business saved to your account.
+              </p>
+            </div>
+
+            <Link
+              href="/dashboard"
+              className="text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
+            >
+              Back to dashboard
+            </Link>
+          </div>
+
+          {loading ? (
+            <p className="mt-6 text-sm text-white/70">Loading business...</p>
+          ) : notFound ? (
+            <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+              <p className="text-sm text-white/80">
+                Business not found, or you do not have access to it.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="mt-6 max-w-xl space-y-4">
+              <div>
+                <label
+                  htmlFor="name"
+                  className="mb-2 block text-sm text-white/80"
+                >
+                  Business name
+                </label>
+
+                <input
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Cale Design Services"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-white/25"
+                />
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {saving ? "Saving..." : "Save changes"}
+                </button>
+
+                <Link
+                  href="/dashboard"
+                  className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.07] hover:text-white"
+                >
+                  Cancel
+                </Link>
+              </div>
+
+              {message ? (
+                <p className="text-sm text-white/70">{message}</p>
+              ) : null}
+            </form>
+          )}
+        </div>
+      </section>
+    </SiteShell>
+  );
+}
+
+===== src\app\login\page.tsx =====
+"use client";
+
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { SiteShell } from "@/components/site-shell";
+import { createClient } from "@/utils/supabase/client";
+
+export default function LoginPage() {
+  const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
+
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [working, setWorking] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
+
+  useEffect(() => {
+    async function checkSession() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        router.replace("/dashboard");
+        return;
+      }
+
+      setCheckingSession(false);
+    }
+
+    checkSession();
+  }, [router, supabase]);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!email.trim() || !password.trim()) {
+      setMessage("Enter email and password");
+      return;
+    }
+
+    setWorking(true);
+    setMessage("Working...");
+
+    if (mode === "signup") {
+      const { error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+      });
+
+      if (error) {
+        setMessage(error.message);
+        setWorking(false);
+        return;
+      }
+
+      setMessage("Account created. You can now log in.");
+      setMode("login");
+      setPassword("");
+      setWorking(false);
+      return;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+
+    if (error) {
+      setMessage(error.message);
+      setWorking(false);
+      return;
+    }
+
+    router.refresh();
+    router.push("/dashboard");
+  }
+
+  return (
+    <SiteShell>
+      <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
+        <div className="mx-auto max-w-xl rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                Private tester
+              </p>
+              <h1 className="mt-2 text-2xl font-normal tracking-tight text-white">
+                {mode === "login" ? "Log in" : "Create account"}
+              </h1>
+              <p className="mt-3 text-sm leading-6 text-white/70">
+                Use your email and password to access the tester dashboard.
+              </p>
+            </div>
+
+            <Link
+              href="/"
+              className="text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
+            >
+              Back to homepage
+            </Link>
+          </div>
+
+          {checkingSession ? (
+            <p className="mt-6 text-sm text-white/70">Checking session...</p>
+          ) : (
+            <>
+              <div className="mt-6 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => setMode("login")}
+                  className={`rounded-xl border px-4 py-2 text-sm transition ${
+                    mode === "login"
+                      ? "border-sky-400 bg-sky-400 text-black"
+                      : "border-white/10 bg-white/[0.04] text-white/80 hover:border-white/20 hover:bg-white/[0.07]"
+                  }`}
+                >
+                  Log in
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setMode("signup")}
+                  className={`rounded-xl border px-4 py-2 text-sm transition ${
+                    mode === "signup"
+                      ? "border-sky-400 bg-sky-400 text-black"
+                      : "border-white/10 bg-white/[0.04] text-white/80 hover:border-white/20 hover:bg-white/[0.07]"
+                  }`}
+                >
+                  Sign up
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="mb-2 block text-sm text-white/80"
+                  >
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-white/25"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="mb-2 block text-sm text-white/80"
+                  >
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    autoComplete={
+                      mode === "login" ? "current-password" : "new-password"
+                    }
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-white/25"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={working}
+                  className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {working
+                    ? "Working..."
+                    : mode === "login"
+                    ? "Log in"
+                    : "Create account"}
+                </button>
+              </form>
+
+              {message ? (
+                <p className="mt-4 text-sm text-white/70">{message}</p>
+              ) : null}
+            </>
+          )}
+        </div>
+      </section>
+    </SiteShell>
+  );
+}
+
+===== src\app\account\page.tsx =====
+"use client";
+
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { SiteShell } from "@/components/site-shell";
+import { createClient } from "@/utils/supabase/client";
+
+export default function AccountPage() {
+  const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
+  const [working, setWorking] = useState(false);
+  const [message, setMessage] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadUser() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.replace("/login");
+        return;
+      }
+
+      setUserEmail(user.email ?? "");
+      setLoading(false);
+    }
+
+    loadUser();
+  }, [router, supabase]);
+
+  async function handleSignOut() {
+    setWorking(true);
+    setMessage("Signing out...");
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      setMessage(error.message);
+      setWorking(false);
+      return;
+    }
+
+    router.refresh();
+    router.push("/login");
+  }
+
+  return (
+    <SiteShell>
+      <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
+        <div className="max-w-2xl rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                Private tester
+              </p>
+              <h1 className="mt-2 text-2xl font-normal tracking-tight text-white">
+                Account
+              </h1>
+              <p className="mt-3 text-sm leading-6 text-white/70">
+                Your current tester login details.
+              </p>
+            </div>
+
+            <Link
+              href="/dashboard"
+              className="text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
+            >
+              Back to dashboard
+            </Link>
+          </div>
+
+          {loading ? (
+            <p className="mt-6 text-sm text-white/70">Loading account...</p>
+          ) : (
+            <>
+              <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+                  Signed in email
+                </p>
+                <p className="mt-2 text-sm text-white">{userEmail}</p>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Link
+                  href="/dashboard"
+                  className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90"
+                >
+                  Go to dashboard
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  disabled={working}
+                  className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {working ? "Signing out..." : "Sign out"}
+                </button>
+              </div>
+
+              {message ? (
+                <p className="mt-4 text-sm text-white/70">{message}</p>
+              ) : null}
+            </>
+          )}
+        </div>
+      </section>
+    </SiteShell>
+  );
+}
+
+===== src\components\site-header.tsx =====
+import Link from "next/link";
+
+type NavItem = {
+  href: string;
+  label: string;
+};
+
+export function SiteHeader({
+  navItems,
+}: {
+  navItems: NavItem[];
+}) {
+  const navLinkClass =
+    "text-base font-semibold tracking-[-0.03em] text-white transition hover:opacity-85";
+
+  return (
+    <header className="border-b border-white/10 bg-transparent">
+      <div className="mx-auto w-full max-w-[1000px] px-6 sm:px-8 lg:px-10">
+        <div className="flex items-center justify-between gap-4 py-4">
+          <Link
+            href="/"
+            className="flex items-center gap-3 transition hover:opacity-90"
+          >
+            <div className="flex h-10 w-10 items-center justify-center sm:h-11 sm:w-11">
+              <img
+                src="/brand/0015.png"
+                alt="Flonancial"
+                className="h-full w-full object-contain"
+              />
+            </div>
+
+            <div className="min-w-0">
+              <p className="text-base font-semibold tracking-[-0.03em] text-white sm:text-lg">
+                flonancial.co.uk
+              </p>
+            </div>
+          </Link>
+
+          <nav className="flex flex-wrap items-center gap-x-5 gap-y-3">
+            {navItems.map((item) => (
+              <Link key={item.href} href={item.href} className={navLinkClass}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+===== src\components\site-shell.tsx =====
+import React from "react";
+import Link from "next/link";
+import { SiteHeader } from "@/components/site-header";
+
+export function SiteShell({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <main className="min-h-screen text-white">
+      <SiteHeader
+        navItems={[
+          { href: "/", label: "home" },
+          { href: "/about", label: "about" },
+        ]}
+      />
+      <div>{children}</div>
+      <Footer />
+    </main>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="mt-10 border-t border-white/10">
+      <div className="mx-auto w-full max-w-[1000px] px-6 sm:px-8 lg:px-10">
+        <div className="flex flex-col gap-4 py-8 text-sm text-white/60 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} Flonancial</p>
+
+          <div className="flex flex-wrap gap-6">
+            <Link href="/privacy" className="hover:text-white">
+              Privacy
+            </Link>
+
+            <Link href="/about" className="hover:text-white">
+              About
+            </Link>
+
+            <Link href="/disclaimer" className="hover:text-white">
+              Disclaimer
+            </Link>
+
+            <a href="mailto:hello@flonancial.co.uk" className="hover:text-white">
+              hello@flonancial.co.uk
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+===== src\app\layout.tsx =====
+import type { Metadata } from "next";
+import { Manrope } from "next/font/google";
+import "./globals.css";
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+export const metadata: Metadata = {
+  title: "Flonancial — MTD Quick Check",
+  description: "MTD for Income Tax quick check. Bridging now, full accounts later.",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body
+        className={`${manrope.className} min-h-screen bg-black text-white antialiased`}
+      >
+        {children}
+      </body>
+    </html>
+  );
+}
+
+===== src\utils\supabase\client.ts =====
+import { createBrowserClient } from "@supabase/ssr";
+
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!
+  );
+}
+
+===== src\utils\supabase\server.ts =====
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+
+export async function createClient() {
+  const cookieStore = await cookies();
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {}
+        },
+      },
+    }
+  );
+}
+
+===== src\proxy.ts =====
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
+
+const PROTECTED_PATHS = [
+  "/dashboard",
+  "/account",
+  "/add-business",
+  "/add-update",
+  "/edit-business",
+];
+
+function isProtectedPath(pathname: string) {
+  return PROTECTED_PATHS.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`)
+  );
+}
+
+export async function proxy(request: NextRequest) {
+  const response = NextResponse.next({ request });
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options);
+          });
+        },
+      },
+    }
+  );
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname } = request.nextUrl;
+
+  if (!user && isProtectedPath(pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
+  if (user && pathname === "/login") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
+  return response;
+}
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+};
+
