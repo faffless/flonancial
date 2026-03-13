@@ -14,7 +14,7 @@ export default function AboutPage() {
             <div>
               <h2 className="text-base font-medium text-white">What Flonancial is</h2>
               <p className="mt-3">
-                Flonancial is a simple, modern Making Tax Digital service built for 		self-employed people and businesses of every size. We created it to make MTD easier, more accessible, and 		genuinely affordable, because the real cost of building and running a digital service like this can be 			kept low. That is why we are able to offer our core service for free, while we continue developing 			optional extras and premium features for the future. Our goal is straightforward: earn trust by delivering 		a reliable service first, then give customers the choice to upgrade only if they want more.
+                Flonancial is a simple, modern Making Tax Digital service primarily built for 		self-employed people and landlords but eventually it will be for businesses of every size. We created it to make MTD easier, more accessible, and 		genuinely affordable, because the real cost of building and running a digital service like this can be 			kept low. That is why we are able to offer our core service for free, while we continue developing 			optional extras and premium features for the future. Our goal is straightforward: earn trust by delivering 		a reliable service first, then give customers the choice to upgrade only if they want more.
                 It lets you connect directly to HMRC, log your quarterly income and expenses, and submit
                 your MTD updates without needing an accountant or expensive software. The name comes from the idea of finances that just flow — simple, friction-free, and
                 straightforward. That's what we're building.
@@ -30,7 +30,7 @@ export default function AboutPage() {
               </p>
               <p className="mt-3">
                 Most existing MTD software is added on to old systems, built for accountants or businesses with complex needs.
-                It's expensive, complicated, and overkill for a freelancer, sole trader or business with straightforward
+                It's expensive, complicated, and overkill for a freelancer, sole trader, landlord or business with straightforward
                 income. We think that's wrong. Flonancial is built specifically for people who just want to
                 meet their obligations simply, quickly, and without paying through the nose.
               </p>
