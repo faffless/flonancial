@@ -4,15 +4,7 @@ import { SiteHeader } from "@/components/site-header";
 export default function HomePage() {
   return (
     <main className="min-h-screen text-white">
-      <SiteHeader
-        navItems={[
-          { href: "/about", label: "About" },
-          { href: "/privacy", label: "Privacy" },
-          { href: "/disclaimer", label: "Disclaimer" },
-          { href: "mailto:hello@flonancial.co.uk", label: "Contact" },
-          { href: "/login", label: "Log in" },
-        ]}
-      />
+      <SiteHeader />
 
       <section className="mx-auto w-full max-w-[1000px] px-6 py-6 sm:px-8 lg:px-10">
         <div className="rounded-[28px] border border-white/10 bg-white/[0.03] px-8 py-10">
@@ -70,6 +62,7 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-6">
               <Link href="/about" className="hover:text-white">About</Link>
               <Link href="/privacy" className="hover:text-white">Privacy</Link>
+              <Link href="/terms" className="hover:text-white">Terms</Link>
               <Link href="/disclaimer" className="hover:text-white">Disclaimer</Link>
               <a href="mailto:hello@flonancial.co.uk" className="hover:text-white">hello@flonancial.co.uk</a>
             </div>
