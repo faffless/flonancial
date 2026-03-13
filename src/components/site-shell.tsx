@@ -1,17 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
-export function SiteShell({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+
+export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <main className="min-h-screen text-white">
       <SiteHeader
         navItems={[
-          { href: "/", label: "Home" },
-          { href: "/about", label: "About" },
+          { href: "/dashboard", label: "Dashboard" },
+          { href: "/account", label: "Account" },
         ]}
       />
       <div>{children}</div>
@@ -19,6 +16,7 @@ export function SiteShell({
     </main>
   );
 }
+
 function Footer() {
   return (
     <footer className="mt-10 border-t border-white/10">
@@ -26,18 +24,10 @@ function Footer() {
         <div className="flex flex-col gap-4 py-8 text-sm text-white/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Flonancial</p>
           <div className="flex flex-wrap gap-6">
-            <Link href="/privacy" className="hover:text-white">
-              Privacy
-            </Link>
-            <Link href="/about" className="hover:text-white">
-              About
-            </Link>
-            <Link href="/disclaimer" className="hover:text-white">
-              Disclaimer
-            </Link>
-            <a href="mailto:hello@flonancial.co.uk" className="hover:text-white">
-              hello@flonancial.co.uk
-            </a>
+            <Link href="/privacy" className="hover:text-white">Privacy</Link>
+            <Link href="/about" className="hover:text-white">About</Link>
+            <Link href="/disclaimer" className="hover:text-white">Disclaimer</Link>
+            <a href="mailto:hello@flonancial.co.uk" className="hover:text-white">hello@flonancial.co.uk</a>
           </div>
         </div>
       </div>
