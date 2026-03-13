@@ -10,10 +10,10 @@ export default function HomePage() {
         <div className="rounded-[28px] border border-white/10 bg-white/[0.03] px-8 py-10">
           <div className="mx-auto max-w-[680px] text-center">
             <h1 className="text-[2rem] font-semibold leading-[1.08] tracking-[-0.04em] text-white sm:text-[2.6rem] lg:text-[3.2rem]">
-              Free & Simple<br />MTD Submissions<br />For Everyone 
+              Free & Simple<br />MTD Submissions<br />For Income Tax (ITSA) 
             </h1>
             <p className="mx-auto mt-4 max-w-[600px] text-base leading-7 text-white/65">
-              Submit your quarterly Making Tax Digital updates directly to HMRC.<br />No accountant needed. Built for freelancers, self-employed, sole traders, landlords, businesses big and small.
+              Submit your quarterly Making Tax Digital updates directly to HMRC.<br />Built for sole traders and landlords. Tax year 2025–26 onwards.<br />No accountant needed.
             </p>
             <div className="mt-6 flex justify-center">
               <Link
@@ -24,7 +24,7 @@ export default function HomePage() {
               </Link>
             </div>
             <p className="mt-4 text-xs leading-5 text-white/35">
-              Yes, Flonancial is free. It's free because it doesn't actually cost much to provide MTD bridging!
+              We may introduce optional upgrades in future, but submitting your MTD updates will always be free on Flonancial.
             </p>
           </div>
         </div>
