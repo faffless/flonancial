@@ -8,20 +8,22 @@ export default function HomePage() {
         navItems={[
           { href: "/about", label: "About" },
           { href: "/privacy", label: "Privacy" },
+          { href: "/disclaimer", label: "Disclaimer" },
+          { href: "mailto:hello@flonancial.co.uk", label: "Contact" },
           { href: "/login", label: "Log in" },
         ]}
       />
 
-      <section className="mx-auto w-full max-w-[1000px] px-6 py-8 sm:px-8 lg:px-10">
-        <div className="rounded-[28px] border border-white/10 bg-white/[0.03] px-8 py-14">
-          <div className="mx-auto max-w-[580px] text-center">
-            <h1 className="text-[2.8rem] font-semibold leading-[1.04] tracking-[-0.05em] text-white sm:text-[3.8rem] lg:text-[4.4rem]">
-              Free MTD tax submissions for the self-employed
+      <section className="mx-auto w-full max-w-[1000px] px-6 py-6 sm:px-8 lg:px-10">
+        <div className="rounded-[28px] border border-white/10 bg-white/[0.03] px-8 py-10">
+          <div className="mx-auto max-w-[680px] text-center">
+            <h1 className="text-[2rem] font-semibold leading-[1.08] tracking-[-0.04em] text-white sm:text-[2.6rem] lg:text-[3.2rem]">
+              Free & Simple<br />MTD Submissions<br />For Everyone 
             </h1>
-            <p className="mx-auto mt-6 max-w-[520px] text-base leading-7 text-white/65">
-              Submit your quarterly Making Tax Digital updates directly to HMRC. <br />No accountant needed.
+            <p className="mx-auto mt-4 max-w-[600px] text-base leading-7 text-white/65">
+              Submit your quarterly Making Tax Digital updates directly to HMRC.<br />No accountant needed. Built for freelancers, self-employed, sole traders, landlords, businesses big and small.
             </p>
-            <div className="mt-8 flex justify-center">
+            <div className="mt-6 flex justify-center">
               <Link
                 href="/login"
                 className="rounded-2xl border border-white/10 bg-white px-6 py-3 text-sm font-medium text-black transition hover:opacity-90"
@@ -29,8 +31,8 @@ export default function HomePage() {
                 Get started free
               </Link>
             </div>
-            <p className="mt-5 text-xs leading-5 text-white/35">
-              Why is Flonancial free? Because costs are low right now, and we're still in beta.
+            <p className="mt-4 text-xs leading-5 text-white/35">
+              Yes, Flonancial is free. It's free because it doesn't actually cost much to provide MTD bridging!
             </p>
           </div>
         </div>
@@ -64,10 +66,10 @@ export default function HomePage() {
       <footer className="mt-10 border-t border-white/10">
         <div className="mx-auto w-full max-w-[1000px] px-6 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-4 py-8 text-sm text-white/60 sm:flex-row sm:items-center sm:justify-between">
-            <p>© {new Date().getFullYear()} Flonancial</p>
+            <p>© {new Date().getFullYear()} Flonancial Ltd</p>
             <div className="flex flex-wrap gap-6">
-              <Link href="/privacy" className="hover:text-white">Privacy</Link>
               <Link href="/about" className="hover:text-white">About</Link>
+              <Link href="/privacy" className="hover:text-white">Privacy</Link>
               <Link href="/disclaimer" className="hover:text-white">Disclaimer</Link>
               <a href="mailto:hello@flonancial.co.uk" className="hover:text-white">hello@flonancial.co.uk</a>
             </div>

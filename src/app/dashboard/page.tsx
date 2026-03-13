@@ -73,11 +73,34 @@ function getCurrentTaxYear(accountingYearEnd: string | null): {
   end: Date;
 } {
   const yearEnd = accountingYearEnd ?? "04-05";
-  const [endMonth, endDay] = yearEnd.split("-").map(Number);
+  const parts = yearEnd.split("-").map(Number);
+  const endMonth = parts[0];
+  const endDay = parts[1];
+
+  if (
+    !Number.isFinite(endMonth) ||
+    !Number.isFinite(endDay) ||
+    endMonth < 1 ||
+    endMonth > 12 ||
+    endDay < 1 ||
+    endDay > 31
+  ) {
+    const now = new Date();
+    const aprilEnd = now.getMonth() < 3 || (now.getMonth() === 3 && now.getDate() <= 5)
+      ? new Date(now.getFullYear(), 3, 5)
+      : new Date(now.getFullYear() + 1, 3, 5);
+    const aprilStart = new Date(aprilEnd.getFullYear() - 1, 3, 6);
+    const startYear = aprilStart.getFullYear();
+    const endYear = aprilEnd.getFullYear();
+    return {
+      label: `${startYear}–${String(endYear).slice(2)}`,
+      start: aprilStart,
+      end: aprilEnd,
+    };
+  }
 
   const now = new Date();
   const yearEndThisYear = new Date(now.getFullYear(), endMonth - 1, endDay);
-
   const taxYearEndDate =
     now <= yearEndThisYear
       ? yearEndThisYear
@@ -157,15 +180,13 @@ export default async function DashboardPage() {
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              
-              <h1 className="mt-2 text-2xl font-normal tracking-tight text-white">
+              <h1 className="text-2xl font-normal tracking-tight text-white">
                 Dashboard
               </h1>
-              <p className="mt-3 text-sm leading-6 text-white/70">
+              <p className="mt-2 text-sm leading-6 text-white/70">
                 Signed in as {user.email}
               </p>
             </div>
-
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/add-business"
@@ -189,15 +210,12 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-7">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { label: "Businesses", value: businesses.length },
-            { label: "HMRC linked", value: linkedHmrcCount },
             { label: "Updates", value: updates.length },
             { label: "Drafts", value: draftCount },
             { label: "Submitted", value: submittedCount },
-            { label: "Total turnover", value: formatCurrency(totalTurnover) },
-            { label: "Total expenses", value: formatCurrency(totalExpenses) },
           ].map(({ label, value }) => (
             <div
               key={label}
@@ -210,6 +228,67 @@ export default async function DashboardPage() {
             </div>
           ))}
         </div>
+
+        {businesses.length > 0 ? (
+          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
+              This tax year
+            </p>
+            <div className="mt-4 space-y-3">
+              {businesses.map((business) => {
+                const taxYear = getCurrentTaxYear(business.accounting_year_end);
+                const taxYearUpdates = getUpdatesForTaxYear(
+                  updates,
+                  business.id,
+                  taxYear.start,
+                  taxYear.end
+                );
+                const submittedThisYear = taxYearUpdates.filter(
+                  (u) => u.status === "submitted"
+                ).length;
+                const draftThisYear = taxYearUpdates.filter(
+                  (u) => u.status === "draft"
+                ).length;
+
+                return (
+                  <div
+                    key={business.id}
+                    className="rounded-xl border border-white/10 bg-black/20 p-4"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="text-sm font-medium text-white">
+                          {business.name}
+                        </p>
+                        {business.hmrc_business_id ? (
+                          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/15 px-2.5 py-1 text-[11px] text-emerald-300">
+                            HMRC linked
+                          </span>
+                        ) : null}
+                        <span className="text-xs text-white/45">
+                          {taxYear.label}
+                        </span>
+                      </div>
+                      <div className="flex gap-3 text-sm">
+                        <span className="text-emerald-300">
+                          {submittedThisYear} submitted
+                        </span>
+                        {draftThisYear > 0 ? (
+                          <span className="text-amber-300/70">
+                            {draftThisYear} draft
+                          </span>
+                        ) : null}
+                        {submittedThisYear === 0 && draftThisYear === 0 ? (
+                          <span className="text-white/40">no updates yet</span>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
 
         {latestUpdate ? (
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
@@ -227,98 +306,6 @@ export default async function DashboardPage() {
             <p className="mt-1 text-sm text-white/70">
               Status: {formatStatus(latestUpdate.status)}
             </p>
-          </div>
-        ) : null}
-
-        {businesses.length > 0 ? (
-          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-              This tax year
-            </p>
-
-            <div className="mt-4 space-y-4">
-              {businesses.map((business) => {
-                const taxYear = getCurrentTaxYear(business.accounting_year_end);
-                const taxYearUpdates = getUpdatesForTaxYear(
-                  updates,
-                  business.id,
-                  taxYear.start,
-                  taxYear.end
-                );
-                const submittedThisYear = taxYearUpdates.filter(
-                  (u) => u.status === "submitted"
-                ).length;
-                const draftThisYear = taxYearUpdates.filter(
-                  (u) => u.status === "draft"
-                ).length;
-                const completedQuarters = submittedThisYear;
-                const totalQuarters = 4;
-
-                return (
-                  <div
-                    key={business.id}
-                    className="rounded-xl border border-white/10 bg-black/20 p-4"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-2">
-                      <div>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-sm font-medium text-white">
-                            {business.name}
-                          </p>
-                          {business.hmrc_business_id ? (
-                            <span className="rounded-full border border-emerald-400/30 bg-emerald-400/15 px-2.5 py-1 text-[11px] text-emerald-300">
-                              HMRC linked
-                            </span>
-                          ) : null}
-                        </div>
-
-                        <p className="mt-0.5 text-xs text-white/45">
-                          Tax year {taxYear.label}
-                        </p>
-                      </div>
-
-                      <p className="text-sm text-white/70">
-                        {completedQuarters}/{totalQuarters} submitted
-                        {draftThisYear > 0 ? (
-                          <span className="ml-2 text-amber-300/70">
-                            {draftThisYear} draft
-                          </span>
-                        ) : null}
-                      </p>
-                    </div>
-
-                    <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                      <div
-                        className="h-full rounded-full bg-emerald-400/60 transition-all"
-                        style={{
-                          width: `${(completedQuarters / totalQuarters) * 100}%`,
-                        }}
-                      />
-                    </div>
-
-                    <div className="mt-2 flex gap-1">
-                      {Array.from({ length: totalQuarters }).map((_, i) => {
-                        const update = taxYearUpdates[i];
-                        const isSubmitted = update?.status === "submitted";
-                        const isDraft = update?.status === "draft";
-                        return (
-                          <div
-                            key={i}
-                            className={`h-1 flex-1 rounded-full ${
-                              isSubmitted
-                                ? "bg-emerald-400/60"
-                                : isDraft
-                                ? "bg-amber-400/40"
-                                : "bg-white/10"
-                            }`}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
           </div>
         ) : null}
 
@@ -352,47 +339,24 @@ export default async function DashboardPage() {
                             </span>
                           )}
                         </div>
-
                         <div className="mt-3 grid gap-3 sm:grid-cols-2">
                           {[
-                            {
-                              label: "Trading name",
-                              value: business.trading_name || "Not set",
-                            },
-                            {
-                              label: "Business type",
-                              value: formatBusinessType(business.business_type),
-                            },
-                            {
-                              label: "Start date",
-                              value: business.start_date
-                                ? formatDate(business.start_date)
-                                : "Not set",
-                            },
-                            {
-                              label: "Year end",
-                              value: formatAccountingYearEnd(
-                                business.accounting_year_end
-                              ),
-                            },
-                            {
-                              label: "HMRC business ID",
-                              value: business.hmrc_business_id || "Not linked",
-                            },
+                            { label: "Trading name", value: business.trading_name || "Not set" },
+                            { label: "Business type", value: formatBusinessType(business.business_type) },
+                            { label: "Start date", value: business.start_date ? formatDate(business.start_date) : "Not set" },
+                            { label: "Year end", value: formatAccountingYearEnd(business.accounting_year_end) },
+                            { label: "HMRC business ID", value: business.hmrc_business_id || "Not linked" },
                           ].map(({ label, value }) => (
                             <div
                               key={label}
                               className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2"
                             >
-                              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-                                {label}
-                              </p>
+                              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">{label}</p>
                               <p className="mt-1 text-sm text-white">{value}</p>
                             </div>
                           ))}
                         </div>
                       </div>
-
                       <Link
                         href={`/edit-business/${business.id}`}
                         className="text-sm text-white/70 transition hover:text-white"
@@ -441,8 +405,7 @@ export default async function DashboardPage() {
                         <div>
                           <div className="flex flex-wrap items-center gap-2">
                             <p className="text-sm font-medium text-white">
-                              {businessNameById.get(update.business_id) ??
-                                `Business #${update.business_id}`}
+                              {businessNameById.get(update.business_id) ?? `Business #${update.business_id}`}
                             </p>
                             {isHmrcLinked ? (
                               <span className="rounded-full border border-emerald-400/30 bg-emerald-400/15 px-2.5 py-1 text-[11px] text-emerald-300">
@@ -450,62 +413,38 @@ export default async function DashboardPage() {
                               </span>
                             ) : null}
                           </div>
-
                           <p className="mt-1 text-xs text-white/45">
-                            {formatDate(update.quarter_start)} to{" "}
-                            {formatDate(update.quarter_end)}
+                            {formatDate(update.quarter_start)} to {formatDate(update.quarter_end)}
                           </p>
-                          {update.period_key ? (
-                            <p className="mt-1 text-xs text-white/30">
-                              {update.period_key}
-                            </p>
-                          ) : null}
                         </div>
 
                         <div className="flex items-center gap-3">
-                          <div
-                            className={`rounded-full border px-3 py-1 text-xs ${
-                              update.status === "submitted"
-                                ? "border-emerald-400/30 bg-emerald-400/15 text-emerald-300"
-                                : "border-amber-400/30 bg-amber-400/15 text-amber-300"
-                            }`}
-                          >
+                          <div className={`rounded-full border px-3 py-1 text-xs ${
+                            update.status === "submitted"
+                              ? "border-emerald-400/30 bg-emerald-400/15 text-emerald-300"
+                              : "border-amber-400/30 bg-amber-400/15 text-amber-300"
+                          }`}>
                             {formatStatus(update.status)}
                           </div>
 
                           {update.status === "draft" ? (
                             <>
-                              <Link
-                                href={`/edit-update/${update.id}`}
-                                className="text-sm text-white/70 transition hover:text-white"
-                              >
+                              <Link href={`/edit-update/${update.id}`} className="text-sm text-white/70 transition hover:text-white">
                                 Edit
                               </Link>
-
                               {isHmrcLinked ? (
-                                <Link
-                                  href={`/hmrc-submit?updateId=${update.id}`}
-                                  className="text-sm text-emerald-300 transition hover:text-emerald-200"
-                                >
+                                <Link href={`/hmrc-submit?updateId=${update.id}`} className="text-sm text-emerald-300 transition hover:text-emerald-200">
                                   Submit to HMRC
                                 </Link>
                               ) : null}
-
                               <DeleteUpdateButton updateId={update.id} />
                             </>
                           ) : isHmrcLinked ? (
                             <>
-                              <Link
-                                href={`/edit-update/${update.id}`}
-                                className="text-sm text-white/70 transition hover:text-white"
-                              >
+                              <Link href={`/edit-update/${update.id}`} className="text-sm text-white/70 transition hover:text-white">
                                 Edit
                               </Link>
-
-                              <Link
-                                href={`/hmrc-submit?updateId=${update.id}`}
-                                className="text-sm text-emerald-300 transition hover:text-emerald-200"
-                              >
+                              <Link href={`/hmrc-submit?updateId=${update.id}`} className="text-sm text-emerald-300 transition hover:text-emerald-200">
                                 Review HMRC submission
                               </Link>
                             </>
@@ -515,20 +454,12 @@ export default async function DashboardPage() {
 
                       <div className="mt-3 grid gap-3 sm:grid-cols-2">
                         <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-                            Turnover
-                          </p>
-                          <p className="mt-1 text-sm text-white">
-                            {formatCurrency(Number(update.turnover))}
-                          </p>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Turnover</p>
+                          <p className="mt-1 text-sm text-white">{formatCurrency(Number(update.turnover))}</p>
                         </div>
                         <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-                            Expenses
-                          </p>
-                          <p className="mt-1 text-sm text-white">
-                            {formatCurrency(Number(update.expenses))}
-                          </p>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Expenses</p>
+                          <p className="mt-1 text-sm text-white">{formatCurrency(Number(update.expenses))}</p>
                         </div>
                       </div>
 
@@ -543,20 +474,13 @@ export default async function DashboardPage() {
               </div>
             ) : businesses.length === 0 ? (
               <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-                <p className="text-sm text-white/80">
-                  Add a business first, then you can add your first quarterly update.
-                </p>
+                <p className="text-sm text-white/80">Add a business first, then you can add your first quarterly update.</p>
               </div>
             ) : (
               <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-                <p className="text-sm text-white/80">
-                  No quarterly updates yet. Add your first one now.
-                </p>
+                <p className="text-sm text-white/80">No quarterly updates yet. Add your first one now.</p>
                 <div className="mt-4">
-                  <Link
-                    href="/add-update"
-                    className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90"
-                  >
+                  <Link href="/add-update" className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90">
                     Add quarterly update
                   </Link>
                 </div>

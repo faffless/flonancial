@@ -14,14 +14,14 @@ export function SiteHeader({ navItems }: { navItems: NavItem[] }) {
             href="/"
             className="flex flex-col items-center transition hover:opacity-90"
           >
-            <div className="flex h-12 w-12 items-center justify-center">
+            <div className="flex h-20 w-20 items-center justify-center">
               <img
                 src="/brand/990.png"
                 alt="Flonancial"
                 className="h-full w-full object-contain"
               />
             </div>
-            <p className="mt-1 text-base font-semibold tracking-[-0.03em] text-white">
+            <p className="mt-0 text-lg font-bold tracking-tight text-white">
               Flonancial
             </p>
           </Link>

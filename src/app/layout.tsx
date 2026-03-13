@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const manrope = Manrope({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Flonancial — MTD Quick Check",
-  description: "MTD for Income Tax quick check. Bridging now, full accounts later.",
+  title: "Flonancial — Free MTD tax submissions for the self-employed",
+  description: "Submit your quarterly Making Tax Digital updates directly to HMRC. Free during beta. No accountant needed.",
 };
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${manrope.className} min-h-screen bg-black text-white antialiased`}
+        className={`${plusJakarta.className} min-h-screen bg-black text-white antialiased`}
       >
         {children}
       </body>
