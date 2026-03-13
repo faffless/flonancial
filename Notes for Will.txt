@@ -17,7 +17,7 @@ Update my site (GitHub + Vercel)
 3 Stage changes: git add -A
 
 git add -A
-git commit -m "remove smll fix"
+git commit -m "big update 8"
 git push
 
 4 Commit: git commit -m "what I changed"
@@ -30,3 +30,12 @@ git push
 
 5059090370406
 
+
+Companies House:
+Your personal code is XJT-TD8F-2223
+pwr = [Personumetstepsofre][yearumarriedher]!
+GGway user ID:
+33 77 97 41 94 91
+Companies House submission number:
+
+114-414621

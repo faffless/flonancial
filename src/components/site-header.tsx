@@ -11,7 +11,7 @@ export function SiteHeader({
   navItems: NavItem[];
 }) {
   const navLinkClass =
-  "mt-3 text-base font-semibold tracking-[-0.03em] text-white transition hover:opacity-85";
+    "text-base font-semibold tracking-[-0.03em] text-white transition hover:opacity-85";
 
   return (
     <header className="border-b border-white/10 bg-transparent">
@@ -19,21 +19,21 @@ export function SiteHeader({
         <div className="flex items-center justify-between gap-4 py-4">
           <Link
             href="/"
-            className="flex items-center gap-3 transition hover:opacity-90"
+            className="flex flex-col items-center justify-center transition hover:opacity-90"
           >
-            <div className="flex h-14 w-14 items-center justify-center sm:h-16 sm:w-16">
+            <div className="flex h-12 w-12 items-center justify-center sm:h-14 sm:w-14">
               <img
-                src="/brand/555.png"
+                src="/brand/990.png"
                 alt="Flonancial"
                 className="h-full w-full object-contain"
               />
             </div>
 
-            <div className="min-w-0 mt-3">
-  <p className="text-base font-semibold tracking-[-0.03em] text-white sm:text-lg">
-    Flonancial
-  </p>
-</div>
+            <div className="mt-px min-w-0 text-center">
+              <p className="text-base font-semibold tracking-[-0.03em] text-white sm:text-lg">
+                Flonancial
+              </p>
+            </div>
           </Link>
 
           <nav className="flex flex-wrap items-center gap-x-5 gap-y-3">

@@ -1,5 +1,8 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import {
+  applyHmrcCookieMutations,
+  hmrcFetchWithAuth,
+} from "@/utils/hmrc/server";
 
 type HMRCListBusiness = {
   businessId: string;
@@ -19,17 +22,7 @@ type HMRCErrorResponse = {
 };
 
 export async function GET() {
-  const cookieStore = await cookies();
-
-  const accessToken = cookieStore.get("hmrc_access_token")?.value;
   const testNino = process.env.HMRC_TEST_NINO;
-
-  if (!accessToken) {
-    return NextResponse.json(
-      { error: "missing_hmrc_access_token" },
-      { status: 401 }
-    );
-  }
 
   if (!testNino) {
     return NextResponse.json(
@@ -38,19 +31,31 @@ export async function GET() {
     );
   }
 
-  const hmrcResponse = await fetch(
+  const hmrcResult = await hmrcFetchWithAuth(
     `https://test-api.service.hmrc.gov.uk/individuals/business/details/${encodeURIComponent(
       testNino
     )}/list`,
     {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${accessToken}`,
         Accept: "application/vnd.hmrc.2.0+json",
       },
-      cache: "no-store",
     }
   );
+
+  if (!hmrcResult.ok) {
+    const response = NextResponse.json(
+      {
+        error: hmrcResult.error,
+        status: hmrcResult.status,
+      },
+      { status: hmrcResult.status }
+    );
+
+    return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
+  }
+
+  const hmrcResponse = hmrcResult.response;
 
   if (!hmrcResponse.ok) {
     let hmrcError = "hmrc_business_details_failed";
@@ -65,13 +70,15 @@ export async function GET() {
         hmrcError;
     } catch {}
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         error: hmrcError,
         status: hmrcResponse.status,
       },
       { status: hmrcResponse.status }
     );
+
+    return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
   }
 
   const data = (await hmrcResponse.json()) as HMRCBusinessDetailsResponse;
@@ -83,7 +90,9 @@ export async function GET() {
       trading_name: business.tradingName ?? null,
     })) ?? [];
 
-  return NextResponse.json({
+  const response = NextResponse.json({
     businesses,
   });
+
+  return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
 }

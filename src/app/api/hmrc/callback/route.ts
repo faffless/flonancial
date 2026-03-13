@@ -12,7 +12,12 @@ type HMRCErrorResponse = {
   error?: string;
   error_description?: string;
   message?: string;
+  code?: string;
 };
+
+function getSecureCookieFlag() {
+  return process.env.NODE_ENV === "production";
+}
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
@@ -80,7 +85,11 @@ export async function GET(request: NextRequest) {
     try {
       const errorJson = (await tokenResponse.json()) as HMRCErrorResponse;
       hmrcError =
-        errorJson.error_description || errorJson.error || errorJson.message || hmrcError;
+        errorJson.error_description ||
+        errorJson.error ||
+        errorJson.message ||
+        errorJson.code ||
+        hmrcError;
     } catch {}
 
     const response = NextResponse.redirect(
@@ -93,7 +102,7 @@ export async function GET(request: NextRequest) {
     response.cookies.set("hmrc_oauth_state", "", {
       httpOnly: true,
       sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
+      secure: getSecureCookieFlag(),
       path: "/",
       maxAge: 0,
     });
@@ -110,7 +119,7 @@ export async function GET(request: NextRequest) {
   response.cookies.set("hmrc_oauth_state", "", {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: getSecureCookieFlag(),
     path: "/",
     maxAge: 0,
   });
@@ -118,7 +127,7 @@ export async function GET(request: NextRequest) {
   response.cookies.set("hmrc_access_token", tokenJson.access_token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: getSecureCookieFlag(),
     path: "/",
     maxAge: tokenJson.expires_in,
   });
@@ -126,23 +135,27 @@ export async function GET(request: NextRequest) {
   response.cookies.set("hmrc_refresh_token", tokenJson.refresh_token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: getSecureCookieFlag(),
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
   });
 
-  response.cookies.set("hmrc_token_expires_at", String(Date.now() + tokenJson.expires_in * 1000), {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: tokenJson.expires_in,
-  });
+  response.cookies.set(
+    "hmrc_token_expires_at",
+    String(Date.now() + tokenJson.expires_in * 1000),
+    {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: getSecureCookieFlag(),
+      path: "/",
+      maxAge: tokenJson.expires_in,
+    }
+  );
 
   response.cookies.set("hmrc_scope", tokenJson.scope ?? "", {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: getSecureCookieFlag(),
     path: "/",
     maxAge: tokenJson.expires_in,
   });

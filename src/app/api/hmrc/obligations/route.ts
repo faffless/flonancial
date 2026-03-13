@@ -1,6 +1,9 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import {
+  applyHmrcCookieMutations,
+  hmrcFetchWithAuth,
+} from "@/utils/hmrc/server";
 
 type HMRCObligationGroup = {
   typeOfBusiness?: string;
@@ -27,16 +30,7 @@ type HMRCErrorResponse = {
 };
 
 export async function GET() {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("hmrc_access_token")?.value;
   const testNino = process.env.HMRC_TEST_NINO;
-
-  if (!accessToken) {
-    return NextResponse.json(
-      { error: "missing_hmrc_access_token" },
-      { status: 401 }
-    );
-  }
 
   if (!testNino) {
     return NextResponse.json(
@@ -99,15 +93,27 @@ export async function GET() {
   hmrcUrl.searchParams.set("fromDate", fromDate);
   hmrcUrl.searchParams.set("toDate", toDate);
 
-  const hmrcResponse = await fetch(hmrcUrl.toString(), {
+  const hmrcResult = await hmrcFetchWithAuth(hmrcUrl.toString(), {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${accessToken}`,
       Accept: "application/vnd.hmrc.3.0+json",
       "Gov-Test-Scenario": "DYNAMIC",
     },
-    cache: "no-store",
   });
+
+  if (!hmrcResult.ok) {
+    const response = NextResponse.json(
+      {
+        error: hmrcResult.error,
+        status: hmrcResult.status,
+      },
+      { status: hmrcResult.status }
+    );
+
+    return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
+  }
+
+  const hmrcResponse = hmrcResult.response;
 
   if (!hmrcResponse.ok) {
     let hmrcError = "hmrc_obligations_failed";
@@ -122,13 +128,15 @@ export async function GET() {
         hmrcError;
     } catch {}
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         error: hmrcError,
         status: hmrcResponse.status,
       },
       { status: hmrcResponse.status }
     );
+
+    return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
   }
 
   const data = (await hmrcResponse.json()) as HMRCObligationsResponse;
@@ -149,7 +157,9 @@ export async function GET() {
       }))
     ) ?? [];
 
-  return NextResponse.json({
+  const response = NextResponse.json({
     obligations,
   });
+
+  return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
 }
