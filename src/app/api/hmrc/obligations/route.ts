@@ -40,6 +40,12 @@ function isQuarterlyPeriod(startDate: string | null, endDate: string | null): bo
   return days >= 80 && days <= 105;
 }
 
+// Map Supabase business_type to HMRC typeOfBusiness query param
+function toHmrcBusinessType(businessType: string | null): string {
+  if (businessType === "uk_property") return "uk-property";
+  return "self-employment"; // sole_trader and fallback
+}
+
 export async function GET() {
   const testNino = process.env.HMRC_TEST_NINO;
 
@@ -63,7 +69,7 @@ export async function GET() {
 
   const { data: businesses, error: businessesError } = await supabase
     .from("businesses")
-    .select("id, name, hmrc_business_id")
+    .select("id, name, business_type, hmrc_business_id")
     .eq("user_id", user.id)
     .not("hmrc_business_id", "is", null);
 
@@ -81,98 +87,71 @@ export async function GET() {
     );
   }
 
-  const linkedBusiness = businesses[0];
-
-  if (!linkedBusiness.hmrc_business_id) {
-    return NextResponse.json(
-      { error: "missing_hmrc_business_id" },
-      { status: 400 }
-    );
-  }
-
   const fromDate = "2025-04-06";
   const toDate = "2026-04-05";
 
-  const hmrcUrl = new URL(
-    `https://test-api.service.hmrc.gov.uk/obligations/details/${encodeURIComponent(
-      testNino
-    )}/income-and-expenditure`
-  );
+  const allObligations = [];
+  let lastCookieMutations: unknown[] = [];
 
-  hmrcUrl.searchParams.set("typeOfBusiness", "self-employment");
-  hmrcUrl.searchParams.set("businessId", linkedBusiness.hmrc_business_id);
-  hmrcUrl.searchParams.set("fromDate", fromDate);
-  hmrcUrl.searchParams.set("toDate", toDate);
+  for (const business of businesses) {
+    if (!business.hmrc_business_id) continue;
 
-  const hmrcResult = await hmrcFetchWithAuth(hmrcUrl.toString(), {
-    method: "GET",
-    headers: {
-      Accept: "application/vnd.hmrc.3.0+json",
-      "Gov-Test-Scenario": "CUMULATIVE",
-    },
-  });
+    const hmrcBusinessType = toHmrcBusinessType(business.business_type);
 
-  if (!hmrcResult.ok) {
-    const response = NextResponse.json(
-      {
-        error: hmrcResult.error,
-        status: hmrcResult.status,
-      },
-      { status: hmrcResult.status }
+    const hmrcUrl = new URL(
+      `https://test-api.service.hmrc.gov.uk/obligations/details/${encodeURIComponent(
+        testNino
+      )}/income-and-expenditure`
     );
 
-    return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
-  }
+    hmrcUrl.searchParams.set("typeOfBusiness", hmrcBusinessType);
+    hmrcUrl.searchParams.set("businessId", business.hmrc_business_id);
+    hmrcUrl.searchParams.set("fromDate", fromDate);
+    hmrcUrl.searchParams.set("toDate", toDate);
 
-  const hmrcResponse = hmrcResult.response;
-
-  if (!hmrcResponse.ok) {
-    let hmrcError = "hmrc_obligations_failed";
-
-    try {
-      const errorJson = (await hmrcResponse.json()) as HMRCErrorResponse;
-      hmrcError =
-        errorJson.message ||
-        errorJson.error_description ||
-        errorJson.error ||
-        errorJson.code ||
-        hmrcError;
-    } catch {}
-
-    const response = NextResponse.json(
-      {
-        error: hmrcError,
-        status: hmrcResponse.status,
+    const hmrcResult = await hmrcFetchWithAuth(hmrcUrl.toString(), {
+      method: "GET",
+      headers: {
+        Accept: "application/vnd.hmrc.3.0+json",
+        "Gov-Test-Scenario": "CUMULATIVE",
       },
-      { status: hmrcResponse.status }
-    );
+    });
 
-    return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
+    if (hmrcResult.cookieMutations) {
+      lastCookieMutations = hmrcResult.cookieMutations;
+    }
+
+    if (!hmrcResult.ok) continue; // skip this business if auth failed entirely
+
+    const hmrcResponse = hmrcResult.response;
+
+    if (!hmrcResponse.ok) continue; // skip this business if HMRC returned an error
+
+    const data = (await hmrcResponse.json()) as HMRCObligationsResponse;
+
+    const obligations =
+      data.obligations?.flatMap((group) =>
+        (group.obligationDetails ?? [])
+          .filter((item) =>
+            isQuarterlyPeriod(item.periodStartDate ?? null, item.periodEndDate ?? null)
+          )
+          .map((item) => ({
+            business_id: business.id,
+            business_name: business.name,
+            hmrc_business_id: group.businessId ?? business.hmrc_business_id,
+            type_of_business: group.typeOfBusiness ?? hmrcBusinessType,
+            period_key: item.periodKey ?? null,
+            status: item.status ?? null,
+            quarter_start: item.periodStartDate ?? null,
+            quarter_end: item.periodEndDate ?? null,
+            due_date: item.dueDate ?? null,
+            received_date: item.receivedDate ?? null,
+          }))
+      ) ?? [];
+
+    allObligations.push(...obligations);
   }
 
-  const data = (await hmrcResponse.json()) as HMRCObligationsResponse;
-
-  const obligations =
-    data.obligations?.flatMap((group) =>
-      (group.obligationDetails ?? [])
-        .filter((item) => isQuarterlyPeriod(item.periodStartDate ?? null, item.periodEndDate ?? null))
-        .map((item) => ({
-          business_id: linkedBusiness.id,
-          business_name: linkedBusiness.name,
-          hmrc_business_id: group.businessId ?? linkedBusiness.hmrc_business_id,
-          type_of_business: group.typeOfBusiness ?? "self-employment",
-          period_key: item.periodKey ?? null,
-          status: item.status ?? null,
-          quarter_start: item.periodStartDate ?? null,
-          quarter_end: item.periodEndDate ?? null,
-          due_date: item.dueDate ?? null,
-          received_date: item.receivedDate ?? null,
-        }))
-    ) ?? [];
-
-  const response = NextResponse.json({
-    obligations,
-  });
-
-  return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
+  const response = NextResponse.json({ obligations: allObligations });
+  return applyHmrcCookieMutations(response, lastCookieMutations);
 }
