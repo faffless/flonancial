@@ -29,6 +29,17 @@ type HMRCErrorResponse = {
   error_description?: string;
 };
 
+// Quarterly obligations are approximately 3 months (88–95 days).
+// Annual obligations (End of Period Statements, Final Declarations) are ~365 days.
+// We only want quarterly periods here.
+function isQuarterlyPeriod(startDate: string | null, endDate: string | null): boolean {
+  if (!startDate || !endDate) return false;
+  const start = new Date(`${startDate}T00:00:00`);
+  const end = new Date(`${endDate}T00:00:00`);
+  const days = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
+  return days >= 80 && days <= 105;
+}
+
 export async function GET() {
   const testNino = process.env.HMRC_TEST_NINO;
 
@@ -97,7 +108,7 @@ export async function GET() {
     method: "GET",
     headers: {
       Accept: "application/vnd.hmrc.3.0+json",
-      "Gov-Test-Scenario": "DYNAMIC",
+      "Gov-Test-Scenario": "OPEN",
     },
   });
 
@@ -143,18 +154,20 @@ export async function GET() {
 
   const obligations =
     data.obligations?.flatMap((group) =>
-      (group.obligationDetails ?? []).map((item) => ({
-        business_id: linkedBusiness.id,
-        business_name: linkedBusiness.name,
-        hmrc_business_id: group.businessId ?? linkedBusiness.hmrc_business_id,
-        type_of_business: group.typeOfBusiness ?? "self-employment",
-        period_key: item.periodKey ?? null,
-        status: item.status ?? null,
-        quarter_start: item.periodStartDate ?? null,
-        quarter_end: item.periodEndDate ?? null,
-        due_date: item.dueDate ?? null,
-        received_date: item.receivedDate ?? null,
-      }))
+      (group.obligationDetails ?? [])
+        .filter((item) => isQuarterlyPeriod(item.periodStartDate ?? null, item.periodEndDate ?? null))
+        .map((item) => ({
+          business_id: linkedBusiness.id,
+          business_name: linkedBusiness.name,
+          hmrc_business_id: group.businessId ?? linkedBusiness.hmrc_business_id,
+          type_of_business: group.typeOfBusiness ?? "self-employment",
+          period_key: item.periodKey ?? null,
+          status: item.status ?? null,
+          quarter_start: item.periodStartDate ?? null,
+          quarter_end: item.periodEndDate ?? null,
+          due_date: item.dueDate ?? null,
+          received_date: item.receivedDate ?? null,
+        }))
     ) ?? [];
 
   const response = NextResponse.json({
