@@ -30,7 +30,7 @@ function getTaxYearFromPeriodEnd(periodEnd: string) {
   return `${year}-${String(year + 1).slice(2)}`;
 }
 
-// ─── GET (unchanged) ──────────────────────────────────────────────────────────
+// ─── GET ─────────────────────────────────────────────────────────────────────
 
 export async function GET(_request: Request, context: RouteContext) {
   const { id } = await context.params;
@@ -90,8 +90,8 @@ export async function GET(_request: Request, context: RouteContext) {
     return applyHmrcCookieMutations(response, tokenResult.cookieMutations);
   }
 
-  if (business.business_type !== "sole_trader") {
-    const response = NextResponse.json({ error: "business_type_must_be_sole_trader" }, { status: 400 });
+  if (business.business_type !== "sole_trader" && business.business_type !== "uk_property") {
+    const response = NextResponse.json({ error: "unsupported_business_type" }, { status: 400 });
     return applyHmrcCookieMutations(response, tokenResult.cookieMutations);
   }
 
@@ -101,19 +101,37 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 
   const taxYear = getTaxYearFromPeriodEnd(update.quarter_end);
+  const isProperty = business.business_type === "uk_property";
 
   const response = NextResponse.json({
     ok: true,
     submission_method: "cumulative",
     tax_year: taxYear,
-    business: { id: business.id, name: business.name, hmrc_business_id: business.hmrc_business_id, business_type: business.business_type },
-    update: { id: update.id, period_key: update.period_key, quarter_start: update.quarter_start, quarter_end: update.quarter_end, turnover: update.turnover, expenses: update.expenses, status: update.status, submitted_at: update.submitted_at },
-    hmrc_endpoint: `/individuals/business/self-employment/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`,
+    business: {
+      id: business.id,
+      name: business.name,
+      hmrc_business_id: business.hmrc_business_id,
+      business_type: business.business_type,
+    },
+    update: {
+      id: update.id,
+      period_key: update.period_key,
+      quarter_start: update.quarter_start,
+      quarter_end: update.quarter_end,
+      turnover: update.turnover,
+      expenses: update.expenses,
+      status: update.status,
+      submitted_at: update.submitted_at,
+    },
+    hmrc_endpoint: isProperty
+      ? `/individuals/business/property/uk/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`
+      : `/individuals/business/self-employment/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`,
   });
+
   return applyHmrcCookieMutations(response, tokenResult.cookieMutations);
 }
 
-// ─── POST (modified) ──────────────────────────────────────────────────────────
+// ─── POST ────────────────────────────────────────────────────────────────────
 
 export async function POST(request: Request, context: RouteContext) {
   const { id } = await context.params;
@@ -134,7 +152,7 @@ export async function POST(request: Request, context: RouteContext) {
     const body = await request.json();
     clientFraudData = body.fraudData ?? null;
   } catch {
-    // Body is optional — submission will proceed without some headers
+    // Body is optional
   }
 
   const supabase = await createClient();
@@ -170,8 +188,8 @@ export async function POST(request: Request, context: RouteContext) {
     return NextResponse.json({ error: "business_not_hmrc_linked" }, { status: 400 });
   }
 
-  if (business.business_type !== "sole_trader") {
-    return NextResponse.json({ error: "business_type_must_be_sole_trader" }, { status: 400 });
+  if (business.business_type !== "sole_trader" && business.business_type !== "uk_property") {
+    return NextResponse.json({ error: "unsupported_business_type" }, { status: 400 });
   }
 
   if (update.status !== "draft" && update.status !== "submitted") {
@@ -193,27 +211,46 @@ export async function POST(request: Request, context: RouteContext) {
   );
 
   const taxYear = getTaxYearFromPeriodEnd(update.quarter_end);
-  const hmrcUrl = `https://test-api.service.hmrc.gov.uk/individuals/business/self-employment/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`;
+  const isProperty = business.business_type === "uk_property";
 
-  const payload = {
-    periodDates: {
-      periodStartDate: update.quarter_start,
-      periodEndDate: update.quarter_end,
-    },
-    periodIncome: {
-      turnover: Number(update.turnover),
-    },
-    periodExpenses: {
-      consolidatedExpenses: Number(update.expenses),
-    },
-  };
+  const hmrcUrl = isProperty
+    ? `https://test-api.service.hmrc.gov.uk/individuals/business/property/uk/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`
+    : `https://test-api.service.hmrc.gov.uk/individuals/business/self-employment/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`;
+
+  const acceptHeader = isProperty
+    ? "application/vnd.hmrc.6.0+json"
+    : "application/vnd.hmrc.5.0+json";
+
+  const payload = isProperty
+    ? {
+        fromDate: update.quarter_start,
+        toDate: update.quarter_end,
+        income: {
+          periodAmount: Number(update.turnover),
+        },
+        expenses: {
+          consolidatedExpenses: Number(update.expenses),
+        },
+      }
+    : {
+        periodDates: {
+          periodStartDate: update.quarter_start,
+          periodEndDate: update.quarter_end,
+        },
+        periodIncome: {
+          turnover: Number(update.turnover),
+        },
+        periodExpenses: {
+          consolidatedExpenses: Number(update.expenses),
+        },
+      };
 
   const hmrcResult = await hmrcFetchWithAuth(hmrcUrl, {
     method: "PUT",
     headers: {
-      Accept: "application/vnd.hmrc.5.0+json",
+      Accept: acceptHeader,
       "Content-Type": "application/json",
-      ...fraudHeaders,  // ← fraud prevention headers injected here
+      ...fraudHeaders,
     },
     body: JSON.stringify(payload),
   });
@@ -258,10 +295,27 @@ export async function POST(request: Request, context: RouteContext) {
     submitted: true,
     submission_method: "cumulative",
     tax_year: taxYear,
-    business: { id: business.id, name: business.name, hmrc_business_id: business.hmrc_business_id, business_type: business.business_type },
-    update: { id: update.id, period_key: update.period_key, quarter_start: update.quarter_start, quarter_end: update.quarter_end, turnover: update.turnover, expenses: update.expenses, status: "submitted", submitted_at: submittedAt },
-    hmrc_endpoint: `/individuals/business/self-employment/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`,
+    business: {
+      id: business.id,
+      name: business.name,
+      hmrc_business_id: business.hmrc_business_id,
+      business_type: business.business_type,
+    },
+    update: {
+      id: update.id,
+      period_key: update.period_key,
+      quarter_start: update.quarter_start,
+      quarter_end: update.quarter_end,
+      turnover: update.turnover,
+      expenses: update.expenses,
+      status: "submitted",
+      submitted_at: submittedAt,
+    },
+    hmrc_endpoint: isProperty
+      ? `/individuals/business/property/uk/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`
+      : `/individuals/business/self-employment/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`,
     hmrc_response: hmrcBody,
   });
+
   return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
 }

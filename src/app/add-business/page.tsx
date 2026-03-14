@@ -10,8 +10,6 @@ const businessTypeOptions = [
   { value: "", label: "Select business type" },
   { value: "sole_trader", label: "Sole trader" },
   { value: "uk_property", label: "UK property" },
-  { value: "overseas_property", label: "Overseas property" },
-  { value: "other", label: "Other" },
 ];
 
 const accountingYearEndOptions = [
@@ -19,7 +17,6 @@ const accountingYearEndOptions = [
   { value: "04-05", label: "5 April (standard tax year)" },
   { value: "03-31", label: "31 March" },
   { value: "12-31", label: "31 December" },
-  { value: "other", label: "Other" },
 ];
 
 export default function AddBusinessPage() {
@@ -90,7 +87,7 @@ export default function AddBusinessPage() {
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Cale Design Services"
+                placeholder="e.g. Barry Design Services"
                 className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#5A7896] focus:border-[#2E88D0]"
               />
             </div>
