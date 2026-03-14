@@ -108,7 +108,7 @@ export async function GET() {
     method: "GET",
     headers: {
       Accept: "application/vnd.hmrc.3.0+json",
-      "Gov-Test-Scenario": "OPEN",
+      "Gov-Test-Scenario": "CUMULATIVE",
     },
   });
 
