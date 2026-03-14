@@ -171,6 +171,9 @@ function AddUpdateContent() {
   const availablePeriods = generatedPeriods.filter((p) => !existingDraftPeriodKeys.has(p.key));
   const selectedPeriod = availablePeriods.find((p) => p.key === periodKey) ?? null;
 
+  // Whether the business was preselected via URL and is valid
+  const isBusinessPreselected = !!(preselectedBusinessId && businesses.some((b) => String(b.id) === preselectedBusinessId));
+
   useEffect(() => {
     async function loadBusinesses() {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -270,7 +273,11 @@ function AddUpdateContent() {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Add quarterly update</h1>
-              <p className="mt-3 text-sm leading-6 text-[#5A7896]">Record the next available period for one of your saved businesses.</p>
+              <p className="mt-3 text-sm leading-6 text-[#5A7896]">
+                {isBusinessPreselected
+                  ? `Adding a quarterly update for ${selectedBusiness?.name ?? "your business"}.`
+                  : "Record the next available period for one of your saved businesses."}
+              </p>
             </div>
             <Link href="/dashboard" className="text-sm text-[#5A7896] underline underline-offset-4 transition hover:text-[#0F1C2E]">Back to dashboard</Link>
           </div>
@@ -301,13 +308,17 @@ function AddUpdateContent() {
               </div>
 
               <form onSubmit={handleSubmit} className="mt-6 max-w-xl space-y-4">
-                <div>
-                  <label htmlFor="business" className="mb-2 block text-sm text-[#0F1C2E]">Business</label>
-                  <select id="business" value={businessId} onChange={(e) => { setBusinessId(e.target.value); setMessage(""); }}
-                    className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]">
-                    {businesses.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-                  </select>
-                </div>
+
+                {/* Only show business selector if no business was preselected via URL */}
+                {!isBusinessPreselected && (
+                  <div>
+                    <label htmlFor="business" className="mb-2 block text-sm text-[#0F1C2E]">Business</label>
+                    <select id="business" value={businessId} onChange={(e) => { setBusinessId(e.target.value); setMessage(""); }}
+                      className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]">
+                      {businesses.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+                    </select>
+                  </div>
+                )}
 
                 <div>
                   <label htmlFor="period" className="mb-2 block text-sm text-[#0F1C2E]">Available period</label>
