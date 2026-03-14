@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SiteShell } from "@/components/site-shell";
 import { createClient } from "@/utils/supabase/client";
@@ -131,7 +131,7 @@ function generateLocalPeriods(startDate: string, accountingYearEnd: string | nul
   return generatePeriodsFallback(startDate);
 }
 
-export default function AddUpdatePage() {
+function AddUpdateContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const preselectedBusinessId = searchParams.get("businessId");
@@ -191,7 +191,6 @@ export default function AddUpdatePage() {
       setBusinesses(loadedBusinesses);
       setExistingUpdates(updatesData ?? []);
 
-      // Pre-select business from URL param, or default to first
       if (preselectedBusinessId && loadedBusinesses.some((b) => String(b.id) === preselectedBusinessId)) {
         setBusinessId(preselectedBusinessId);
       } else if (loadedBusinesses.length > 0) {
@@ -381,5 +380,13 @@ export default function AddUpdatePage() {
         </div>
       </section>
     </SiteShell>
+  );
+}
+
+export default function AddUpdatePage() {
+  return (
+    <Suspense fallback={<p className="p-10 text-sm text-[#5A7896]">Loading...</p>}>
+      <AddUpdateContent />
+    </Suspense>
   );
 }
