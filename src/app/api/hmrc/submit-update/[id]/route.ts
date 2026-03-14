@@ -10,10 +10,6 @@ import {
   buildFraudPreventionHeaders,
   type ClientFraudData,
 } from "@/utils/hmrc/fraud-prevention";
-import {
-  buildFraudPreventionHeaders,
-  type ClientFraudData,
-} from "@/utils/hmrc/fraud-prevention";
 
 type RouteContext = {
   params: Promise<{ id: string }>;
