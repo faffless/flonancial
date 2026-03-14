@@ -276,9 +276,10 @@ export async function POST(request: Request, context: RouteContext) {
     return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
   }
 
-  // Send confirmation email — fire and forget
-  if (user.email) {
-    sendSubmissionConfirmation({
+  // Send confirmation email
+if (user.email) {
+  try {
+    await sendSubmissionConfirmation({
       toEmail: user.email,
       businessName: business.name,
       quarterStart: update.quarter_start,
@@ -287,8 +288,11 @@ export async function POST(request: Request, context: RouteContext) {
       expenses: Number(update.expenses),
       taxYear,
       submittedAt,
-    }).catch(() => {});
+    });
+  } catch {
+    // Email failed — submission still succeeded
   }
+}
 
   const response = NextResponse.json({
     ok: true,
