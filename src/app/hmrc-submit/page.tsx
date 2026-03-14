@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { SiteShell } from "@/components/site-shell";
+import { collectFraudData } from "@/utils/hmrc/collect-fraud-data";
 
 type SubmitPreviewResponse = {
   ok?: boolean;
@@ -90,11 +91,15 @@ function HmrcSubmitContent() {
     setSubmitting(true);
     setErrorMessage("");
 
-    const response = await fetch(`/api/hmrc/submit-update/${updateId}`, {
-      method: "POST",
-      credentials: "include",
-      cache: "no-store",
-    });
+    const fraudData = collectFraudData();
+
+const response = await fetch(`/api/hmrc/submit-update/${updateId}`, {
+  method: "POST",
+  credentials: "include",
+  cache: "no-store",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ fraudData }),
+});
     const json = (await response.json()) as SubmitPreviewResponse;
 
     if (!response.ok) {
