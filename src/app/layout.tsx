@@ -10,6 +10,9 @@ const plusJakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Flonancial — Free MTD tax submissions for the self-employed",
   description: "Submit your quarterly Making Tax Digital updates directly to HMRC. Free during beta. No accountant needed.",
+  icons: {
+    icon: "/brand/990.png",
+  },
 };
 
 export default function RootLayout({
