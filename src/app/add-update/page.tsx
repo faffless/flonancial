@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SiteShell } from "@/components/site-shell";
 import { createClient } from "@/utils/supabase/client";
 
@@ -71,8 +71,6 @@ function formatBusinessType(value: string | null) {
   if (!value) return "Not set";
   if (value === "sole_trader") return "Sole trader";
   if (value === "uk_property") return "UK property";
-  if (value === "overseas_property") return "Overseas property";
-  if (value === "other") return "Other";
   return value;
 }
 
@@ -135,6 +133,8 @@ function generateLocalPeriods(startDate: string, accountingYearEnd: string | nul
 
 export default function AddUpdatePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const preselectedBusinessId = searchParams.get("businessId");
   const supabase = useMemo(() => createClient(), []);
 
   const [businesses, setBusinesses] = useState<Business[]>([]);
@@ -190,11 +190,18 @@ export default function AddUpdatePage() {
       const loadedBusinesses = businessesData ?? [];
       setBusinesses(loadedBusinesses);
       setExistingUpdates(updatesData ?? []);
-      if (loadedBusinesses.length > 0) setBusinessId(String(loadedBusinesses[0].id));
+
+      // Pre-select business from URL param, or default to first
+      if (preselectedBusinessId && loadedBusinesses.some((b) => String(b.id) === preselectedBusinessId)) {
+        setBusinessId(preselectedBusinessId);
+      } else if (loadedBusinesses.length > 0) {
+        setBusinessId(String(loadedBusinesses[0].id));
+      }
+
       setLoadingBusinesses(false);
     }
     loadBusinesses();
-  }, [router, supabase]);
+  }, [router, supabase, preselectedBusinessId]);
 
   useEffect(() => {
     async function loadHmrcObligations() {

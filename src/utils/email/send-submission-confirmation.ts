@@ -88,7 +88,7 @@ export async function sendSubmissionConfirmation(params: SubmissionConfirmationP
         </div>
         <p style="font-size: 13px; color: #5A7896; margin: 0 0 8px;">Please verify your submission was accepted by checking your HMRC online account directly.</p>
         <p style="font-size: 13px; color: #5A7896; margin: 0 0 32px;">If you did not make this submission or have any concerns, contact us immediately at hello@flonancial.co.uk.</p>
-        <p style="font-size: 13px; color: #5A7896; margin: 0;">Flonancial Ltd · 104 Finborough Road, London SW10 9ED</p>
+        <p style="font-size: 13px; color: #5A7896; margin: 0;">hello@flonancial.co.uk</p>
       </div>
     `,
   });
