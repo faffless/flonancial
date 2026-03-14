@@ -91,7 +91,7 @@ export async function GET() {
   const toDate = "2026-04-05";
 
   const allObligations = [];
-  let lastCookieMutations: unknown[] = [];
+  let lastCookieMutations: Parameters<typeof applyHmrcCookieMutations>[1] = [];
 
   for (const business of businesses) {
     if (!business.hmrc_business_id) continue;
