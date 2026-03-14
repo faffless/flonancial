@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import {
@@ -10,6 +9,7 @@ import {
   buildFraudPreventionHeaders,
   type ClientFraudData,
 } from "@/utils/hmrc/fraud-prevention";
+import { sendSubmissionConfirmation } from "@/utils/email/send-submission-confirmation";
 
 type RouteContext = {
   params: Promise<{ id: string }>;
@@ -40,9 +40,7 @@ export async function GET(_request: Request, context: RouteContext) {
     return NextResponse.json({ error: "invalid_update_id" }, { status: 400 });
   }
 
-  const cookieStore = await cookies();
   const testNino = process.env.HMRC_TEST_NINO;
-
   if (!testNino) {
     return NextResponse.json({ error: "missing_hmrc_test_nino" }, { status: 500 });
   }
@@ -146,14 +144,11 @@ export async function POST(request: Request, context: RouteContext) {
     return NextResponse.json({ error: "missing_hmrc_test_nino" }, { status: 500 });
   }
 
-  // Read client fraud data from request body
   let clientFraudData: ClientFraudData | null = null;
   try {
     const body = await request.json();
     clientFraudData = body.fraudData ?? null;
-  } catch {
-    // Body is optional
-  }
+  } catch {}
 
   const supabase = await createClient();
   const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -196,7 +191,6 @@ export async function POST(request: Request, context: RouteContext) {
     return NextResponse.json({ error: "only_draft_or_submitted_updates_can_be_submitted" }, { status: 400 });
   }
 
-  // Build fraud prevention headers
   const fraudHeaders = buildFraudPreventionHeaders(
     request.headers,
     clientFraudData ?? {
@@ -225,24 +219,16 @@ export async function POST(request: Request, context: RouteContext) {
     ? {
         fromDate: update.quarter_start,
         toDate: update.quarter_end,
-        income: {
-          periodAmount: Number(update.turnover),
-        },
-        expenses: {
-          consolidatedExpenses: Number(update.expenses),
-        },
+        income: { periodAmount: Number(update.turnover) },
+        expenses: { consolidatedExpenses: Number(update.expenses) },
       }
     : {
         periodDates: {
           periodStartDate: update.quarter_start,
           periodEndDate: update.quarter_end,
         },
-        periodIncome: {
-          turnover: Number(update.turnover),
-        },
-        periodExpenses: {
-          consolidatedExpenses: Number(update.expenses),
-        },
+        periodIncome: { turnover: Number(update.turnover) },
+        periodExpenses: { consolidatedExpenses: Number(update.expenses) },
       };
 
   const hmrcResult = await hmrcFetchWithAuth(hmrcUrl, {
@@ -288,6 +274,20 @@ export async function POST(request: Request, context: RouteContext) {
   if (saveError) {
     const response = NextResponse.json({ error: "hmrc_submission_succeeded_but_local_save_failed" }, { status: 500 });
     return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
+  }
+
+  // Send confirmation email — fire and forget
+  if (user.email) {
+    sendSubmissionConfirmation({
+      toEmail: user.email,
+      businessName: business.name,
+      quarterStart: update.quarter_start,
+      quarterEnd: update.quarter_end,
+      turnover: Number(update.turnover),
+      expenses: Number(update.expenses),
+      taxYear,
+      submittedAt,
+    }).catch(() => {});
   }
 
   const response = NextResponse.json({
