@@ -48,57 +48,59 @@ function AccountContent() {
 
   return (
     <section className="mx-auto w-full max-w-[640px] px-6 py-10 sm:px-8">
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+      <div className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
-          <h1 className="text-2xl font-normal tracking-tight text-white">Account</h1>
-          <Link href="/dashboard" className="text-sm text-white/70 underline underline-offset-4 transition hover:text-white">Dashboard</Link>
+          <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Account</h1>
+          <Link href="/dashboard" className="text-sm text-[#5A7896] underline underline-offset-4 transition hover:text-[#0F1C2E]">Dashboard</Link>
         </div>
 
         {loading ? (
-          <p className="mt-6 text-sm text-white/70">Loading...</p>
+          <p className="mt-6 text-sm text-[#5A7896]">Loading...</p>
         ) : (
           <>
-            <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Signed in as</p>
-              <p className="mt-2 text-sm text-white">{userEmail}</p>
+            <div className="mt-6 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[#5A7896]">Signed in as</p>
+              <p className="mt-2 text-sm text-[#0F1C2E]">{userEmail}</p>
             </div>
 
-            <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">HMRC connection</p>
+            <div className="mt-4 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[#5A7896]">HMRC connection</p>
 
               {hmrcConnected === true ? (
                 <div>
                   <div className="mt-3 flex items-center gap-2">
-                    <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
-                    <p className="text-sm text-emerald-200">Connected</p>
+                    <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+                    <p className="text-sm text-emerald-700">Connected</p>
                   </div>
-                  <p className="mt-2 text-xs text-white/45">Your HMRC account is connected. You can submit quarterly updates from the dashboard.</p>
+                  <p className="mt-2 text-xs text-[#5A7896]">Your HMRC account is connected. You can submit quarterly updates from the dashboard.</p>
                   <div className="mt-4">
-                    <a href="/api/hmrc/start" className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.07] hover:text-white">Reconnect HMRC</a>
+                    <a href="/api/hmrc/start" className="rounded-xl border border-[#B8D0EB] bg-[#CCE0F5] px-4 py-2.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]">Reconnect HMRC</a>
                   </div>
                 </div>
               ) : (
                 <div>
                   <div className="mt-3 flex items-center gap-2">
-                    <span className="inline-block h-2 w-2 rounded-full bg-white/20" />
-                    <p className="text-sm text-white/70">Not connected</p>
+                    <span className="inline-block h-2 w-2 rounded-full bg-[#B8D0EB]" />
+                    <p className="text-sm text-[#5A7896]">Not connected</p>
                   </div>
-                  <p className="mt-2 text-xs text-white/45">Connect your HMRC account to submit quarterly updates directly from Flonancial.</p>
+                  <p className="mt-2 text-xs text-[#5A7896]">Connect your HMRC account to submit quarterly updates directly from Flonancial.</p>
                   <div className="mt-4">
-                    <a href="/api/hmrc/start" className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90">Connect HMRC</a>
+                    <a href="/api/hmrc/start" className="rounded-xl bg-[#2E88D0] px-4 py-2.5 text-sm text-white transition hover:opacity-90">Connect HMRC</a>
                   </div>
                 </div>
               )}
             </div>
 
             <div className="mt-4 flex flex-wrap gap-3">
-              <Link href="/dashboard" className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90">Go to dashboard</Link>
-              <button type="button" onClick={handleSignOut} disabled={working} className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:opacity-60">
+              <Link href="/dashboard" className="rounded-xl bg-[#2E88D0] px-4 py-2.5 text-sm text-white transition hover:opacity-90">
+                Go to dashboard
+              </Link>
+              <button type="button" onClick={handleSignOut} disabled={working} className="rounded-xl border border-[#B8D0EB] bg-[#CCE0F5] px-4 py-2.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB] disabled:cursor-not-allowed disabled:opacity-60">
                 {working ? "Signing out..." : "Sign out"}
               </button>
             </div>
 
-            {message ? <p className="mt-4 text-sm text-white/70">{message}</p> : null}
+            {message ? <p className="mt-4 text-sm text-[#5A7896]">{message}</p> : null}
           </>
         )}
       </div>
@@ -109,7 +111,7 @@ function AccountContent() {
 export default function AccountPage() {
   return (
     <SiteShell>
-      <Suspense fallback={<p className="p-10 text-sm text-white/70">Loading...</p>}>
+      <Suspense fallback={<p className="p-10 text-sm text-[#5A7896]">Loading...</p>}>
         <AccountContent />
       </Suspense>
     </SiteShell>

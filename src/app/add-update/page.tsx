@@ -58,24 +58,13 @@ function formatCurrencyPreview(value: string) {
   if (value === "") return "£0.00";
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) return "£0.00";
-  return new Intl.NumberFormat("en-GB", {
-    style: "currency",
-    currency: "GBP",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(parsed);
+  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(parsed);
 }
 
-function toInputDate(date: Date) {
-  return date.toISOString().slice(0, 10);
-}
+function toInputDate(date: Date) { return date.toISOString().slice(0, 10); }
 
 function formatDate(value: string) {
-  return new Date(`${value}T00:00:00`).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  return new Date(`${value}T00:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
 function formatBusinessType(value: string | null) {
@@ -95,97 +84,52 @@ function formatAccountingYearEnd(value: string | null) {
   return value;
 }
 
-function makePeriodKey(quarterStart: string, quarterEnd: string) {
-  return `${quarterStart}_${quarterEnd}`;
-}
+function makePeriodKey(quarterStart: string, quarterEnd: string) { return `${quarterStart}_${quarterEnd}`; }
 
-function generatePeriodsFromYearEnd(
-  startDate: string,
-  accountingYearEnd: string,
-  count = 8
-): PeriodOption[] {
+function generatePeriodsFromYearEnd(startDate: string, accountingYearEnd: string, count = 8): PeriodOption[] {
   const [endMonth, endDay] = accountingYearEnd.split("-").map(Number);
-
   const probe = new Date(2000, endMonth - 1, endDay + 1);
   const periodStartMonth = probe.getMonth() + 1;
   const periodStartDay = probe.getDate();
-
   const businessStart = new Date(`${startDate}T00:00:00`);
-
-  let yearStart = new Date(
-    businessStart.getFullYear(),
-    periodStartMonth - 1,
-    periodStartDay
-  );
-
-  if (yearStart > businessStart) {
-    yearStart.setFullYear(yearStart.getFullYear() - 1);
-  }
-
+  let yearStart = new Date(businessStart.getFullYear(), periodStartMonth - 1, periodStartDay);
+  if (yearStart > businessStart) yearStart.setFullYear(yearStart.getFullYear() - 1);
   const periods: PeriodOption[] = [];
   const cursor = new Date(yearStart);
-
   for (let i = 0; i < count + 12; i++) {
     const periodStart = new Date(cursor);
     const periodEnd = new Date(cursor);
     periodEnd.setMonth(periodEnd.getMonth() + 3);
     periodEnd.setDate(periodEnd.getDate() - 1);
-
     const quarterStart = toInputDate(periodStart);
     const quarterEnd = toInputDate(periodEnd);
-
     if (periodStart >= businessStart) {
-      periods.push({
-        key: makePeriodKey(quarterStart, quarterEnd),
-        quarterStart,
-        quarterEnd,
-        label: `${formatDate(quarterStart)} to ${formatDate(quarterEnd)}`,
-        source: "local",
-      });
-
+      periods.push({ key: makePeriodKey(quarterStart, quarterEnd), quarterStart, quarterEnd, label: `${formatDate(quarterStart)} to ${formatDate(quarterEnd)}`, source: "local" });
       if (periods.length >= count) break;
     }
-
     cursor.setMonth(cursor.getMonth() + 3);
   }
-
   return periods;
 }
 
 function generatePeriodsFallback(startDate: string, count = 8): PeriodOption[] {
   const periods: PeriodOption[] = [];
   const cursor = new Date(`${startDate}T00:00:00`);
-
   for (let i = 0; i < count; i++) {
     const periodStart = new Date(cursor);
     const periodEnd = new Date(cursor);
     periodEnd.setMonth(periodEnd.getMonth() + 3);
     periodEnd.setDate(periodEnd.getDate() - 1);
-
     const quarterStart = toInputDate(periodStart);
     const quarterEnd = toInputDate(periodEnd);
-
-    periods.push({
-      key: makePeriodKey(quarterStart, quarterEnd),
-      quarterStart,
-      quarterEnd,
-      label: `${formatDate(quarterStart)} to ${formatDate(quarterEnd)}`,
-      source: "local",
-    });
-
+    periods.push({ key: makePeriodKey(quarterStart, quarterEnd), quarterStart, quarterEnd, label: `${formatDate(quarterStart)} to ${formatDate(quarterEnd)}`, source: "local" });
     cursor.setMonth(cursor.getMonth() + 3);
   }
-
   return periods;
 }
 
-function generateLocalPeriods(
-  startDate: string,
-  accountingYearEnd: string | null
-): PeriodOption[] {
-  if (accountingYearEnd && accountingYearEnd !== "other") {
-    return generatePeriodsFromYearEnd(startDate, accountingYearEnd);
-  }
+function generateLocalPeriods(startDate: string, accountingYearEnd: string | null): PeriodOption[] {
+  if (accountingYearEnd && accountingYearEnd !== "other") return generatePeriodsFromYearEnd(startDate, accountingYearEnd);
   return generatePeriodsFallback(startDate);
 }
 
@@ -205,239 +149,97 @@ export default function AddUpdatePage() {
   const [loadingHmrc, setLoadingHmrc] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const selectedBusiness =
-    businesses.find((business) => String(business.id) === businessId) ?? null;
-
-  const localPeriods =
-    selectedBusiness?.start_date
-      ? generateLocalPeriods(
-          selectedBusiness.start_date,
-          selectedBusiness.accounting_year_end
-        )
-      : [];
-
+  const selectedBusiness = businesses.find((b) => String(b.id) === businessId) ?? null;
+  const localPeriods = selectedBusiness?.start_date ? generateLocalPeriods(selectedBusiness.start_date, selectedBusiness.accounting_year_end) : [];
   const hmrcPeriods: PeriodOption[] = hmrcObligations
-    .filter(
-      (item) =>
-        item.business_id === Number(businessId) &&
-        item.status === "open" &&
-        item.quarter_start &&
-        item.quarter_end
-    )
+    .filter((item) => item.business_id === Number(businessId) && item.status === "open" && item.quarter_start && item.quarter_end)
     .map((item) => ({
-      key:
-        item.period_key ||
-        makePeriodKey(item.quarter_start as string, item.quarter_end as string),
+      key: item.period_key || makePeriodKey(item.quarter_start as string, item.quarter_end as string),
       quarterStart: item.quarter_start as string,
       quarterEnd: item.quarter_end as string,
-      label: `${formatDate(item.quarter_start as string)} to ${formatDate(
-        item.quarter_end as string
-      )}`,
+      label: `${formatDate(item.quarter_start as string)} to ${formatDate(item.quarter_end as string)}`,
       source: "hmrc",
       status: item.status,
       dueDate: item.due_date,
     }));
 
-  // CHANGED: HMRC-linked businesses only ever use HMRC periods — no local fallback
-  const generatedPeriods = selectedBusiness?.hmrc_business_id
-    ? hmrcPeriods
-    : localPeriods;
-
+  const generatedPeriods = selectedBusiness?.hmrc_business_id ? hmrcPeriods : localPeriods;
   const existingDraftPeriodKeys = new Set(
-    existingUpdates
-      .filter(
-        (update) =>
-          String(update.business_id) === businessId && update.status === "draft"
-      )
-      .map(
-        (update) =>
-          update.period_key ||
-          makePeriodKey(update.quarter_start, update.quarter_end)
-      )
+    existingUpdates.filter((u) => String(u.business_id) === businessId && u.status === "draft")
+      .map((u) => u.period_key || makePeriodKey(u.quarter_start, u.quarter_end))
   );
-
-  const availablePeriods = generatedPeriods.filter(
-    (period) => !existingDraftPeriodKeys.has(period.key)
-  );
-
-  const selectedPeriod =
-    availablePeriods.find((period) => period.key === periodKey) ?? null;
+  const availablePeriods = generatedPeriods.filter((p) => !existingDraftPeriodKeys.has(p.key));
+  const selectedPeriod = availablePeriods.find((p) => p.key === periodKey) ?? null;
 
   useEffect(() => {
     async function loadBusinesses() {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
-      if (userError || !user) {
-        router.replace("/login");
-        return;
-      }
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) { router.replace("/login"); return; }
 
       const { data: businessesData, error: businessesError } = await supabase
-        .from("businesses")
-        .select(
-          "id, name, trading_name, business_type, start_date, accounting_year_end, hmrc_business_id"
-        )
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: true });
+        .from("businesses").select("id, name, trading_name, business_type, start_date, accounting_year_end, hmrc_business_id")
+        .eq("user_id", user.id).order("created_at", { ascending: true });
 
-      if (businessesError) {
-        setMessage(businessesError.message);
-        setLoadingBusinesses(false);
-        return;
-      }
+      if (businessesError) { setMessage(businessesError.message); setLoadingBusinesses(false); return; }
 
       const { data: updatesData, error: updatesError } = await supabase
-        .from("quarterly_updates")
-        .select(
-          "id, business_id, period_key, quarter_start, quarter_end, status"
-        )
-        .eq("user_id", user.id);
+        .from("quarterly_updates").select("id, business_id, period_key, quarter_start, quarter_end, status").eq("user_id", user.id);
 
-      if (updatesError) {
-        setMessage(updatesError.message);
-        setLoadingBusinesses(false);
-        return;
-      }
+      if (updatesError) { setMessage(updatesError.message); setLoadingBusinesses(false); return; }
 
       const loadedBusinesses = businessesData ?? [];
       setBusinesses(loadedBusinesses);
       setExistingUpdates(updatesData ?? []);
-
-      if (loadedBusinesses.length > 0) {
-        setBusinessId(String(loadedBusinesses[0].id));
-      }
-
+      if (loadedBusinesses.length > 0) setBusinessId(String(loadedBusinesses[0].id));
       setLoadingBusinesses(false);
     }
-
     loadBusinesses();
   }, [router, supabase]);
 
   useEffect(() => {
     async function loadHmrcObligations() {
-      if (!selectedBusiness?.hmrc_business_id) {
-        setHmrcObligations([]);
-        return;
-      }
-
+      if (!selectedBusiness?.hmrc_business_id) { setHmrcObligations([]); return; }
       setLoadingHmrc(true);
-
-      const response = await fetch("/api/hmrc/obligations", {
-        method: "GET",
-        credentials: "include",
-        cache: "no-store",
-      });
-
+      const response = await fetch("/api/hmrc/obligations", { method: "GET", credentials: "include", cache: "no-store" });
       const data = (await response.json()) as HmrcObligationsResponse;
-
-      if (!response.ok) {
-        setMessage(data.error || "Could not load HMRC obligations.");
-        setHmrcObligations([]);
-        setLoadingHmrc(false);
-        return;
-      }
-
+      if (!response.ok) { setMessage(data.error || "Could not load HMRC obligations."); setHmrcObligations([]); setLoadingHmrc(false); return; }
       setHmrcObligations(data.obligations ?? []);
       setLoadingHmrc(false);
     }
-
     loadHmrcObligations();
   }, [selectedBusiness?.hmrc_business_id]);
 
   useEffect(() => {
-    if (availablePeriods.length === 0) {
-      setPeriodKey("");
-      return;
-    }
-
-    const selectedStillValid = availablePeriods.some(
-      (period) => period.key === periodKey
-    );
-
-    if (!selectedStillValid) {
-      setPeriodKey(availablePeriods[0].key);
-    }
+    if (availablePeriods.length === 0) { setPeriodKey(""); return; }
+    const selectedStillValid = availablePeriods.some((p) => p.key === periodKey);
+    if (!selectedStillValid) setPeriodKey(availablePeriods[0].key);
   }, [businessId, periodKey, availablePeriods]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    if (!businessId) {
-      setMessage("Add a business first");
-      return;
-    }
-
-    if (!selectedBusiness) {
-      setMessage("Select a business");
-      return;
-    }
-
-    if (!selectedBusiness.start_date) {
-      setMessage("Add a business start date first");
-      return;
-    }
-
-    if (!selectedPeriod) {
-      setMessage("Select an available period");
-      return;
-    }
-
-    if (turnover === "" || expenses === "") {
-      setMessage("Enter turnover and expenses");
-      return;
-    }
+    if (!businessId) { setMessage("Add a business first"); return; }
+    if (!selectedBusiness) { setMessage("Select a business"); return; }
+    if (!selectedBusiness.start_date) { setMessage("Add a business start date first"); return; }
+    if (!selectedPeriod) { setMessage("Select an available period"); return; }
+    if (turnover === "" || expenses === "") { setMessage("Enter turnover and expenses"); return; }
 
     const turnoverNumber = Number(turnover);
     const expensesNumber = Number(expenses);
-
-    if (!Number.isFinite(turnoverNumber) || turnoverNumber < 0) {
-      setMessage("Enter a valid turnover amount");
-      return;
-    }
-
-    if (!Number.isFinite(expensesNumber) || expensesNumber < 0) {
-      setMessage("Enter a valid expenses amount");
-      return;
-    }
+    if (!Number.isFinite(turnoverNumber) || turnoverNumber < 0) { setMessage("Enter a valid turnover amount"); return; }
+    if (!Number.isFinite(expensesNumber) || expensesNumber < 0) { setMessage("Enter a valid expenses amount"); return; }
 
     setSaving(true);
     setMessage("Saving...");
 
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError || !user) {
-      setMessage("You need to log in");
-      setSaving(false);
-      router.push("/login");
-      return;
-    }
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) { setMessage("You need to log in"); setSaving(false); router.push("/login"); return; }
 
     const { data: existingDraft, error: existingError } = await supabase
-      .from("quarterly_updates")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("business_id", Number(businessId))
-      .eq("period_key", selectedPeriod.key)
-      .eq("status", "draft")
-      .maybeSingle();
+      .from("quarterly_updates").select("id").eq("user_id", user.id).eq("business_id", Number(businessId))
+      .eq("period_key", selectedPeriod.key).eq("status", "draft").maybeSingle();
 
-    if (existingError) {
-      setMessage(existingError.message);
-      setSaving(false);
-      return;
-    }
-
-    if (existingDraft) {
-      setMessage("You already have a draft update for that period");
-      setSaving(false);
-      return;
-    }
+    if (existingError) { setMessage(existingError.message); setSaving(false); return; }
+    if (existingDraft) { setMessage("You already have a draft update for that period"); setSaving(false); return; }
 
     const { error } = await supabase.from("quarterly_updates").insert({
       business_id: Number(businessId),
@@ -450,12 +252,7 @@ export default function AddUpdatePage() {
       status: "draft",
     });
 
-    if (error) {
-      setMessage(error.message);
-      setSaving(false);
-      return;
-    }
-
+    if (error) { setMessage(error.message); setSaving(false); return; }
     router.refresh();
     router.push("/dashboard");
   }
@@ -463,267 +260,114 @@ export default function AddUpdatePage() {
   return (
     <SiteShell>
       <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+        <div className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-                Private tester
-              </p>
-              <h1 className="mt-2 text-2xl font-normal tracking-tight text-white">
-                Add quarterly update
-              </h1>
-              <p className="mt-3 text-sm leading-6 text-white/70">
-                Record the next available period for one of your saved businesses.
-              </p>
+              <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Add quarterly update</h1>
+              <p className="mt-3 text-sm leading-6 text-[#5A7896]">Record the next available period for one of your saved businesses.</p>
             </div>
-
-            <Link
-              href="/dashboard"
-              className="text-sm text-white/70 transition hover:text-white"
-            >
-              Back to dashboard
-            </Link>
+            <Link href="/dashboard" className="text-sm text-[#5A7896] underline underline-offset-4 transition hover:text-[#0F1C2E]">Back to dashboard</Link>
           </div>
 
           {loadingBusinesses ? (
-            <p className="mt-6 text-sm text-white/70">Loading businesses...</p>
+            <p className="mt-6 text-sm text-[#5A7896]">Loading businesses...</p>
           ) : businesses.length === 0 ? (
-            <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
-              <p className="text-sm text-white/80">
-                You need at least one business before you can add a quarterly
-                update.
-              </p>
+            <div className="mt-6 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
+              <p className="text-sm text-[#0F1C2E]">You need at least one business before you can add a quarterly update.</p>
               <div className="mt-4">
-                <Link
-                  href="/add-business"
-                  className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90"
-                >
-                  Add business
-                </Link>
+                <Link href="/add-business" className="rounded-xl bg-[#2E88D0] px-4 py-2.5 text-sm text-white transition hover:opacity-90">Add business</Link>
               </div>
             </div>
           ) : (
             <>
               <div className="mt-6 grid gap-4 sm:grid-cols-4">
-                <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-                    Business
-                  </p>
-                  <p className="mt-2 text-sm text-white">
-                    {selectedBusiness?.name ?? "Select a business"}
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-                    Business type
-                  </p>
-                  <p className="mt-2 text-sm text-white">
-                    {formatBusinessType(selectedBusiness?.business_type ?? null)}
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-                    Year end
-                  </p>
-                  <p className="mt-2 text-sm text-white">
-                    {formatAccountingYearEnd(
-                      selectedBusiness?.accounting_year_end ?? null
-                    )}
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-                    Turnover preview
-                  </p>
-                  <p className="mt-2 text-sm text-white">
-                    {formatCurrencyPreview(turnover)}
-                  </p>
-                </div>
+                {[
+                  { label: "Business", value: selectedBusiness?.name ?? "Select a business" },
+                  { label: "Business type", value: formatBusinessType(selectedBusiness?.business_type ?? null) },
+                  { label: "Year end", value: formatAccountingYearEnd(selectedBusiness?.accounting_year_end ?? null) },
+                  { label: "Turnover preview", value: formatCurrencyPreview(turnover) },
+                ].map(({ label, value }) => (
+                  <div key={label} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#5A7896]">{label}</p>
+                    <p className="mt-2 text-sm text-[#0F1C2E]">{value}</p>
+                  </div>
+                ))}
               </div>
 
               <form onSubmit={handleSubmit} className="mt-6 max-w-xl space-y-4">
                 <div>
-                  <label
-                    htmlFor="business"
-                    className="mb-2 block text-sm text-white/80"
-                  >
-                    Business
-                  </label>
-                  <select
-                    id="business"
-                    value={businessId}
-                    onChange={(e) => {
-                      setBusinessId(e.target.value);
-                      setMessage("");
-                    }}
-                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition focus:border-white/25"
-                  >
-                    {businesses.map((business) => (
-                      <option
-                        key={business.id}
-                        value={business.id}
-                        className="bg-[#0D1115] text-white"
-                      >
-                        {business.name}
-                      </option>
-                    ))}
+                  <label htmlFor="business" className="mb-2 block text-sm text-[#0F1C2E]">Business</label>
+                  <select id="business" value={businessId} onChange={(e) => { setBusinessId(e.target.value); setMessage(""); }}
+                    className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]">
+                    {businesses.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
                   </select>
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="period"
-                    className="mb-2 block text-sm text-white/80"
-                  >
-                    Available period
-                  </label>
-                  <select
-                    id="period"
-                    value={periodKey}
-                    onChange={(e) => setPeriodKey(e.target.value)}
-                    disabled={
-                      !selectedBusiness?.start_date ||
-                      availablePeriods.length === 0 ||
-                      loadingHmrc
-                    }
-                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition focus:border-white/25 disabled:opacity-60"
-                  >
+                  <label htmlFor="period" className="mb-2 block text-sm text-[#0F1C2E]">Available period</label>
+                  <select id="period" value={periodKey} onChange={(e) => setPeriodKey(e.target.value)}
+                    disabled={!selectedBusiness?.start_date || availablePeriods.length === 0 || loadingHmrc}
+                    className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition focus:border-[#2E88D0] disabled:opacity-60">
                     {loadingHmrc ? (
-                      <option value="" className="bg-[#0D1115] text-white">
-                        Loading HMRC periods...
-                      </option>
+                      <option value="">Loading HMRC periods...</option>
                     ) : availablePeriods.length > 0 ? (
-                      availablePeriods.map((period) => (
-                        <option
-                          key={period.key}
-                          value={period.key}
-                          className="bg-[#0D1115] text-white"
-                        >
-                          {period.label}
-                        </option>
-                      ))
+                      availablePeriods.map((p) => <option key={p.key} value={p.key}>{p.label}</option>)
                     ) : (
-                      <option value="" className="bg-[#0D1115] text-white">
-                        {selectedBusiness?.hmrc_business_id
-                          ? "No open HMRC periods available"
-                          : "No available periods"}
-                      </option>
+                      <option value="">{selectedBusiness?.hmrc_business_id ? "No open HMRC periods available" : "No available periods"}</option>
                     )}
                   </select>
-
                   {selectedBusiness?.hmrc_business_id ? (
-                    <p className="mt-2 text-xs text-emerald-300/70">
-                      This business is HMRC linked. Only open HMRC obligation periods are shown.
-                    </p>
-                  ) : !selectedBusiness?.accounting_year_end &&
-                    selectedBusiness?.start_date ? (
-                    <p className="mt-2 text-xs text-amber-400/70">
-                      No accounting year end set — periods are estimated from
-                      start date. Edit this business to set one.
-                    </p>
+                    <p className="mt-2 text-xs text-emerald-700">This business is HMRC linked. Only open HMRC obligation periods are shown.</p>
+                  ) : !selectedBusiness?.accounting_year_end && selectedBusiness?.start_date ? (
+                    <p className="mt-2 text-xs text-amber-700">No accounting year end set — periods are estimated from start date.</p>
                   ) : null}
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-                      Quarter start
-                    </p>
-                    <p className="mt-2 text-sm text-white">
-                      {selectedPeriod
-                        ? formatDate(selectedPeriod.quarterStart)
-                        : "Not available"}
-                    </p>
-                  </div>
-
-                  <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">
-                      Quarter end
-                    </p>
-                    <p className="mt-2 text-sm text-white">
-                      {selectedPeriod
-                        ? formatDate(selectedPeriod.quarterEnd)
-                        : "Not available"}
-                    </p>
-                  </div>
+                  {[
+                    { label: "Quarter start", value: selectedPeriod ? formatDate(selectedPeriod.quarterStart) : "Not available" },
+                    { label: "Quarter end", value: selectedPeriod ? formatDate(selectedPeriod.quarterEnd) : "Not available" },
+                  ].map(({ label, value }) => (
+                    <div key={label} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-[#5A7896]">{label}</p>
+                      <p className="mt-2 text-sm text-[#0F1C2E]">{value}</p>
+                    </div>
+                  ))}
                 </div>
 
                 {selectedPeriod?.source === "hmrc" ? (
-                  <div className="rounded-xl border border-emerald-400/25 bg-emerald-400/10 p-4">
-                    <p className="text-sm text-emerald-200">
-                      Using HMRC obligation period.
-                    </p>
+                  <div className="rounded-xl border border-emerald-600/20 bg-emerald-50 p-4">
+                    <p className="text-sm text-emerald-700">Using HMRC obligation period.</p>
                     {selectedPeriod.dueDate ? (
-                      <p className="mt-2 text-xs text-emerald-200/80">
-                        Due date: {formatDate(selectedPeriod.dueDate)}
-                      </p>
+                      <p className="mt-2 text-xs text-emerald-700/80">Due date: {formatDate(selectedPeriod.dueDate)}</p>
                     ) : null}
                   </div>
                 ) : null}
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label
-                      htmlFor="turnover"
-                      className="mb-2 block text-sm text-white/80"
-                    >
-                      Turnover
-                    </label>
-                    <input
-                      id="turnover"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      placeholder="0.00"
-                      value={turnover}
-                      onChange={(e) => setTurnover(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-white/25"
-                    />
+                    <label htmlFor="turnover" className="mb-2 block text-sm text-[#0F1C2E]">Turnover</label>
+                    <input id="turnover" type="number" min="0" step="0.01" placeholder="0.00" value={turnover} onChange={(e) => setTurnover(e.target.value)}
+                      className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#5A7896] focus:border-[#2E88D0]" />
                   </div>
-
                   <div>
-                    <label
-                      htmlFor="expenses"
-                      className="mb-2 block text-sm text-white/80"
-                    >
-                      Expenses
-                    </label>
-                    <input
-                      id="expenses"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      placeholder="0.00"
-                      value={expenses}
-                      onChange={(e) => setExpenses(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition placeholder:text-white/25 focus:border-white/25"
-                    />
+                    <label htmlFor="expenses" className="mb-2 block text-sm text-[#0F1C2E]">Expenses</label>
+                    <input id="expenses" type="number" min="0" step="0.01" placeholder="0.00" value={expenses} onChange={(e) => setExpenses(e.target.value)}
+                      className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#5A7896] focus:border-[#2E88D0]" />
                   </div>
                 </div>
 
                 <div className="flex flex-wrap gap-3">
-                  <button
-                    type="submit"
-                    disabled={saving || !selectedPeriod}
-                    className="rounded-xl border border-white/10 bg-white px-4 py-2.5 text-sm text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-                  >
+                  <button type="submit" disabled={saving || !selectedPeriod}
+                    className="rounded-xl bg-[#2E88D0] px-4 py-2.5 text-sm text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60">
                     {saving ? "Saving..." : "Save quarterly update"}
                   </button>
-
-                  <Link
-                    href="/dashboard"
-                    className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.07] hover:text-white"
-                  >
+                  <Link href="/dashboard" className="rounded-xl border border-[#B8D0EB] bg-[#CCE0F5] px-4 py-2.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]">
                     Cancel
                   </Link>
                 </div>
 
-                {message ? (
-                  <p className="text-sm text-white/70">{message}</p>
-                ) : null}
+                {message ? <p className="text-sm text-[#5A7896]">{message}</p> : null}
               </form>
             </>
           )}
