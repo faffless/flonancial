@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
 function useDaysUntil(targetDate: string): number {
@@ -30,7 +29,6 @@ function useCurrentTime(): string {
 }
 
 export function SiteHeader() {
-  const router = useRouter();
   const [loggedIn, setLoggedIn] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const daysToMtd50k = useDaysUntil("2026-04-06");
@@ -48,7 +46,7 @@ export function SiteHeader() {
   async function handleSignOut() {
     setSigningOut(true);
     await fetch("/api/auth/signout", { method: "POST", credentials: "include" });
-    router.push("/login");
+    window.location.href = "/login";
   }
 
   return (
@@ -57,7 +55,7 @@ export function SiteHeader() {
         <div className="flex items-end justify-between py-4">
           {/* Logo */}
           <Link href="/" className="flex flex-col items-center transition hover:opacity-90">
-            <div className="flex h-20 w-20 items-center justify-center">
+            <div className="flex h-[100px] w-[100px] items-center justify-center">
               <img src="/brand/99D.png" alt="Flonancial" className="h-full w-full object-contain" />
             </div>
             <p className="mt-0 text-lg font-bold tracking-tight text-[#0F1C2E]">Flonancial</p>
