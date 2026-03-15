@@ -196,6 +196,9 @@ export async function POST(request: Request, context: RouteContext) {
     return NextResponse.json({ error: "only_draft_or_submitted_updates_can_be_submitted" }, { status: 400 });
   }
 
+  // Determine action before we change anything
+  const action = update.status === "submitted" ? "amended" : "submitted";
+
   // Use new figures if provided, otherwise use saved figures
   const turnover = newTurnover !== null ? newTurnover : Number(update.turnover);
   const expenses = newExpenses !== null ? newExpenses : Number(update.expenses);
@@ -276,6 +279,7 @@ export async function POST(request: Request, context: RouteContext) {
 
   const submittedAt = new Date().toISOString();
 
+  // Update the quarterly_updates row as before
   const { error: saveError } = await supabase
     .from("quarterly_updates")
     .update({ turnover, expenses, status: "submitted", submitted_at: submittedAt })
@@ -285,6 +289,25 @@ export async function POST(request: Request, context: RouteContext) {
   if (saveError) {
     const response = NextResponse.json({ error: "hmrc_submission_succeeded_but_local_save_failed" }, { status: 500 });
     return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
+  }
+
+  // Append to submission_history — non-fatal if this fails
+  try {
+    await supabase.from("submission_history").insert({
+      user_id: user.id,
+      business_id: business.id,
+      quarterly_update_id: update.id,
+      period_key: update.period_key,
+      quarter_start: update.quarter_start,
+      quarter_end: update.quarter_end,
+      turnover,
+      expenses,
+      tax_year: taxYear,
+      action,
+      submitted_at: submittedAt,
+    });
+  } catch {
+    // History insert failed — submission still succeeded, do not block
   }
 
   if (user.email) {
@@ -309,6 +332,7 @@ export async function POST(request: Request, context: RouteContext) {
     submitted: true,
     submission_method: "cumulative",
     tax_year: taxYear,
+    action,
     business: {
       id: business.id,
       name: business.name,
