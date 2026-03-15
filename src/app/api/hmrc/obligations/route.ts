@@ -39,8 +39,9 @@ export async function GET() {
 
   if (userError || !user) {
     return NextResponse.json({ error: "not_logged_in" }, { status: 401 });
-console.log("[obligations] user.id:", user.id);
   }
+
+console.log("[obligations] user.id:", user.id);
 
   const { data: businesses, error: businessesError } = await supabase
     .from("businesses")
