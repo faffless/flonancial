@@ -46,7 +46,7 @@ type HistoryRow = {
   turnover: number;
   expenses: number;
   tax_year: string;
-  action: "submitted" | "amended";
+  action: "submitted" | "Amendment sent";
   submitted_at: string;
   businesses: BusinessesField;
 };
