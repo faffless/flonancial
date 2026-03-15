@@ -152,7 +152,7 @@ function AddUpdateContent() {
   const selectedBusiness = businesses.find((b) => String(b.id) === businessId) ?? null;
   const localPeriods = selectedBusiness?.start_date ? generateLocalPeriods(selectedBusiness.start_date, selectedBusiness.accounting_year_end) : [];
   const hmrcPeriods: PeriodOption[] = hmrcObligations
-    .filter((item) => item.business_id === Number(businessId) && item.status === "open" && item.quarter_start && item.quarter_end)
+    .filter((item) => item.business_id === Number(businessId) && (item.status === "open" || item.status === "O") && item.quarter_start && item.quarter_end)
     .map((item) => ({
       key: item.period_key || makePeriodKey(item.quarter_start as string, item.quarter_end as string),
       quarterStart: item.quarter_start as string,
