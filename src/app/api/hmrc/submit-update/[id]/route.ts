@@ -225,30 +225,22 @@ export async function POST(request: Request, context: RouteContext) {
     : "application/vnd.hmrc.5.0+json";
 
   const payload = isProperty
-    ? {
-        fromDate: update.quarter_start,
-        toDate: update.quarter_end,
+  ? {
+      fromDate: update.quarter_start,
+      toDate: update.quarter_end,
+      ukProperty: {
         income: { periodAmount: turnover },
         expenses: { consolidatedExpenses: expenses },
-      }
-    : {
-        periodDates: {
-          periodStartDate: update.quarter_start,
-          periodEndDate: update.quarter_end,
-        },
-        periodIncome: { turnover },
-        periodExpenses: { consolidatedExpenses: expenses },
-      };
-
-  const hmrcResult = await hmrcFetchWithAuth(hmrcUrl, {
-    method: "PUT",
-    headers: {
-      Accept: acceptHeader,
-      "Content-Type": "application/json",
-      ...fraudHeaders,
-    },
-    body: JSON.stringify(payload),
-  });
+      },
+    }
+  : {
+      periodDates: {
+        periodStartDate: update.quarter_start,
+        periodEndDate: update.quarter_end,
+      },
+      periodIncome: { turnover },
+      periodExpenses: { consolidatedExpenses: expenses },
+    };
 
   if (!hmrcResult.ok) {
     const response = NextResponse.json({ error: "hmrc_auth_failed", status: hmrcResult.status }, { status: hmrcResult.status });
