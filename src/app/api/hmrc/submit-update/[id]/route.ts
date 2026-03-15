@@ -225,22 +225,32 @@ export async function POST(request: Request, context: RouteContext) {
     : "application/vnd.hmrc.5.0+json";
 
   const payload = isProperty
-  ? {
-      fromDate: update.quarter_start,
-      toDate: update.quarter_end,
-      ukProperty: {
-        income: { periodAmount: turnover },
-        expenses: { consolidatedExpenses: expenses },
-      },
-    }
-  : {
-      periodDates: {
-        periodStartDate: update.quarter_start,
-        periodEndDate: update.quarter_end,
-      },
-      periodIncome: { turnover },
-      periodExpenses: { consolidatedExpenses: expenses },
-    };
+    ? {
+        fromDate: update.quarter_start,
+        toDate: update.quarter_end,
+        ukProperty: {
+          income: { periodAmount: turnover },
+          expenses: { consolidatedExpenses: expenses },
+        },
+      }
+    : {
+        periodDates: {
+          periodStartDate: update.quarter_start,
+          periodEndDate: update.quarter_end,
+        },
+        periodIncome: { turnover },
+        periodExpenses: { consolidatedExpenses: expenses },
+      };
+
+  const hmrcResult = await hmrcFetchWithAuth(hmrcUrl, {
+    method: "PUT",
+    headers: {
+      Accept: acceptHeader,
+      "Content-Type": "application/json",
+      ...fraudHeaders,
+    },
+    body: JSON.stringify(payload),
+  });
 
   if (!hmrcResult.ok) {
     const response = NextResponse.json({ error: "hmrc_auth_failed", status: hmrcResult.status }, { status: hmrcResult.status });
@@ -266,7 +276,6 @@ export async function POST(request: Request, context: RouteContext) {
 
   const submittedAt = new Date().toISOString();
 
-  // Save updated figures and status
   const { error: saveError } = await supabase
     .from("quarterly_updates")
     .update({ turnover, expenses, status: "submitted", submitted_at: submittedAt })
@@ -278,7 +287,6 @@ export async function POST(request: Request, context: RouteContext) {
     return applyHmrcCookieMutations(response, hmrcResult.cookieMutations);
   }
 
-  // Send confirmation email
   if (user.email) {
     try {
       await sendSubmissionConfirmation({
