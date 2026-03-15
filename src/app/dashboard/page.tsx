@@ -106,7 +106,6 @@ export default async function DashboardPage() {
   const { data: { user }, error: userError } = await supabase.auth.getUser();
   if (userError || !user) redirect("/login");
 
-  // Check HMRC connection via cookies
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("hmrc_access_token")?.value;
   const refreshToken = cookieStore.get("hmrc_refresh_token")?.value;
@@ -138,12 +137,6 @@ export default async function DashboardPage() {
             <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Dashboard</h1>
             <p className="mt-1 text-sm text-[#5A7896]">{user.email}</p>
           </div>
-          <Link
-            href="/add-business"
-            className="rounded-xl bg-[#2E88D0] px-4 py-2.5 text-sm text-white transition hover:opacity-90"
-          >
-            Add business
-          </Link>
         </div>
 
         {/* HMRC connection banner */}
@@ -179,127 +172,135 @@ export default async function DashboardPage() {
             </div>
           </div>
         ) : (
-          <div className="mt-8 space-y-6">
-            {businesses.map((business) => {
-              const taxYear = getCurrentTaxYear(business.accounting_year_end);
-              const businessUpdates = updates.filter((u) => u.business_id === business.id);
-              const thisYearUpdates = businessUpdates.filter((u) => {
-                const qs = new Date(`${u.quarter_start}T00:00:00`);
-                return qs >= taxYear.start && qs <= taxYear.end;
-              });
-              const submittedCount = thisYearUpdates.filter((u) => u.status === "submitted").length;
-              const isHmrcReady = Boolean(business.hmrc_business_id);
-              const businessType = formatBusinessType(business.business_type);
+          <>
+            <div className="mt-8 space-y-6">
+              {businesses.map((business) => {
+                const taxYear = getCurrentTaxYear(business.accounting_year_end);
+                const businessUpdates = updates.filter((u) => u.business_id === business.id);
+                const thisYearUpdates = businessUpdates.filter((u) => {
+                  const qs = new Date(`${u.quarter_start}T00:00:00`);
+                  return qs >= taxYear.start && qs <= taxYear.end;
+                });
+                const submittedCount = thisYearUpdates.filter((u) => u.status === "submitted").length;
+                const isHmrcReady = Boolean(business.hmrc_business_id);
+                const businessType = formatBusinessType(business.business_type);
 
-              // Badge: only show if connected to HMRC
-              let badge = null;
-              if (hmrcConnected) {
-                if (isHmrcReady) {
-                  badge = (
-                    <span className="rounded-full border border-emerald-600/20 bg-emerald-50 px-2.5 py-1 text-[11px] text-emerald-700">
-                      HMRC ready
-                    </span>
-                  );
-                } else {
-                  badge = (
-                    <span className="rounded-full border border-amber-600/20 bg-amber-50 px-2.5 py-1 text-[11px] text-amber-700">
-                      Not matched to HMRC
-                    </span>
-                  );
+                let badge = null;
+                if (hmrcConnected) {
+                  if (isHmrcReady) {
+                    badge = (
+                      <span className="rounded-full border border-emerald-600/20 bg-emerald-50 px-2.5 py-1 text-[11px] text-emerald-700">
+                        HMRC ready
+                      </span>
+                    );
+                  } else {
+                    badge = (
+                      <span className="rounded-full border border-amber-600/20 bg-amber-50 px-2.5 py-1 text-[11px] text-amber-700">
+                        Not matched to HMRC
+                      </span>
+                    );
+                  }
                 }
-              }
 
-              return (
-                <div key={business.id} className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5]">
+                return (
+                  <div key={business.id} className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5]">
 
-                  {/* Business header */}
-                  <div className="flex flex-wrap items-center justify-between gap-3 p-5 sm:p-6">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <h2 className="text-lg font-medium text-[#0F1C2E]">{business.name}</h2>
-                      {businessType ? (
-                        <span className="text-sm text-[#5A7896]">{businessType}</span>
-                      ) : null}
-                      {badge}
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <p className="text-sm text-[#5A7896]">
-                        {taxYear.label} · <span className="text-emerald-700">{submittedCount} of 4 submitted</span>
-                      </p>
-                      <Link href={`/edit-business/${business.id}`} className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]">
-                        Edit
-                      </Link>
-                      <Link
-                        href={`/add-update?businessId=${business.id}`}
-                        className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-3 py-1.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]"
-                      >
-                        + Add update
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Updates for this business */}
-                  {businessUpdates.length > 0 ? (
-                    <div className="border-t border-[#B8D0EB] px-5 pb-5 sm:px-6 sm:pb-6">
-                      <div className="mt-4 space-y-3">
-                        {businessUpdates.map((update) => (
-                          <div key={update.id} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
-                            <div className="flex flex-wrap items-center justify-between gap-3">
-                              <div>
-                                <p className="text-sm font-medium text-[#0F1C2E]">
-                                  {formatDate(update.quarter_start)} to {formatDate(update.quarter_end)}
-                                </p>
-                                <div className="mt-1.5 flex flex-wrap gap-4 text-sm text-[#5A7896]">
-                                  <span>Turnover: <span className="text-[#0F1C2E]">{formatCurrency(Number(update.turnover))}</span></span>
-                                  <span>Expenses: <span className="text-[#0F1C2E]">{formatCurrency(Number(update.expenses))}</span></span>
-                                </div>
-                                {update.submitted_at ? (
-                                  <p className="mt-1 text-xs text-[#5A7896]">
-                                    Submitted {formatDate(update.submitted_at.slice(0, 10))}
-                                  </p>
-                                ) : null}
-                              </div>
-
-                              <div className="flex flex-wrap items-center gap-3">
-                                <span className={`rounded-full border px-3 py-1 text-xs ${
-                                  update.status === "submitted"
-                                    ? "border-emerald-600/20 bg-emerald-50 text-emerald-700"
-                                    : "border-amber-600/20 bg-amber-50 text-amber-700"
-                                }`}>
-                                  {update.status === "submitted" ? "Submitted" : "Draft"}
-                                </span>
-
-                                {update.status === "draft" ? (
-                                  <>
-                                    <Link href={`/edit-update/${update.id}`} className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]">
-                                      Edit
-                                    </Link>
-                                    {isHmrcReady ? (
-                                      <Link href={`/hmrc-submit?updateId=${update.id}`} className="text-sm font-medium text-[#2E88D0] transition hover:opacity-75">
-                                        Submit to HMRC
-                                      </Link>
-                                    ) : null}
-                                    <DeleteUpdateButton updateId={update.id} />
-                                  </>
-                                ) : isHmrcReady ? (
-                                  <Link href={`/hmrc-submit?updateId=${update.id}`} className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]">
-                                    Amend
-                                  </Link>
-                                ) : null}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
+                    {/* Business header */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 p-5 sm:p-6">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <h2 className="text-lg font-medium text-[#0F1C2E]">{business.name}</h2>
+                        {businessType ? (
+                          <span className="text-sm text-[#5A7896]">{businessType}</span>
+                        ) : null}
+                        {badge}
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <p className="text-sm text-[#5A7896]">
+                          {taxYear.label} · <span className="text-emerald-700">{submittedCount} of 4 submitted</span>
+                        </p>
+                        <Link href={`/edit-business/${business.id}`} className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]">
+                          Edit
+                        </Link>
+                        <Link
+                          href={`/add-update?businessId=${business.id}`}
+                          className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-3 py-1.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]"
+                        >
+                          + Add update
+                        </Link>
                       </div>
                     </div>
-                  ) : (
-                    <div className="border-t border-[#B8D0EB] p-5 sm:p-6">
-                      <p className="text-sm text-[#5A7896]">No quarterly updates yet for this business.</p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+
+                    {/* Updates for this business */}
+                    {businessUpdates.length > 0 ? (
+                      <div className="border-t border-[#B8D0EB] px-5 pb-5 sm:px-6 sm:pb-6">
+                        <div className="mt-4 space-y-3">
+                          {businessUpdates.map((update) => (
+                            <div key={update.id} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
+                              <div className="flex flex-wrap items-center justify-between gap-3">
+                                <div>
+                                  <p className="text-sm font-medium text-[#0F1C2E]">
+                                    {formatDate(update.quarter_start)} to {formatDate(update.quarter_end)}
+                                  </p>
+                                  <div className="mt-1.5 flex flex-wrap gap-4 text-sm text-[#5A7896]">
+                                    <span>Turnover: <span className="text-[#0F1C2E]">{formatCurrency(Number(update.turnover))}</span></span>
+                                    <span>Expenses: <span className="text-[#0F1C2E]">{formatCurrency(Number(update.expenses))}</span></span>
+                                  </div>
+                                  {update.submitted_at ? (
+                                    <p className="mt-1 text-xs text-[#5A7896]">
+                                      Submitted {formatDate(update.submitted_at.slice(0, 10))}
+                                    </p>
+                                  ) : null}
+                                </div>
+
+                                <div className="flex flex-wrap items-center gap-3">
+                                  <span className={`rounded-full border px-3 py-1 text-xs ${
+                                    update.status === "submitted"
+                                      ? "border-emerald-600/20 bg-emerald-50 text-emerald-700"
+                                      : "border-amber-600/20 bg-amber-50 text-amber-700"
+                                  }`}>
+                                    {update.status === "submitted" ? "Submitted" : "Draft"}
+                                  </span>
+
+                                  {update.status === "draft" ? (
+                                    <>
+                                      <Link href={`/edit-update/${update.id}`} className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]">
+                                        Edit
+                                      </Link>
+                                      {isHmrcReady ? (
+                                        <Link href={`/hmrc-submit?updateId=${update.id}`} className="text-sm font-medium text-[#2E88D0] transition hover:opacity-75">
+                                          Submit to HMRC
+                                        </Link>
+                                      ) : null}
+                                      <DeleteUpdateButton updateId={update.id} />
+                                    </>
+                                  ) : isHmrcReady ? (
+                                    <Link href={`/hmrc-submit?updateId=${update.id}`} className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]">
+                                      Amend
+                                    </Link>
+                                  ) : null}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="border-t border-[#B8D0EB] p-5 sm:p-6">
+                        <p className="text-sm text-[#5A7896]">No quarterly updates yet for this business.</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Add business button — below the list */}
+            <div className="mt-6">
+              <Link href="/add-business" className="rounded-xl bg-[#2E88D0] px-4 py-2.5 text-sm text-white transition hover:opacity-90">
+                Add business
+              </Link>
+            </div>
+          </>
         )}
       </section>
     </SiteShell>
