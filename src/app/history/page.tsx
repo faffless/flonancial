@@ -46,7 +46,7 @@ type HistoryRow = {
   turnover: number;
   expenses: number;
   tax_year: string;
-  action: "submitted" | "Amended";
+  action: "submitted" | "amended";
   submitted_at: string;
   businesses: BusinessesField;
 };
@@ -134,7 +134,9 @@ export default async function HistoryPage() {
 
         {grouped.length === 0 ? (
           <div className="rounded-2xl bg-[#CCE0F5] border border-[#B8D0EB] px-6 py-10 text-center">
-            <p className="text-[#5A7896] text-sm">No submissions yet. Once you submit a quarterly update to HMRC it will appear here.</p>
+            <p className="text-[#5A7896] text-sm">
+              No submissions yet. Once you submit a quarterly update to HMRC it will appear here.
+            </p>
           </div>
         ) : (
           <div className="flex flex-col gap-10">
@@ -181,7 +183,7 @@ export default async function HistoryPage() {
                                 ? "bg-amber-100 text-amber-700"
                                 : "bg-green-100 text-green-700"
                             }`}>
-                              {entry.action === "amended" ? "Amendment Sent" : "Submitted"}
+                              {entry.action === "amended" ? "Amendment sent" : "Submitted"}
                             </span>
                           </td>
                           <td className="px-5 py-3 text-[#5A7896] whitespace-nowrap">
