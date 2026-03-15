@@ -29,9 +29,6 @@ type HMRCErrorResponse = {
   error_description?: string;
 };
 
-// Quarterly obligations are approximately 3 months (88–95 days).
-// Annual obligations (End of Period Statements, Final Declarations) are ~365 days.
-// We only want quarterly periods here.
 function isQuarterlyPeriod(startDate: string | null, endDate: string | null): boolean {
   if (!startDate || !endDate) return false;
   const start = new Date(`${startDate}T00:00:00`);
@@ -40,28 +37,20 @@ function isQuarterlyPeriod(startDate: string | null, endDate: string | null): bo
   return days >= 80 && days <= 105;
 }
 
-// Map Supabase business_type to HMRC typeOfBusiness query param
 function toHmrcBusinessType(businessType: string | null): string {
   if (businessType === "uk_property") return "uk-property";
-  return "self-employment"; // sole_trader and fallback
+  return "self-employment";
 }
 
 export async function GET() {
   const testNino = process.env.HMRC_TEST_NINO;
 
   if (!testNino) {
-    return NextResponse.json(
-      { error: "missing_hmrc_test_nino" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "missing_hmrc_test_nino" }, { status: 500 });
   }
 
   const supabase = await createClient();
-
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
 
   if (userError || !user) {
     return NextResponse.json({ error: "not_logged_in" }, { status: 401 });
@@ -74,17 +63,11 @@ export async function GET() {
     .not("hmrc_business_id", "is", null);
 
   if (businessesError) {
-    return NextResponse.json(
-      { error: businessesError.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: businessesError.message }, { status: 500 });
   }
 
   if (!businesses || businesses.length === 0) {
-    return NextResponse.json(
-      { error: "no_linked_hmrc_business" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "no_linked_hmrc_business" }, { status: 400 });
   }
 
   const fromDate = "2025-04-06";
@@ -99,15 +82,14 @@ export async function GET() {
     const hmrcBusinessType = toHmrcBusinessType(business.business_type);
 
     const hmrcUrl = new URL(
-      `https://test-api.service.hmrc.gov.uk/obligations/details/${encodeURIComponent(
-        testNino
-      )}/income-and-expenditure`
+      `https://test-api.service.hmrc.gov.uk/obligations/details/${encodeURIComponent(testNino)}/income-and-expenditure`
     );
-
     hmrcUrl.searchParams.set("typeOfBusiness", hmrcBusinessType);
     hmrcUrl.searchParams.set("businessId", business.hmrc_business_id);
     hmrcUrl.searchParams.set("fromDate", fromDate);
     hmrcUrl.searchParams.set("toDate", toDate);
+
+    console.log("[obligations] Fetching:", hmrcUrl.toString());
 
     const hmrcResult = await hmrcFetchWithAuth(hmrcUrl.toString(), {
       method: "GET",
@@ -121,20 +103,33 @@ export async function GET() {
       lastCookieMutations = hmrcResult.cookieMutations;
     }
 
-    if (!hmrcResult.ok) continue; // skip this business if auth failed entirely
+    console.log("[obligations] hmrcResult.ok:", hmrcResult.ok);
+
+    if (!hmrcResult.ok) {
+      console.log("[obligations] Auth failed, skipping business:", business.id);
+      continue;
+    }
 
     const hmrcResponse = hmrcResult.response;
+    console.log("[obligations] HMRC HTTP status:", hmrcResponse.status);
 
-    if (!hmrcResponse.ok) continue; // skip this business if HMRC returned an error
+    if (!hmrcResponse.ok) {
+      const errorBody = await hmrcResponse.text();
+      console.log("[obligations] HMRC error body:", errorBody);
+      continue;
+    }
 
     const data = (await hmrcResponse.json()) as HMRCObligationsResponse;
+    console.log("[obligations] Raw HMRC response:", JSON.stringify(data));
 
     const obligations =
       data.obligations?.flatMap((group) =>
         (group.obligationDetails ?? [])
-          .filter((item) =>
-            isQuarterlyPeriod(item.periodStartDate ?? null, item.periodEndDate ?? null)
-          )
+          .filter((item) => {
+            const quarterly = isQuarterlyPeriod(item.periodStartDate ?? null, item.periodEndDate ?? null);
+            console.log("[obligations] period:", item.periodStartDate, "to", item.periodEndDate, "status:", item.status, "quarterly:", quarterly);
+            return quarterly;
+          })
           .map((item) => ({
             business_id: business.id,
             business_name: business.name,
