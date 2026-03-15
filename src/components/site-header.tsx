@@ -83,19 +83,19 @@ export function SiteHeader() {
 
           {/* Right side */}
           {loggedIn ? (
-            <div className="flex items-center gap-5">
-              <Link href="/dashboard" className="text-lg font-bold tracking-tight text-[#0F1C2E] transition hover:opacity-75">
-                Dashboard
-              </Link>
-              <button
-                type="button"
-                onClick={handleSignOut}
-                disabled={signingOut}
-                className="text-lg font-bold tracking-tight text-[#0F1C2E] transition hover:opacity-75 disabled:opacity-50"
-              >
-                {signingOut ? "Signing out..." : "Sign out"}
-              </button>
-            </div>
+            <div className="flex flex-col items-end gap-1">
+  <button
+    type="button"
+    onClick={handleSignOut}
+    disabled={signingOut}
+    className="text-lg font-bold tracking-tight text-[#0F1C2E] transition hover:opacity-75 disabled:opacity-50"
+  >
+    {signingOut ? "Signing out..." : "Sign out"}
+  </button>
+  <Link href="/dashboard" className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]">
+    Dashboard
+  </Link>
+</div>
           ) : (
             <Link href="/login" className="text-lg font-bold tracking-tight text-[#0F1C2E] transition hover:opacity-75">
               Log in
