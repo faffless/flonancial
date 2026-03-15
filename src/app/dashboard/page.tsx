@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { SiteShell } from "@/components/site-shell";
 import { DeleteUpdateButton } from "@/components/delete-update-button";
 import { createClient } from "@/utils/supabase/server";
@@ -105,6 +106,13 @@ export default async function DashboardPage() {
   const { data: { user }, error: userError } = await supabase.auth.getUser();
   if (userError || !user) redirect("/login");
 
+  // Check HMRC connection via cookies
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("hmrc_access_token")?.value;
+  const refreshToken = cookieStore.get("hmrc_refresh_token")?.value;
+  const expiresAt = Number(cookieStore.get("hmrc_token_expires_at")?.value);
+  const hmrcConnected = !!refreshToken && !!accessToken && Number.isFinite(expiresAt) && expiresAt > Date.now();
+
   const { data: businessesData } = await supabase
     .from("businesses")
     .select("id, name, trading_name, business_type, start_date, accounting_year_end, hmrc_business_id, created_at")
@@ -130,21 +138,34 @@ export default async function DashboardPage() {
             <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Dashboard</h1>
             <p className="mt-1 text-sm text-[#5A7896]">{user.email}</p>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/add-business"
-              className="rounded-xl bg-[#2E88D0] px-4 py-2.5 text-sm text-white transition hover:opacity-90"
-            >
-              Add business
-            </Link>
-            <Link
-              href="/account"
-              className="rounded-xl border border-[#B8D0EB] px-4 py-2.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]"
-            >
-              Account
-            </Link>
-          </div>
+          <Link
+            href="/add-business"
+            className="rounded-xl bg-[#2E88D0] px-4 py-2.5 text-sm text-white transition hover:opacity-90"
+          >
+            Add business
+          </Link>
         </div>
+
+        {/* HMRC connection banner */}
+        {hmrcConnected ? (
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-600/20 bg-emerald-50 px-4 py-3">
+            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+            <p className="text-sm text-emerald-700">Connected to HMRC</p>
+          </div>
+        ) : (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-600/20 bg-amber-50 px-4 py-3">
+            <div className="flex items-center gap-2">
+              <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
+              <p className="text-sm text-amber-700">Not connected to HMRC — connect your account to submit quarterly updates</p>
+            </div>
+            <a
+              href="/api/hmrc/start"
+              className="rounded-xl bg-[#2E88D0] px-4 py-2 text-sm text-white transition hover:opacity-90"
+            >
+              Connect HMRC
+            </a>
+          </div>
+        )}
 
         {/* No businesses state */}
         {businesses.length === 0 ? (
@@ -167,8 +188,26 @@ export default async function DashboardPage() {
                 return qs >= taxYear.start && qs <= taxYear.end;
               });
               const submittedCount = thisYearUpdates.filter((u) => u.status === "submitted").length;
-              const isHmrcLinked = Boolean(business.hmrc_business_id);
+              const isHmrcReady = Boolean(business.hmrc_business_id);
               const businessType = formatBusinessType(business.business_type);
+
+              // Badge: only show if connected to HMRC
+              let badge = null;
+              if (hmrcConnected) {
+                if (isHmrcReady) {
+                  badge = (
+                    <span className="rounded-full border border-emerald-600/20 bg-emerald-50 px-2.5 py-1 text-[11px] text-emerald-700">
+                      HMRC ready
+                    </span>
+                  );
+                } else {
+                  badge = (
+                    <span className="rounded-full border border-amber-600/20 bg-amber-50 px-2.5 py-1 text-[11px] text-amber-700">
+                      Not matched to HMRC
+                    </span>
+                  );
+                }
+              }
 
               return (
                 <div key={business.id} className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5]">
@@ -180,15 +219,7 @@ export default async function DashboardPage() {
                       {businessType ? (
                         <span className="text-sm text-[#5A7896]">{businessType}</span>
                       ) : null}
-                      {isHmrcLinked ? (
-                        <span className="rounded-full border border-emerald-600/20 bg-emerald-50 px-2.5 py-1 text-[11px] text-emerald-700">
-                          HMRC linked
-                        </span>
-                      ) : (
-                        <span className="rounded-full border border-amber-600/20 bg-amber-50 px-2.5 py-1 text-[11px] text-amber-700">
-                          Not linked to HMRC
-                        </span>
-                      )}
+                      {badge}
                     </div>
                     <div className="flex items-center gap-4">
                       <p className="text-sm text-[#5A7896]">
@@ -242,14 +273,14 @@ export default async function DashboardPage() {
                                     <Link href={`/edit-update/${update.id}`} className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]">
                                       Edit
                                     </Link>
-                                    {isHmrcLinked ? (
+                                    {isHmrcReady ? (
                                       <Link href={`/hmrc-submit?updateId=${update.id}`} className="text-sm font-medium text-[#2E88D0] transition hover:opacity-75">
                                         Submit to HMRC
                                       </Link>
                                     ) : null}
                                     <DeleteUpdateButton updateId={update.id} />
                                   </>
-                                ) : isHmrcLinked ? (
+                                ) : isHmrcReady ? (
                                   <Link href={`/hmrc-submit?updateId=${update.id}`} className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]">
                                     Amend
                                   </Link>
