@@ -22,21 +22,6 @@ type HMRCObligationsResponse = {
   obligations?: HMRCObligationGroup[];
 };
 
-type HMRCErrorResponse = {
-  code?: string;
-  message?: string;
-  error?: string;
-  error_description?: string;
-};
-
-function isQuarterlyPeriod(startDate: string | null, endDate: string | null): boolean {
-  if (!startDate || !endDate) return false;
-  const start = new Date(`${startDate}T00:00:00`);
-  const end = new Date(`${endDate}T00:00:00`);
-  const days = (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
-  return days >= 80 && days <= 105;
-}
-
 function toHmrcBusinessType(businessType: string | null): string {
   if (businessType === "uk_property") return "uk-property";
   return "self-employment";
@@ -89,8 +74,6 @@ export async function GET() {
     hmrcUrl.searchParams.set("fromDate", fromDate);
     hmrcUrl.searchParams.set("toDate", toDate);
 
-    console.log("[obligations] Fetching:", hmrcUrl.toString());
-
     const hmrcResult = await hmrcFetchWithAuth(hmrcUrl.toString(), {
       method: "GET",
       headers: {
@@ -103,33 +86,17 @@ export async function GET() {
       lastCookieMutations = hmrcResult.cookieMutations;
     }
 
-    console.log("[obligations] hmrcResult.ok:", hmrcResult.ok);
-
-    if (!hmrcResult.ok) {
-      console.log("[obligations] Auth failed, skipping business:", business.id);
-      continue;
-    }
+    if (!hmrcResult.ok) continue;
 
     const hmrcResponse = hmrcResult.response;
-    console.log("[obligations] HMRC HTTP status:", hmrcResponse.status);
-
-    if (!hmrcResponse.ok) {
-      const errorBody = await hmrcResponse.text();
-      console.log("[obligations] HMRC error body:", errorBody);
-      continue;
-    }
+    if (!hmrcResponse.ok) continue;
 
     const data = (await hmrcResponse.json()) as HMRCObligationsResponse;
-    console.log("[obligations] Raw HMRC response:", JSON.stringify(data));
 
     const obligations =
       data.obligations?.flatMap((group) =>
         (group.obligationDetails ?? [])
-          .filter((item) => {
-            const quarterly = isQuarterlyPeriod(item.periodStartDate ?? null, item.periodEndDate ?? null);
-            console.log("[obligations] period:", item.periodStartDate, "to", item.periodEndDate, "status:", item.status, "quarterly:", quarterly);
-            return quarterly;
-          })
+          .filter((item) => !!item.periodStartDate && !!item.periodEndDate)
           .map((item) => ({
             business_id: business.id,
             business_name: business.name,
