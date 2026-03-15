@@ -29,6 +29,14 @@ function formatPeriod(start: string, end: string) {
   return `${formatDate(start)} to ${formatDate(end)}`;
 }
 
+type BusinessesField = {
+  name: string;
+  business_type: string;
+} | {
+  name: string;
+  business_type: string;
+}[] | null;
+
 type HistoryRow = {
   id: number;
   business_id: number;
@@ -40,10 +48,7 @@ type HistoryRow = {
   tax_year: string;
   action: "submitted" | "amended";
   submitted_at: string;
-  businesses: {
-    name: string;
-    business_type: string;
-  };
+  businesses: BusinessesField;
 };
 
 type GroupedHistory = {
@@ -52,6 +57,18 @@ type GroupedHistory = {
   business_type: string;
   entries: HistoryRow[];
 };
+
+function getBusinessName(businesses: BusinessesField): string {
+  if (!businesses) return "Unknown business";
+  if (Array.isArray(businesses)) return businesses[0]?.name ?? "Unknown business";
+  return businesses.name ?? "Unknown business";
+}
+
+function getBusinessType(businesses: BusinessesField): string {
+  if (!businesses) return "";
+  if (Array.isArray(businesses)) return businesses[0]?.business_type ?? "";
+  return businesses.business_type ?? "";
+}
 
 export default async function HistoryPage() {
   const supabase = await createClient();
@@ -90,16 +107,15 @@ export default async function HistoryPage() {
     );
   }
 
-  // Group by business
   const grouped: GroupedHistory[] = [];
   const seen = new Map<number, GroupedHistory>();
 
-  for (const row of (rows ?? []) as HistoryRow[]) {
+  for (const row of (rows ?? []) as unknown as HistoryRow[]) {
     if (!seen.has(row.business_id)) {
       const group: GroupedHistory = {
         business_id: row.business_id,
-        business_name: row.businesses?.name ?? "Unknown business",
-        business_type: row.businesses?.business_type ?? "",
+        business_name: getBusinessName(row.businesses),
+        business_type: getBusinessType(row.businesses),
         entries: [],
       };
       seen.set(row.business_id, group);
@@ -124,7 +140,6 @@ export default async function HistoryPage() {
           <div className="flex flex-col gap-10">
             {grouped.map((group) => (
               <div key={group.business_id}>
-                {/* Business header */}
                 <div className="flex items-center gap-3 mb-3">
                   <h2 className="text-lg font-bold text-[#0F1C2E]">{group.business_name}</h2>
                   <span className="text-xs font-medium text-[#5A7896] bg-[#CCE0F5] border border-[#B8D0EB] rounded-full px-3 py-0.5">
@@ -132,7 +147,6 @@ export default async function HistoryPage() {
                   </span>
                 </div>
 
-                {/* Entries table */}
                 <div className="rounded-2xl border border-[#B8D0EB] overflow-hidden">
                   <table className="w-full text-sm">
                     <thead>
