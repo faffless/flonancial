@@ -56,7 +56,7 @@ export function SiteHeader() {
           {/* Logo */}
           <Link href="/" className="flex flex-col items-center transition hover:opacity-90">
             <div className="flex h-[80px] w-[140px] items-center justify-center">
-              <img src="/brand/99G.png" alt="Flonancial" className="h-full w-full object-contain" />
+              <img src="/brand/99H.png" alt="Flonancial" className="h-full w-full object-contain" />
             </div>
             <p className="mt-0 text-lg font-bold tracking-tight text-[#0F1C2E]">Flonancial</p>
           </Link>
