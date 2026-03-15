@@ -262,7 +262,6 @@ function AddUpdateContent() {
     });
 
     if (error) { setMessage(error.message); setSaving(false); return; }
-    router.refresh();
     router.push("/dashboard");
   }
 
