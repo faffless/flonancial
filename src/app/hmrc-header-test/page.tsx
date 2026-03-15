@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { collectFraudData } from "@/utils/hmrc/collect-fraud-data";
 
 export default function HmrcHeaderTestPage() {
   const [result, setResult] = useState<any>(null);
@@ -9,19 +10,7 @@ export default function HmrcHeaderTestPage() {
     setLoading(true);
     setResult(null);
 
-    // Get device ID from cookie
-    const deviceId = document.cookie
-      .split("; ")
-      .find((c) => c.startsWith("flo_device_id="))
-      ?.split("=")[1] ?? "unknown";
-
-    const clientData = {
-      browserJSUserAgent: navigator.userAgent,
-      deviceId,
-      screens: `width=${screen.width}&height=${screen.height}&scaling-factor=${window.devicePixelRatio}&colour-depth=${screen.colorDepth}`,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      windowSize: `width=${window.innerWidth}&height=${window.innerHeight}`,
-    };
+    const clientData = collectFraudData();
 
     const res = await fetch("/api/hmrc/test-headers", {
       method: "POST",
