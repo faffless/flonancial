@@ -250,14 +250,9 @@ export default async function DashboardPage() {
                                     <DeleteUpdateButton updateId={update.id} />
                                   </>
                                 ) : isHmrcLinked ? (
-                                  <>
-                                    <Link href={`/edit-update/${update.id}`} className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]">
-                                      Edit
-                                    </Link>
-                                    <Link href={`/hmrc-submit?updateId=${update.id}`} className="text-sm font-medium text-[#2E88D0] transition hover:opacity-75">
-                                      Amend
-                                    </Link>
-                                  </>
+                                  <Link href={`/hmrc-submit?updateId=${update.id}`} className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]">
+                                    Amend
+                                  </Link>
                                 ) : null}
                               </div>
                             </div>

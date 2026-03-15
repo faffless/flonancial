@@ -145,9 +145,14 @@ export async function POST(request: Request, context: RouteContext) {
   }
 
   let clientFraudData: ClientFraudData | null = null;
+  let newTurnover: number | null = null;
+  let newExpenses: number | null = null;
+
   try {
     const body = await request.json();
     clientFraudData = body.fraudData ?? null;
+    if (typeof body.turnover === "number" && Number.isFinite(body.turnover)) newTurnover = body.turnover;
+    if (typeof body.expenses === "number" && Number.isFinite(body.expenses)) newExpenses = body.expenses;
   } catch {}
 
   const supabase = await createClient();
@@ -191,6 +196,10 @@ export async function POST(request: Request, context: RouteContext) {
     return NextResponse.json({ error: "only_draft_or_submitted_updates_can_be_submitted" }, { status: 400 });
   }
 
+  // Use new figures if provided, otherwise use saved figures
+  const turnover = newTurnover !== null ? newTurnover : Number(update.turnover);
+  const expenses = newExpenses !== null ? newExpenses : Number(update.expenses);
+
   const fraudHeaders = buildFraudPreventionHeaders(
     request.headers,
     clientFraudData ?? {
@@ -219,16 +228,16 @@ export async function POST(request: Request, context: RouteContext) {
     ? {
         fromDate: update.quarter_start,
         toDate: update.quarter_end,
-        income: { periodAmount: Number(update.turnover) },
-        expenses: { consolidatedExpenses: Number(update.expenses) },
+        income: { periodAmount: turnover },
+        expenses: { consolidatedExpenses: expenses },
       }
     : {
         periodDates: {
           periodStartDate: update.quarter_start,
           periodEndDate: update.quarter_end,
         },
-        periodIncome: { turnover: Number(update.turnover) },
-        periodExpenses: { consolidatedExpenses: Number(update.expenses) },
+        periodIncome: { turnover },
+        periodExpenses: { consolidatedExpenses: expenses },
       };
 
   const hmrcResult = await hmrcFetchWithAuth(hmrcUrl, {
@@ -265,9 +274,10 @@ export async function POST(request: Request, context: RouteContext) {
 
   const submittedAt = new Date().toISOString();
 
+  // Save updated figures and status
   const { error: saveError } = await supabase
     .from("quarterly_updates")
-    .update({ status: "submitted", submitted_at: submittedAt })
+    .update({ turnover, expenses, status: "submitted", submitted_at: submittedAt })
     .eq("id", update.id)
     .eq("user_id", user.id);
 
@@ -277,22 +287,22 @@ export async function POST(request: Request, context: RouteContext) {
   }
 
   // Send confirmation email
-if (user.email) {
-  try {
-    await sendSubmissionConfirmation({
-      toEmail: user.email,
-      businessName: business.name,
-      quarterStart: update.quarter_start,
-      quarterEnd: update.quarter_end,
-      turnover: Number(update.turnover),
-      expenses: Number(update.expenses),
-      taxYear,
-      submittedAt,
-    });
-  } catch {
-    // Email failed — submission still succeeded
+  if (user.email) {
+    try {
+      await sendSubmissionConfirmation({
+        toEmail: user.email,
+        businessName: business.name,
+        quarterStart: update.quarter_start,
+        quarterEnd: update.quarter_end,
+        turnover,
+        expenses,
+        taxYear,
+        submittedAt,
+      });
+    } catch {
+      // Email failed — submission still succeeded
+    }
   }
-}
 
   const response = NextResponse.json({
     ok: true,
@@ -310,8 +320,8 @@ if (user.email) {
       period_key: update.period_key,
       quarter_start: update.quarter_start,
       quarter_end: update.quarter_end,
-      turnover: update.turnover,
-      expenses: update.expenses,
+      turnover,
+      expenses,
       status: "submitted",
       submitted_at: submittedAt,
     },

@@ -37,6 +37,10 @@ function HmrcSubmitContent() {
   const [errorMessage, setErrorMessage] = useState("");
   const [data, setData] = useState<SubmitPreviewResponse | null>(null);
 
+  // Amend fields
+  const [turnover, setTurnover] = useState("");
+  const [expenses, setExpenses] = useState("");
+
   useEffect(() => {
     async function loadPreview() {
       if (!updateId) { setErrorMessage("No update selected. Please go back to the dashboard."); setLoading(false); return; }
@@ -44,20 +48,37 @@ function HmrcSubmitContent() {
       const json = (await response.json()) as SubmitPreviewResponse;
       if (!response.ok) { setErrorMessage("We could not load this submission. Please go back to the dashboard and try again."); setLoading(false); return; }
       setData(json);
+      if (json.update) {
+        setTurnover(String(json.update.turnover));
+        setExpenses(String(json.update.expenses));
+      }
       setLoading(false);
     }
     loadPreview();
   }, [updateId]);
+
+  const isAmend = data?.update?.status === "submitted";
+
+  const turnoverChanged = isAmend && Number(turnover) !== Number(data?.update?.turnover);
+  const expensesChanged = isAmend && Number(expenses) !== Number(data?.update?.expenses);
+  const figuresChanged = turnoverChanged || expensesChanged;
 
   async function handleSubmit() {
     if (!updateId || !data?.update) return;
     setSubmitting(true);
     setErrorMessage("");
     const fraudData = collectFraudData();
+
+    const body: Record<string, unknown> = { fraudData };
+    if (isAmend && figuresChanged) {
+      body.turnover = Number(turnover);
+      body.expenses = Number(expenses);
+    }
+
     const response = await fetch(`/api/hmrc/submit-update/${updateId}`, {
       method: "POST", credentials: "include", cache: "no-store",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fraudData }),
+      body: JSON.stringify(body),
     });
     const json = (await response.json()) as SubmitPreviewResponse;
     if (!response.ok) { setErrorMessage("The submission failed. Please check your figures and try again, or go back to the dashboard."); setSubmitting(false); return; }
@@ -65,8 +86,6 @@ function HmrcSubmitContent() {
     setSubmitted(true);
     setSubmitting(false);
   }
-
-  const isAmend = data?.update?.status === "submitted";
 
   return (
     <section className="mx-auto w-full max-w-[640px] px-6 py-10 sm:px-8">
@@ -106,7 +125,9 @@ function HmrcSubmitContent() {
             ) : (
               <>
                 <p className="mt-4 text-sm leading-6 text-[#5A7896]">
-                  {isAmend ? "This period was already submitted. You can send updated figures to HMRC now." : "Check your figures below. Once you submit, they will be sent to HMRC."}
+                  {isAmend
+                    ? "This period was already submitted. Update the figures below if they have changed, then send the amendment to HMRC."
+                    : "Check your figures below. Once you submit, they will be sent to HMRC."}
                 </p>
 
                 <div className="mt-6 space-y-3">
@@ -121,18 +142,51 @@ function HmrcSubmitContent() {
                     </div>
                   ))}
 
-                  <div className="grid grid-cols-2 gap-3">
-                    {[
-                      { label: "Turnover", value: formatCurrency(Number(data.update.turnover)) },
-                      { label: "Expenses", value: formatCurrency(Number(data.update.expenses)) },
-                    ].map(({ label, value }) => (
-                      <div key={label} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-[#5A7896]">{label}</p>
-                        <p className="mt-1.5 text-sm text-[#0F1C2E]">{value}</p>
+                  {isAmend ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label htmlFor="turnover" className="mb-2 block text-sm text-[#0F1C2E]">Turnover</label>
+                        <input
+                          id="turnover"
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={turnover}
+                          onChange={(e) => setTurnover(e.target.value)}
+                          className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]"
+                        />
                       </div>
-                    ))}
-                  </div>
+                      <div>
+                        <label htmlFor="expenses" className="mb-2 block text-sm text-[#0F1C2E]">Expenses</label>
+                        <input
+                          id="expenses"
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={expenses}
+                          onChange={(e) => setExpenses(e.target.value)}
+                          className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-3">
+                      {[
+                        { label: "Turnover", value: formatCurrency(Number(data.update.turnover)) },
+                        { label: "Expenses", value: formatCurrency(Number(data.update.expenses)) },
+                      ].map(({ label, value }) => (
+                        <div key={label} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-[#5A7896]">{label}</p>
+                          <p className="mt-1.5 text-sm text-[#0F1C2E]">{value}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
+
+                {isAmend && !figuresChanged ? (
+                  <p className="mt-4 text-xs text-[#5A7896]">Change at least one figure above to send an amendment.</p>
+                ) : null}
 
                 {errorMessage ? (
                   <div className="mt-4 rounded-xl border border-red-300 bg-red-50 p-4">
@@ -141,8 +195,12 @@ function HmrcSubmitContent() {
                 ) : null}
 
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <button type="button" onClick={handleSubmit} disabled={submitting}
-                    className="rounded-xl bg-[#2E88D0] px-4 py-2.5 text-sm text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60">
+                  <button
+                    type="button"
+                    onClick={handleSubmit}
+                    disabled={submitting || (isAmend && !figuresChanged)}
+                    className="rounded-xl bg-[#2E88D0] px-4 py-2.5 text-sm text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
                     {submitting ? "Submitting..." : isAmend ? "Send amended figures to HMRC" : "Submit to HMRC"}
                   </button>
                   <Link href="/dashboard" className="rounded-xl border border-[#B8D0EB] bg-[#CCE0F5] px-4 py-2.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]">
