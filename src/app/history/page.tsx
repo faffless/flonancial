@@ -46,7 +46,7 @@ type HistoryRow = {
   turnover: number;
   expenses: number;
   tax_year: string;
-  action: "submitted" | "Amendment sent";
+  action: "submitted" | "Amended";
   submitted_at: string;
   businesses: BusinessesField;
 };
@@ -181,7 +181,7 @@ export default async function HistoryPage() {
                                 ? "bg-amber-100 text-amber-700"
                                 : "bg-green-100 text-green-700"
                             }`}>
-                              {entry.action === "amended" ? "Amended" : "Submitted"}
+                              {entry.action === "amended" ? "Amendment Sent" : "Submitted"}
                             </span>
                           </td>
                           <td className="px-5 py-3 text-[#5A7896] whitespace-nowrap">
