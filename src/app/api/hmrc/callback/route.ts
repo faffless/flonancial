@@ -156,7 +156,7 @@ export async function GET(request: NextRequest) {
 
   // ── Set cookies and redirect ─────────────────────────────────────────────
 
-  const response = NextResponse.redirect(new URL("/account?hmrc=connected", appBaseUrl));
+  const response = NextResponse.redirect(new URL("/dashboard", appBaseUrl));
 
   response.cookies.set("hmrc_oauth_state", "", { httpOnly: true, sameSite: "lax", secure: getSecureCookieFlag(), path: "/", maxAge: 0 });
   response.cookies.set("hmrc_access_token", tokenJson.access_token, { httpOnly: true, sameSite: "lax", secure: getSecureCookieFlag(), path: "/", maxAge: tokenJson.expires_in });
