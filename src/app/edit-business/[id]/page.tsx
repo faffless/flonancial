@@ -30,7 +30,6 @@ export default function EditBusinessPage() {
   const [businessType, setBusinessType] = useState("");
   const [startDate, setStartDate] = useState("");
   const [accountingYearEnd, setAccountingYearEnd] = useState("");
-  const [hmrcBusinessId, setHmrcBusinessId] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -47,7 +46,7 @@ export default function EditBusinessPage() {
 
       const { data: businessData, error: businessError } = await supabase
         .from("businesses")
-        .select("id, name, trading_name, business_type, start_date, accounting_year_end, hmrc_business_id, user_id")
+        .select("id, name, trading_name, business_type, start_date, accounting_year_end, user_id")
         .eq("id", businessId)
         .eq("user_id", user.id)
         .single();
@@ -67,7 +66,6 @@ export default function EditBusinessPage() {
       setBusinessType(businessData.business_type ?? "");
       setStartDate(businessData.start_date ?? "");
       setAccountingYearEnd(businessData.accounting_year_end ?? "");
-      setHmrcBusinessId(businessData.hmrc_business_id ?? "");
       setUpdateCount(count ?? 0);
       setLoading(false);
     }
@@ -92,7 +90,6 @@ export default function EditBusinessPage() {
         business_type: businessType || null,
         start_date: startDate || null,
         accounting_year_end: accountingYearEnd || null,
-        hmrc_business_id: hmrcBusinessId.trim() || null,
       })
       .eq("id", businessId)
       .eq("user_id", user.id);
@@ -183,13 +180,6 @@ export default function EditBusinessPage() {
                   ))}
                 </select>
                 <p className="mt-2 text-xs text-[#5A7896]">Most sole traders use 5 April. HMRC requires this to generate correct periods.</p>
-              </div>
-
-              <div>
-                <label htmlFor="hmrcBusinessId" className="mb-2 block text-sm text-[#0F1C2E]">HMRC business ID</label>
-                <input id="hmrcBusinessId" value={hmrcBusinessId} onChange={(e) => setHmrcBusinessId(e.target.value)} placeholder="e.g. XBIS12345678901"
-                  className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#5A7896] focus:border-[#2E88D0]" />
-                <p className="mt-2 text-xs text-[#5A7896]">Paste the HMRC business ID here to link this Flonancial business.</p>
               </div>
 
               <div className="flex flex-wrap gap-3">
