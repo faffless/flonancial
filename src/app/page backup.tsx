@@ -6,16 +6,10 @@ export default function HomePage() {
     <main className="min-h-screen text-[#0F1C2E]">
       <SiteHeader />
       <section className="mx-auto w-full max-w-[1000px] px-6 py-6 sm:px-8 lg:px-10">
-        <div className="relative overflow-hidden rounded-[28px] border border-[#B8D0EB] bg-[#CCE0F5] px-8 py-10">
-          <img
-            src="/wave.png"
-            alt=""
-            className="pointer-events-none absolute bottom-[-60px] left-1/2 z-0 w-[980px] max-w-none -translate-x-1/2 opacity-[0.05]"
-          />
-
-          <div className="relative z-10 mx-auto max-w-[680px] text-center">
+        <div className="rounded-[28px] border border-[#B8D0EB] bg-[#CCE0F5] px-8 py-10">
+          <div className="mx-auto max-w-[680px] text-center">
             <h1 className="text-[2rem] font-semibold leading-[1.08] tracking-[-0.04em] text-[#0F1C2E] sm:text-[2.6rem] lg:text-[3.2rem]">
-              Free & Dead Simple<br />MTD Submissions<br />For Income Tax (ITSA)
+              Free & Simple<br />MTD Submissions<br />For Income Tax (ITSA)
             </h1>
             <p className="mx-auto mt-4 max-w-[600px] text-base leading-7 text-[#5A7896]">
               Submit your quarterly Making Tax Digital updates directly to HMRC.<br />Built for sole traders and landlords. Tax year 2025–26 onwards.<br />No accountant needed.
@@ -29,11 +23,10 @@ export default function HomePage() {
               </Link>
             </div>
             <p className="mt-4 text-xs leading-5 text-[#5A7896]">
-              Submitting your MTD updates will always be free on Flonancial.
+              We may introduce optional upgrades in future, but submitting your MTD updates will always be free on Flonancial.
             </p>
           </div>
         </div>
-
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
           {[
             {
@@ -59,7 +52,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-
       <footer className="mt-10 border-t border-[#B8D0EB]">
         <div className="mx-auto w-full max-w-[1000px] px-6 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-4 py-8 text-sm text-[#5A7896] sm:flex-row sm:items-center sm:justify-between">

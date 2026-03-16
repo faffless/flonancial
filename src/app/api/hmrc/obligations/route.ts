@@ -27,36 +27,48 @@ function toHmrcBusinessType(businessType: string | null): string {
   return "self-employment";
 }
 
-export async function GET() {
-  const testNino = process.env.HMRC_TEST_NINO;
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const filterBusinessId = url.searchParams.get("businessId")
+    ? Number(url.searchParams.get("businessId"))
+    : null;
+  const fromDateParam = url.searchParams.get("fromDate");
+  const toDateParam = url.searchParams.get("toDate");
 
+  const testNino = process.env.HMRC_TEST_NINO;
   if (!testNino) {
     return NextResponse.json({ error: "missing_hmrc_test_nino" }, { status: 500 });
   }
 
   const supabase = await createClient();
   const { data: { user }, error: userError } = await supabase.auth.getUser();
-
   if (userError || !user) {
     return NextResponse.json({ error: "not_logged_in" }, { status: 401 });
   }
 
-  const { data: businesses, error: businessesError } = await supabase
+  let businessQuery = supabase
     .from("businesses")
     .select("id, name, business_type, hmrc_business_id")
     .eq("user_id", user.id)
     .not("hmrc_business_id", "is", null);
+
+  if (filterBusinessId && Number.isFinite(filterBusinessId)) {
+    businessQuery = businessQuery.eq("id", filterBusinessId);
+  }
+
+  const { data: businesses, error: businessesError } = await businessQuery;
 
   if (businessesError) {
     return NextResponse.json({ error: businessesError.message }, { status: 500 });
   }
 
   if (!businesses || businesses.length === 0) {
-    return NextResponse.json({ error: "no_linked_hmrc_business" }, { status: 400 });
+    return NextResponse.json({ obligations: [] });
   }
 
-  const fromDate = "2025-04-06";
-  const toDate = "2026-04-05";
+  // Default to current tax year if no dates provided
+  const fromDate = fromDateParam ?? "2025-04-06";
+  const toDate = toDateParam ?? "2026-04-05";
 
   const allObligations = [];
   let lastCookieMutations: Parameters<typeof applyHmrcCookieMutations>[1] = [];
@@ -65,7 +77,6 @@ export async function GET() {
     if (!business.hmrc_business_id) continue;
 
     const hmrcBusinessType = toHmrcBusinessType(business.business_type);
-
     const hmrcUrl = new URL(
       `https://test-api.service.hmrc.gov.uk/obligations/details/${encodeURIComponent(testNino)}/income-and-expenditure`
     );
@@ -87,7 +98,6 @@ export async function GET() {
     }
 
     if (!hmrcResult.ok) continue;
-
     const hmrcResponse = hmrcResult.response;
     if (!hmrcResponse.ok) continue;
 

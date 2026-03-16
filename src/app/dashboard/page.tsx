@@ -25,6 +25,7 @@ type LastSubmission = {
 function formatBusinessType(value: string | null) {
   if (value === "sole_trader") return "Sole trader";
   if (value === "uk_property") return "UK property";
+  if (value === "overseas_property") return "Overseas property";
   return null;
 }
 
@@ -45,7 +46,37 @@ function formatDate(value: string) {
   });
 }
 
-export default async function DashboardPage() {
+function formatYearEnd(mmdd: string) {
+  const map: Record<string, string> = {
+    "04-05": "5 April",
+    "03-31": "31 March",
+    "12-31": "31 December",
+  };
+  return map[mmdd] ?? mmdd;
+}
+
+function formatTypeLabel(type: string) {
+  if (type === "sole_trader") return "sole trader";
+  if (type === "uk_property") return "UK property";
+  if (type === "overseas_property") return "overseas property";
+  return type;
+}
+
+function parseNotifications(raw: string | undefined): string[] {
+  if (!raw) return [];
+  try {
+    const decoded = decodeURIComponent(raw);
+    const parsed = JSON.parse(decoded);
+    if (Array.isArray(parsed)) return parsed;
+  } catch {}
+  return [];
+}
+
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const supabase = await createClient();
   const { data: { user }, error: userError } = await supabase.auth.getUser();
   if (userError || !user) redirect("/login");
@@ -76,13 +107,17 @@ export default async function DashboardPage() {
   const businesses: Business[] = businessesData ?? [];
   const submissions: LastSubmission[] = submissionsData ?? [];
 
-  // Get most recent submission per business
   const lastSubmissionMap = new Map<number, LastSubmission>();
   for (const s of submissions) {
     if (!lastSubmissionMap.has(s.business_id)) {
       lastSubmissionMap.set(s.business_id, s);
     }
   }
+
+  const params = await searchParams;
+  const rawNotifications = params.hmrc_notifications as string | undefined;
+  const notifications = parseNotifications(rawNotifications);
+  const businessAdded = params.business_added === "1";
 
   return (
     <SiteShell>
@@ -94,13 +129,46 @@ export default async function DashboardPage() {
             <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Dashboard</h1>
             <p className="mt-1 text-sm text-[#5A7896]">{user.email}</p>
           </div>
-          <Link
-            href="/history"
-            className="text-sm font-medium text-[#5A7896] transition hover:text-[#0F1C2E]"
-          >
+          <Link href="/history" className="text-sm font-medium text-[#5A7896] transition hover:text-[#0F1C2E]">
             Submission history
           </Link>
         </div>
+
+        {/* Business added confirmation */}
+        {businessAdded ? (
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-600/20 bg-emerald-50 px-4 py-3">
+            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+            <p className="text-sm text-emerald-700">Business added. Connect your HMRC account to match it and fetch your obligations.</p>
+          </div>
+        ) : null}
+
+        {/* HMRC sync notifications */}
+        {notifications.length > 0 ? (
+          <div className="mt-4 space-y-2">
+            {notifications.map((n, i) => {
+              const parts = n.split(":");
+              const type = parts[0];
+              const businessName = parts[1] ?? "Your business";
+              const value = parts[2] ?? "";
+
+              let message = "";
+              if (type === "year_end_changed") {
+                message = `Your accounting period for "${businessName}" has been updated to match your HMRC records (${formatYearEnd(value)}). Your transaction history has been adjusted automatically.`;
+              } else if (type === "type_changed") {
+                message = `The business type for "${businessName}" has been updated to ${formatTypeLabel(value)} to match your HMRC records.`;
+              }
+
+              if (!message) return null;
+
+              return (
+                <div key={i} className="flex items-start gap-2 rounded-xl border border-blue-600/20 bg-blue-50 px-4 py-3">
+                  <span className="mt-0.5 inline-block h-2 w-2 shrink-0 rounded-full bg-blue-400" />
+                  <p className="text-sm text-blue-700">{message}</p>
+                </div>
+              );
+            })}
+          </div>
+        ) : null}
 
         {/* HMRC connection banner */}
         {hmrcConnected ? (
@@ -112,16 +180,9 @@ export default async function DashboardPage() {
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-600/20 bg-amber-50 px-4 py-3">
             <div className="flex items-center gap-2">
               <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
-              <p className="text-sm text-amber-700">
-                Not connected to HMRC — connect your account to submit quarterly updates
-              </p>
+              <p className="text-sm text-amber-700">Not connected to HMRC — connect your account to submit quarterly updates</p>
             </div>
-            
-              href="/api/hmrc/start"
-              className="rounded-xl bg-[#2E88D0] px-4 py-2 text-sm text-white transition hover:opacity-90"
-            >
-              Connect HMRC
-            </a>
+            <a href="/api/hmrc/start" className="rounded-xl bg-[#2E88D0] px-4 py-2 text-sm text-white transition hover:opacity-90">Connect HMRC</a>
           </div>
         )}
 
@@ -130,15 +191,13 @@ export default async function DashboardPage() {
           <div className="mt-8 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-8 text-center">
             <p className="text-base font-medium text-[#0F1C2E]">No businesses yet</p>
             <p className="mt-2 text-sm text-[#5A7896]">
-              Add your first business to get started with MTD submissions.
+              Add a business to start keeping records, or connect your HMRC account to import your businesses automatically.
             </p>
-            <div className="mt-6">
-              <Link
-                href="/add-business"
-                className="rounded-xl bg-[#2E88D0] px-5 py-3 text-sm text-white transition hover:opacity-90"
-              >
-                Add business
-              </Link>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link href="/add-business" className="rounded-xl bg-[#2E88D0] px-5 py-3 text-sm text-white transition hover:opacity-90">Add business manually</Link>
+              {!hmrcConnected ? (
+                <a href="/api/hmrc/start" className="rounded-xl border border-[#B8D0EB] bg-white px-5 py-3 text-sm text-[#0F1C2E] transition hover:bg-[#DEE9F8]">Connect HMRC</a>
+              ) : null}
             </div>
           </div>
         ) : (
@@ -167,55 +226,31 @@ export default async function DashboardPage() {
                 }
 
                 return (
-                  <div
-                    key={business.id}
-                    className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 sm:p-6"
-                  >
+                  <div key={business.id} className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 sm:p-6">
                     <div className="flex flex-wrap items-center justify-between gap-4">
-
-                      {/* Left — business info */}
                       <div className="flex flex-wrap items-center gap-3">
-                        <h2 className="text-lg font-medium text-[#0F1C2E]">
-                          {business.name}
-                        </h2>
-                        {businessType ? (
-                          <span className="text-sm text-[#5A7896]">{businessType}</span>
-                        ) : null}
+                        <h2 className="text-lg font-medium text-[#0F1C2E]">{business.name}</h2>
+                        {businessType ? <span className="text-sm text-[#5A7896]">{businessType}</span> : null}
                         {badge}
                       </div>
-
-                      {/* Right — actions */}
                       <div className="flex items-center gap-4">
-                        <Link
-                          href={`/edit-business/${business.id}`}
-                          className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]"
-                        >
-                          Edit business
+                        <Link href={`/edit-business/${business.id}`} className="text-sm text-[#5A7896] transition hover:text-[#0F1C2E]">
+                          Edit
                         </Link>
-                        <Link
-                          href={`/business/${business.id}`}
-                          className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-3 py-1.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]"
-                        >
+                        <Link href={`/business/${business.id}`} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-3 py-1.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]">
                           View
                         </Link>
                       </div>
                     </div>
 
-                    {/* Last submission summary */}
                     {lastSub ? (
                       <div className="mt-4 border-t border-[#B8D0EB] pt-4">
                         <p className="text-xs text-[#5A7896]">
                           Last submission —{" "}
-                          <span className="text-[#0F1C2E]">
-                            {formatDate(lastSub.quarter_start)} to {formatDate(lastSub.quarter_end)}
-                          </span>
-                          {" · "}
-                          Turnover: <span className="text-[#0F1C2E]">{formatCurrency(Number(lastSub.turnover))}</span>
-                          {" · "}
-                          Expenses: <span className="text-[#0F1C2E]">{formatCurrency(Number(lastSub.expenses))}</span>
-                          {lastSub.submitted_at ? (
-                            <> · Submitted {formatDate(lastSub.submitted_at.slice(0, 10))}</>
-                          ) : null}
+                          <span className="text-[#0F1C2E]">{formatDate(lastSub.quarter_start)} to {formatDate(lastSub.quarter_end)}</span>
+                          {" · "}Turnover: <span className="text-[#0F1C2E]">{formatCurrency(Number(lastSub.turnover))}</span>
+                          {" · "}Expenses: <span className="text-[#0F1C2E]">{formatCurrency(Number(lastSub.expenses))}</span>
+                          {lastSub.submitted_at ? <> · Submitted {formatDate(lastSub.submitted_at.slice(0, 10))}</> : null}
                         </p>
                       </div>
                     ) : (
@@ -228,13 +263,9 @@ export default async function DashboardPage() {
               })}
             </div>
 
-            {/* Add business */}
             <div className="mt-6">
-              <Link
-                href="/add-business"
-                className="rounded-xl bg-[#2E88D0] px-4 py-2.5 text-sm text-white transition hover:opacity-90"
-              >
-                Add business
+              <Link href="/add-business" className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-2.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]">
+                + Add business
               </Link>
             </div>
           </>

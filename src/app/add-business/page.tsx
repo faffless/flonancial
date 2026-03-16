@@ -8,12 +8,12 @@ import { createClient } from "@/utils/supabase/client";
 
 const businessTypeOptions = [
   { value: "", label: "Select business type" },
-  { value: "sole_trader", label: "Sole trader" },
+  { value: "sole_trader", label: "Sole trader (self-employment)" },
   { value: "uk_property", label: "UK property" },
+  { value: "overseas_property", label: "Overseas property" },
 ];
 
 const accountingYearEndOptions = [
-  { value: "", label: "Select accounting year end" },
   { value: "04-05", label: "5 April (standard tax year)" },
   { value: "03-31", label: "31 March" },
   { value: "12-31", label: "31 December" },
@@ -24,10 +24,8 @@ export default function AddBusinessPage() {
   const supabase = useMemo(() => createClient(), []);
 
   const [name, setName] = useState("");
-  const [tradingName, setTradingName] = useState("");
   const [businessType, setBusinessType] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [accountingYearEnd, setAccountingYearEnd] = useState("");
+  const [accountingYearEnd, setAccountingYearEnd] = useState("04-05");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -35,15 +33,13 @@ export default function AddBusinessPage() {
     e.preventDefault();
 
     const trimmedName = name.trim();
-    const trimmedTradingName = tradingName.trim();
-
     if (!trimmedName) { setMessage("Enter a business name"); return; }
+    if (!businessType) { setMessage("Select a business type"); return; }
 
     setSaving(true);
     setMessage("Saving...");
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
-
     if (userError || !user) {
       setMessage("You need to log in");
       setSaving(false);
@@ -51,19 +47,49 @@ export default function AddBusinessPage() {
       return;
     }
 
+    // Enforce one UK property business rule
+    if (businessType === "uk_property") {
+      const { data: existing } = await supabase
+        .from("businesses")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("business_type", "uk_property")
+        .maybeSingle();
+
+      if (existing) {
+        setMessage("You can only have one UK property business under MTD. All UK property income must be grouped into a single business.");
+        setSaving(false);
+        return;
+      }
+    }
+
+    // Enforce one overseas property business rule
+    if (businessType === "overseas_property") {
+      const { data: existing } = await supabase
+        .from("businesses")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("business_type", "overseas_property")
+        .maybeSingle();
+
+      if (existing) {
+        setMessage("You can only have one overseas property business under MTD. All overseas property income must be grouped into a single business.");
+        setSaving(false);
+        return;
+      }
+    }
+
     const { error } = await supabase.from("businesses").insert({
       name: trimmedName,
-      trading_name: trimmedTradingName || null,
-      business_type: businessType || null,
-      start_date: startDate || null,
-      accounting_year_end: accountingYearEnd || null,
+      business_type: businessType,
+      accounting_year_end: accountingYearEnd,
       user_id: user.id,
     });
 
     if (error) { setMessage(error.message); setSaving(false); return; }
 
     router.refresh();
-    router.push("/dashboard");
+    router.push("/dashboard?business_added=1");
   }
 
   return (
@@ -72,39 +98,42 @@ export default function AddBusinessPage() {
         <div className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Add business</h1>
-              <p className="mt-3 text-sm leading-6 text-[#5A7896]">Create a business record before adding quarterly updates.</p>
+              <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">
+                Add business
+              </h1>
+              <p className="mt-3 text-sm leading-6 text-[#5A7896]">
+                Add a business to start keeping records. Make sure you have registered this business for MTD with HMRC first — once you connect your HMRC account, Flonancial will confirm and match the details automatically.
+              </p>
             </div>
-            <Link href="/dashboard" className="text-sm text-[#5A7896] underline underline-offset-4 transition hover:text-[#0F1C2E]">
+            <Link
+              href="/dashboard"
+              className="text-sm text-[#5A7896] underline underline-offset-4 transition hover:text-[#0F1C2E]"
+            >
               Back to dashboard
             </Link>
           </div>
 
           <form onSubmit={handleSubmit} className="mt-6 max-w-xl space-y-4">
             <div>
-              <label htmlFor="name" className="mb-2 block text-sm text-[#0F1C2E]">Business name</label>
+              <label htmlFor="name" className="mb-2 block text-sm text-[#0F1C2E]">
+                Business nickname
+              </label>
               <input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Barry Design Services"
+                placeholder="e.g. My Plumbing Business"
                 className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#5A7896] focus:border-[#2E88D0]"
               />
+              <p className="mt-1.5 text-xs text-[#5A7896]">
+                This is just for your reference in Flonancial. It does not need to match your official business name.
+              </p>
             </div>
 
             <div>
-              <label htmlFor="tradingName" className="mb-2 block text-sm text-[#0F1C2E]">Trading name</label>
-              <input
-                id="tradingName"
-                value={tradingName}
-                onChange={(e) => setTradingName(e.target.value)}
-                placeholder="Optional"
-                className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#5A7896] focus:border-[#2E88D0]"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="businessType" className="mb-2 block text-sm text-[#0F1C2E]">Business type</label>
+              <label htmlFor="businessType" className="mb-2 block text-sm text-[#0F1C2E]">
+                Business type
+              </label>
               <select
                 id="businessType"
                 value={businessType}
@@ -112,24 +141,22 @@ export default function AddBusinessPage() {
                 className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]"
               >
                 {businessTypeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
                 ))}
               </select>
+              {businessType === "uk_property" || businessType === "overseas_property" ? (
+                <p className="mt-1.5 text-xs text-[#5A7896]">
+                  Under MTD, all {businessType === "uk_property" ? "UK" : "overseas"} property income must be grouped into a single business.
+                </p>
+              ) : null}
             </div>
 
             <div>
-              <label htmlFor="startDate" className="mb-2 block text-sm text-[#0F1C2E]">Start date</label>
-              <input
-                id="startDate"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="accountingYearEnd" className="mb-2 block text-sm text-[#0F1C2E]">Accounting year end</label>
+              <label htmlFor="accountingYearEnd" className="mb-2 block text-sm text-[#0F1C2E]">
+                Accounting year end
+              </label>
               <select
                 id="accountingYearEnd"
                 value={accountingYearEnd}
@@ -137,10 +164,14 @@ export default function AddBusinessPage() {
                 className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]"
               >
                 {accountingYearEndOptions.map((option) => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
                 ))}
               </select>
-              <p className="mt-2 text-xs text-[#5A7896]">Most sole traders use 5 April. HMRC requires this to generate correct periods.</p>
+              <p className="mt-1.5 text-xs text-[#5A7896]">
+                Most sole traders use 5 April. This will be confirmed automatically when you connect your HMRC account.
+              </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
@@ -151,12 +182,17 @@ export default function AddBusinessPage() {
               >
                 {saving ? "Saving..." : "Save business"}
               </button>
-              <Link href="/dashboard" className="rounded-xl border border-[#B8D0EB] bg-[#CCE0F5] px-4 py-2.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]">
+              <Link
+                href="/dashboard"
+                className="rounded-xl border border-[#B8D0EB] bg-[#CCE0F5] px-4 py-2.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]"
+              >
                 Cancel
               </Link>
             </div>
 
-            {message ? <p className="text-sm text-[#5A7896]">{message}</p> : null}
+            {message ? (
+              <p className="text-sm text-[#5A7896]">{message}</p>
+            ) : null}
           </form>
         </div>
       </section>
