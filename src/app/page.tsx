@@ -15,7 +15,7 @@ export default function HomePage() {
 
           <div className="relative z-10 mx-auto max-w-[680px] text-center">
             <h1 className="text-[2rem] font-semibold leading-[1.08] tracking-[-0.04em] text-[#0F1C2E] sm:text-[2.6rem] lg:text-[3.2rem]">
-              Free & Dead Simple<br />MTD Submissions<br />For Income Tax (ITSA)
+              Free & Simple<br />MTD Submissions<br />For Income Tax (ITSA)
             </h1>
             <p className="mx-auto mt-4 max-w-[600px] text-base leading-7 text-[#5A7896]">
               Submit your quarterly Making Tax Digital updates directly to HMRC.<br />Built for sole traders and landlords. Tax year 2025–26 onwards.<br />No accountant needed.
