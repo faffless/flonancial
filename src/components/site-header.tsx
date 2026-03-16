@@ -55,8 +55,8 @@ export function SiteHeader() {
         <div className="flex items-end justify-between py-4">
           {/* Logo */}
           <Link href="/" className="flex flex-col items-center transition hover:opacity-90">
-            <div className="flex h-[100px] w-[100px] items-center justify-center">
-              <img src="/brand/99J.png" alt="Flonancial" className="h-full w-full object-contain" />
+            <div className="flex h-[140px] w-[140px] items-center justify-center">
+              <img src="/brand/99K.png" alt="Flonancial" className="h-full w-full object-contain" />
             </div>
             <p className="mt-0 text-lg font-bold tracking-tight text-[#0F1C2E]">Flonancial</p>
           </Link>
