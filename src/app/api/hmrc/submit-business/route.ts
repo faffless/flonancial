@@ -427,7 +427,7 @@ export async function POST(request: Request) {
 
         const key = `${qStart}_${qEnd}`;
         if (!existingKeys.has(key)) {
-          const qTx = earlierTxData.filter((t) => t.date >= qStart && t.date <= qEnd);
+          const qTx = (earlierTxData ?? []).filter((t) => t.date >= qStart && t.date <= qEnd);
           const qTurnover = qTx
             .filter((t) => t.type === "income")
             .reduce((sum, t) => sum + Number(t.amount), 0);
