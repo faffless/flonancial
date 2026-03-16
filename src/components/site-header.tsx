@@ -68,9 +68,9 @@ export function SiteHeader() {
             href="/"
             className="flex flex-col items-start transition hover:opacity-90"
           >
-            <div className="flex h-[120px] w-[120px] items-center justify-center">
+            <div className="w-[100px]">
               <img
-                src="/brand/99K.png"
+                src="/brand/99L.png"
                 alt="Flonancial"
                 className="h-full w-full object-contain"
               />
