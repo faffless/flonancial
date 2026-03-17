@@ -6,8 +6,8 @@ export default function DisclaimerPage() {
       <section className="mx-auto w-full max-w-[640px] px-6 py-10 sm:px-8">
         <div className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 sm:p-8">
           <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Disclaimer</h1>
-          <p className="mt-2 text-sm text-[#5A7896]">Last updated: March 2026</p>
-          <div className="mt-8 space-y-8 text-sm leading-7 text-[#5A7896]">
+          <p className="mt-2 text-sm text-[#3B5A78]">Last updated: March 2026</p>
+          <div className="mt-8 space-y-8 text-sm leading-7 text-[#3B5A78]">
             <div>
               <h2 className="text-base font-medium text-[#0F1C2E]">Not tax advice</h2>
               <p className="mt-3">Flonancial is a software tool that helps you submit quarterly updates to HMRC under Making Tax Digital for Income Tax. It is not a tax advisory service and nothing on this website or within the application constitutes tax advice.</p>

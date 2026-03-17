@@ -7,9 +7,9 @@ export default function TermsPage() {
         <div className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 sm:p-8">
 
           <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Terms of service</h1>
-          <p className="mt-2 text-sm text-[#5A7896]">Last updated: March 2026</p>
+          <p className="mt-2 text-sm text-[#3B5A78]">Last updated: March 2026</p>
 
-          <div className="mt-8 space-y-8 text-sm leading-7 text-[#5A7896]">
+          <div className="mt-8 space-y-8 text-sm leading-7 text-[#3B5A78]">
 
             <div>
               <h2 className="text-base font-medium text-[#0F1C2E]">Who we are</h2>

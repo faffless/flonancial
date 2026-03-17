@@ -127,20 +127,20 @@ export default function EditBusinessPage() {
               <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">
                 Edit business
               </h1>
-              <p className="mt-3 text-sm leading-6 text-[#5A7896]">
+              <p className="mt-3 text-sm leading-6 text-[#3B5A78]">
                 Update your business details.
               </p>
             </div>
             <Link
               href="/dashboard"
-              className="text-sm text-[#5A7896] underline underline-offset-4 transition hover:text-[#0F1C2E]"
+              className="text-sm text-[#3B5A78] underline underline-offset-4 transition hover:text-[#0F1C2E]"
             >
               Back to dashboard
             </Link>
           </div>
 
           {loading ? (
-            <p className="mt-6 text-sm text-[#5A7896]">Loading...</p>
+            <p className="mt-6 text-sm text-[#3B5A78]">Loading...</p>
           ) : notFound ? (
             <div className="mt-6 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
               <p className="text-sm text-[#0F1C2E]">Business not found.</p>
@@ -158,9 +158,9 @@ export default function EditBusinessPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. My Plumbing Business"
-                  className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#5A7896] focus:border-[#2E88D0]"
+                  className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0]"
                 />
-                <p className="mt-1.5 text-xs text-[#5A7896]">
+                <p className="mt-1.5 text-xs text-[#3B5A78]">
                   This is just for your reference in Flonancial.
                 </p>
               </div>
@@ -175,9 +175,9 @@ export default function EditBusinessPage() {
                     type="text"
                     value={tradingName}
                     disabled
-                    className="w-full rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3 text-[#5A7896] outline-none cursor-not-allowed"
+                    className="w-full rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3 text-[#3B5A78] outline-none cursor-not-allowed"
                   />
-                  <p className="mt-1.5 text-xs text-[#5A7896]">
+                  <p className="mt-1.5 text-xs text-[#3B5A78]">
                     Populated from your HMRC account. Cannot be changed here.
                   </p>
                 </div>
@@ -192,9 +192,9 @@ export default function EditBusinessPage() {
                   type="text"
                   value={formatBusinessType(businessType)}
                   disabled
-                  className="w-full rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3 text-[#5A7896] outline-none cursor-not-allowed"
+                  className="w-full rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3 text-[#3B5A78] outline-none cursor-not-allowed"
                 />
-                <p className="mt-1.5 text-xs text-[#5A7896]">
+                <p className="mt-1.5 text-xs text-[#3B5A78]">
                   Business type cannot be changed after creation.
                 </p>
               </div>
@@ -210,9 +210,9 @@ export default function EditBusinessPage() {
                       type="text"
                       value={accountingYearEndOptions.find((o) => o.value === accountingYearEnd)?.label ?? accountingYearEnd}
                       disabled
-                      className="w-full rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3 text-[#5A7896] outline-none cursor-not-allowed"
+                      className="w-full rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3 text-[#3B5A78] outline-none cursor-not-allowed"
                     />
-                    <p className="mt-1.5 text-xs text-[#5A7896]">
+                    <p className="mt-1.5 text-xs text-[#3B5A78]">
                       Locked to your HMRC accounting period.
                     </p>
                   </>
@@ -235,7 +235,7 @@ export default function EditBusinessPage() {
                         You have existing submissions. Changing the accounting year end will affect how your quarters are calculated. Connect your HMRC account to confirm the correct period.
                       </p>
                     ) : (
-                      <p className="mt-1.5 text-xs text-[#5A7896]">
+                      <p className="mt-1.5 text-xs text-[#3B5A78]">
                         This will be confirmed automatically when you connect your HMRC account.
                       </p>
                     )}
@@ -253,9 +253,9 @@ export default function EditBusinessPage() {
                     type="text"
                     value={hmrcBusinessId}
                     disabled
-                    className="w-full rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3 font-mono text-sm text-[#5A7896] outline-none cursor-not-allowed"
+                    className="w-full rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3 font-mono text-sm text-[#3B5A78] outline-none cursor-not-allowed"
                   />
-                  <p className="mt-1.5 text-xs text-[#5A7896]">
+                  <p className="mt-1.5 text-xs text-[#3B5A78]">
                     Quote this reference if you ever need to contact HMRC about this business.
                   </p>
                 </div>
@@ -296,7 +296,7 @@ export default function EditBusinessPage() {
               </div>
 
               {message ? (
-                <p className="text-sm text-[#5A7896]">{message}</p>
+                <p className="text-sm text-[#3B5A78]">{message}</p>
               ) : null}
             </form>
           )}

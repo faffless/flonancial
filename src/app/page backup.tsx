@@ -11,7 +11,7 @@ export default function HomePage() {
             <h1 className="text-[2rem] font-semibold leading-[1.08] tracking-[-0.04em] text-[#0F1C2E] sm:text-[2.6rem] lg:text-[3.2rem]">
               Free & Simple<br />MTD Submissions<br />For Income Tax (ITSA)
             </h1>
-            <p className="mx-auto mt-4 max-w-[600px] text-base leading-7 text-[#5A7896]">
+            <p className="mx-auto mt-4 max-w-[600px] text-base leading-7 text-[#3B5A78]">
               Submit your quarterly Making Tax Digital updates directly to HMRC.<br />Built for sole traders and landlords. Tax year 2025–26 onwards.<br />No accountant needed.
             </p>
             <div className="mt-6 flex justify-center">
@@ -22,7 +22,7 @@ export default function HomePage() {
                 Get started free
               </Link>
             </div>
-            <p className="mt-4 text-xs leading-5 text-[#5A7896]">
+            <p className="mt-4 text-xs leading-5 text-[#3B5A78]">
               We may introduce optional upgrades in future, but submitting your MTD updates will always be free on Flonancial.
             </p>
           </div>
@@ -47,14 +47,14 @@ export default function HomePage() {
               className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 text-center"
             >
               <p className="text-sm font-medium text-[#0F1C2E]">{title}</p>
-              <p className="mt-2 text-sm leading-6 text-[#5A7896]">{text}</p>
+              <p className="mt-2 text-sm leading-6 text-[#3B5A78]">{text}</p>
             </div>
           ))}
         </div>
       </section>
       <footer className="mt-10 border-t border-[#B8D0EB]">
         <div className="mx-auto w-full max-w-[1000px] px-6 sm:px-8 lg:px-10">
-          <div className="flex flex-col gap-4 py-8 text-sm text-[#5A7896] sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-4 py-8 text-sm text-[#3B5A78] sm:flex-row sm:items-center sm:justify-between">
             <p>© {new Date().getFullYear()} Flonancial Ltd</p>
             <div className="flex flex-wrap gap-6">
               <Link href="/about" className="hover:text-[#0F1C2E]">About</Link>

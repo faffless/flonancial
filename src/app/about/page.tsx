@@ -8,7 +8,7 @@ export default function AboutPage() {
 
           <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">About Flonancial</h1>
 
-          <div className="mt-8 space-y-8 text-sm leading-7 text-[#5A7896]">
+          <div className="mt-8 space-y-8 text-sm leading-7 text-[#3B5A78]">
 
             <div>
               <h2 className="text-base font-medium text-[#0F1C2E]">What Flonancial is</h2>

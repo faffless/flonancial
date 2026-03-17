@@ -55,40 +55,40 @@ export async function sendSubmissionConfirmation(params: SubmissionConfirmationP
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; background: #DEE9F8; color: #0F1C2E; padding: 32px 24px; border-radius: 12px;">
         <p style="font-size: 20px; font-weight: bold; margin: 0 0 8px;">Flonancial</p>
-        <p style="font-size: 13px; color: #5A7896; margin: 0 0 32px;">Free MTD tax submissions for the self-employed</p>
+        <p style="font-size: 13px; color: #3B5A78; margin: 0 0 32px;">Free MTD tax submissions for the self-employed</p>
         <p style="font-size: 15px; margin: 0 0 8px;">Hi there,</p>
         <p style="font-size: 15px; margin: 0 0 24px;">Your quarterly MTD update has been successfully submitted to HMRC.</p>
         <div style="background: #CCE0F5; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
           <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
             <tr>
-              <td style="padding: 6px 0; color: #5A7896;">Business</td>
+              <td style="padding: 6px 0; color: #3B5A78;">Business</td>
               <td style="padding: 6px 0; text-align: right; font-weight: bold;">${businessName}</td>
             </tr>
             <tr>
-              <td style="padding: 6px 0; color: #5A7896;">Tax year</td>
+              <td style="padding: 6px 0; color: #3B5A78;">Tax year</td>
               <td style="padding: 6px 0; text-align: right;">${taxYear}</td>
             </tr>
             <tr>
-              <td style="padding: 6px 0; color: #5A7896;">Period</td>
+              <td style="padding: 6px 0; color: #3B5A78;">Period</td>
               <td style="padding: 6px 0; text-align: right;">${formatDate(quarterStart)} to ${formatDate(quarterEnd)}</td>
             </tr>
             <tr>
-              <td style="padding: 6px 0; color: #5A7896;">Turnover</td>
+              <td style="padding: 6px 0; color: #3B5A78;">Turnover</td>
               <td style="padding: 6px 0; text-align: right;">${formatCurrency(turnover)}</td>
             </tr>
             <tr>
-              <td style="padding: 6px 0; color: #5A7896;">Expenses</td>
+              <td style="padding: 6px 0; color: #3B5A78;">Expenses</td>
               <td style="padding: 6px 0; text-align: right;">${formatCurrency(expenses)}</td>
             </tr>
             <tr>
-              <td style="padding: 6px 0; color: #5A7896;">Submitted</td>
+              <td style="padding: 6px 0; color: #3B5A78;">Submitted</td>
               <td style="padding: 6px 0; text-align: right;">${submittedDate}</td>
             </tr>
           </table>
         </div>
-        <p style="font-size: 13px; color: #5A7896; margin: 0 0 8px;">Please verify your submission was accepted by checking your HMRC online account directly.</p>
-        <p style="font-size: 13px; color: #5A7896; margin: 0 0 32px;">If you did not make this submission or have any concerns, contact us immediately at hello@flonancial.co.uk.</p>
-        <p style="font-size: 13px; color: #5A7896; margin: 0;">hello@flonancial.co.uk</p>
+        <p style="font-size: 13px; color: #3B5A78; margin: 0 0 8px;">Please verify your submission was accepted by checking your HMRC online account directly.</p>
+        <p style="font-size: 13px; color: #3B5A78; margin: 0 0 32px;">If you did not make this submission or have any concerns, contact us immediately at hello@flonancial.co.uk.</p>
+        <p style="font-size: 13px; color: #3B5A78; margin: 0;">hello@flonancial.co.uk</p>
       </div>
     `,
   });

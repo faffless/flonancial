@@ -101,13 +101,13 @@ export default function AddBusinessPage() {
               <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">
                 Add business
               </h1>
-              <p className="mt-3 text-sm leading-6 text-[#5A7896]">
+              <p className="mt-3 text-sm leading-6 text-[#3B5A78]">
                 Add a business to start keeping records. Make sure you have registered this business for MTD with HMRC first — once you connect your HMRC account, Flonancial will confirm and match the details automatically.
               </p>
             </div>
             <Link
               href="/dashboard"
-              className="text-sm text-[#5A7896] underline underline-offset-4 transition hover:text-[#0F1C2E]"
+              className="text-sm text-[#3B5A78] underline underline-offset-4 transition hover:text-[#0F1C2E]"
             >
               Back to dashboard
             </Link>
@@ -123,9 +123,9 @@ export default function AddBusinessPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. My Plumbing Business"
-                className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#5A7896] focus:border-[#2E88D0]"
+                className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0]"
               />
-              <p className="mt-1.5 text-xs text-[#5A7896]">
+              <p className="mt-1.5 text-xs text-[#3B5A78]">
                 This is just for your reference in Flonancial. It does not need to match your official business name.
               </p>
             </div>
@@ -147,7 +147,7 @@ export default function AddBusinessPage() {
                 ))}
               </select>
               {businessType === "uk_property" || businessType === "overseas_property" ? (
-                <p className="mt-1.5 text-xs text-[#5A7896]">
+                <p className="mt-1.5 text-xs text-[#3B5A78]">
                   Under MTD, all {businessType === "uk_property" ? "UK" : "overseas"} property income must be grouped into a single business.
                 </p>
               ) : null}
@@ -169,7 +169,7 @@ export default function AddBusinessPage() {
                   </option>
                 ))}
               </select>
-              <p className="mt-1.5 text-xs text-[#5A7896]">
+              <p className="mt-1.5 text-xs text-[#3B5A78]">
                 Most sole traders use 5 April. This will be confirmed automatically when you connect your HMRC account.
               </p>
             </div>
@@ -191,7 +191,7 @@ export default function AddBusinessPage() {
             </div>
 
             {message ? (
-              <p className="text-sm text-[#5A7896]">{message}</p>
+              <p className="text-sm text-[#3B5A78]">{message}</p>
             ) : null}
           </form>
         </div>

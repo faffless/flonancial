@@ -83,7 +83,7 @@ export function SiteHeader() {
           {/* Countdowns — hidden on mobile */}
           <div className="hidden flex-col items-center gap-2 sm:flex">
             {time ? (
-              <p className="text-xs text-[#5A7896]">
+              <p className="text-xs text-[#3B5A78]">
                 {new Date().toLocaleDateString("en-GB", {
                   weekday: "long",
                   day: "numeric",

@@ -170,14 +170,14 @@ function HmrcSubmitContent() {
           </h1>
           <Link
             href={backHref}
-            className="text-sm text-[#5A7896] underline underline-offset-4 transition hover:text-[#0F1C2E]"
+            className="text-sm text-[#3B5A78] underline underline-offset-4 transition hover:text-[#0F1C2E]"
           >
             Back
           </Link>
         </div>
 
         {loading ? (
-          <p className="mt-6 text-sm text-[#5A7896]">Loading...</p>
+          <p className="mt-6 text-sm text-[#3B5A78]">Loading...</p>
         ) : errorMessage && !preview ? (
           <div className="mt-6 rounded-xl border border-red-300 bg-red-50 p-4">
             <p className="text-sm text-red-700">{errorMessage}</p>
@@ -233,7 +233,7 @@ function HmrcSubmitContent() {
           </div>
         ) : preview?.business && preview.period && preview.totals ? (
           <>
-            <p className="mt-4 text-sm leading-6 text-[#5A7896]">
+            <p className="mt-4 text-sm leading-6 text-[#3B5A78]">
               {isAmend
                 ? "This period was already submitted. The figures below are calculated from your current transactions. If they differ from your previous submission, you can send an amendment."
                 : "Review the figures below. These are calculated from your transactions. Once you submit, they will be sent to HMRC."}
@@ -252,7 +252,7 @@ function HmrcSubmitContent() {
                   key={label}
                   className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4"
                 >
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-[#5A7896]">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-[#3B5A78]">
                     {label}
                   </p>
                   <p className="mt-1.5 text-sm text-[#0F1C2E]">{value}</p>
@@ -275,7 +275,7 @@ function HmrcSubmitContent() {
                     key={label}
                     className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4"
                   >
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#5A7896]">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#3B5A78]">
                       {label}
                     </p>
                     <p className="mt-1.5 text-sm text-[#0F1C2E]">{value}</p>
@@ -286,7 +286,7 @@ function HmrcSubmitContent() {
               {/* Previous submission for amend */}
               {isAmend && preview.existing_submission ? (
                 <div className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-[#5A7896]">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-[#3B5A78]">
                     Previously submitted
                   </p>
                   <p className="mt-1.5 text-sm text-[#0F1C2E]">
@@ -300,7 +300,7 @@ function HmrcSubmitContent() {
                     )}
                   </p>
                   {preview.existing_submission.submitted_at ? (
-                    <p className="mt-1 text-xs text-[#5A7896]">
+                    <p className="mt-1 text-xs text-[#3B5A78]">
                       Submitted{" "}
                       {formatDate(
                         preview.existing_submission.submitted_at.slice(0, 10)
@@ -313,7 +313,7 @@ function HmrcSubmitContent() {
 
             {isAmend && !figuresChanged ? (
               <div className="mt-4 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
-                <p className="text-sm text-[#5A7896]">
+                <p className="text-sm text-[#3B5A78]">
                   Your transaction totals match your previous submission — there
                   is nothing to amend. Update your transactions first if you
                   need to make a change.
@@ -371,7 +371,7 @@ function HmrcSubmitContent() {
 export default function HmrcSubmitPage() {
   return (
     <SiteShell>
-      <Suspense fallback={<p className="p-10 text-sm text-[#5A7896]">Loading...</p>}>
+      <Suspense fallback={<p className="p-10 text-sm text-[#3B5A78]">Loading...</p>}>
         <HmrcSubmitContent />
       </Suspense>
     </SiteShell>

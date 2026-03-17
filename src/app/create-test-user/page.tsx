@@ -30,7 +30,7 @@ export default function CreateTestUserPage() {
   return (
     <div style={{ padding: "2rem", fontFamily: "monospace", maxWidth: "800px", margin: "0 auto" }}>
       <h1 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>Create HMRC Sandbox Test User</h1>
-      <p style={{ marginBottom: "1rem", fontSize: "0.9rem", color: "#5A7896" }}>
+      <p style={{ marginBottom: "1rem", fontSize: "0.9rem", color: "#3B5A78" }}>
         Creates a new sandbox individual with MTD Income Tax enrolled, including both sole trader and UK property businesses.
       </p>
       <button

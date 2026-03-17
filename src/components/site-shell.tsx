@@ -16,7 +16,7 @@ function Footer() {
   return (
     <footer className="mt-10 border-t border-[#B8D0EB]">
       <div className="mx-auto w-full max-w-[1000px] px-6 sm:px-8 lg:px-10">
-        <div className="flex flex-col gap-4 py-8 text-sm text-[#5A7896] sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 py-8 text-sm text-[#3B5A78] sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Flonancial Ltd</p>
           <div className="flex flex-wrap gap-6">
             <Link href="/dashboard" className="hover:text-[#0F1C2E]">Dashboard</Link>

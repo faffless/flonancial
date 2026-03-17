@@ -272,17 +272,17 @@ function AddUpdateContent() {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Add quarterly update</h1>
-              <p className="mt-3 text-sm leading-6 text-[#5A7896]">
+              <p className="mt-3 text-sm leading-6 text-[#3B5A78]">
                 {isBusinessPreselected
                   ? `Adding a quarterly update for ${selectedBusiness?.name ?? "your business"}.`
                   : "Record the next available period for one of your saved businesses."}
               </p>
             </div>
-            <Link href="/dashboard" className="text-sm text-[#5A7896] underline underline-offset-4 transition hover:text-[#0F1C2E]">Back to dashboard</Link>
+            <Link href="/dashboard" className="text-sm text-[#3B5A78] underline underline-offset-4 transition hover:text-[#0F1C2E]">Back to dashboard</Link>
           </div>
 
           {loadingBusinesses ? (
-            <p className="mt-6 text-sm text-[#5A7896]">Loading businesses...</p>
+            <p className="mt-6 text-sm text-[#3B5A78]">Loading businesses...</p>
           ) : businesses.length === 0 ? (
             <div className="mt-6 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
               <p className="text-sm text-[#0F1C2E]">You need at least one business before you can add a quarterly update.</p>
@@ -300,7 +300,7 @@ function AddUpdateContent() {
                   { label: "Turnover preview", value: formatCurrencyPreview(turnover) },
                 ].map(({ label, value }) => (
                   <div key={label} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#5A7896]">{label}</p>
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#3B5A78]">{label}</p>
                     <p className="mt-2 text-sm text-[#0F1C2E]">{value}</p>
                   </div>
                 ))}
@@ -345,7 +345,7 @@ function AddUpdateContent() {
                     { label: "Quarter end", value: selectedPeriod ? formatDate(selectedPeriod.quarterEnd) : "Not available" },
                   ].map(({ label, value }) => (
                     <div key={label} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-[#5A7896]">{label}</p>
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-[#3B5A78]">{label}</p>
                       <p className="mt-2 text-sm text-[#0F1C2E]">{value}</p>
                     </div>
                   ))}
@@ -364,12 +364,12 @@ function AddUpdateContent() {
                   <div>
                     <label htmlFor="turnover" className="mb-2 block text-sm text-[#0F1C2E]">Turnover</label>
                     <input id="turnover" type="number" min="0" step="0.01" placeholder="0.00" value={turnover} onChange={(e) => setTurnover(e.target.value)}
-                      className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#5A7896] focus:border-[#2E88D0]" />
+                      className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0]" />
                   </div>
                   <div>
                     <label htmlFor="expenses" className="mb-2 block text-sm text-[#0F1C2E]">Expenses</label>
                     <input id="expenses" type="number" min="0" step="0.01" placeholder="0.00" value={expenses} onChange={(e) => setExpenses(e.target.value)}
-                      className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#5A7896] focus:border-[#2E88D0]" />
+                      className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0]" />
                   </div>
                 </div>
 
@@ -383,7 +383,7 @@ function AddUpdateContent() {
                   </Link>
                 </div>
 
-                {message ? <p className="text-sm text-[#5A7896]">{message}</p> : null}
+                {message ? <p className="text-sm text-[#3B5A78]">{message}</p> : null}
               </form>
             </>
           )}
@@ -395,7 +395,7 @@ function AddUpdateContent() {
 
 export default function AddUpdatePage() {
   return (
-    <Suspense fallback={<p className="p-10 text-sm text-[#5A7896]">Loading...</p>}>
+    <Suspense fallback={<p className="p-10 text-sm text-[#3B5A78]">Loading...</p>}>
       <AddUpdateContent />
     </Suspense>
   );
