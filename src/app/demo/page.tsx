@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SiteShell } from "@/components/site-shell";
 import { demoBusinesses, getDemoBusiness, type DemoBusiness, type DemoTransaction } from "@/data/demo-businesses";
@@ -58,11 +58,7 @@ function getTaxYearForDate(dateStr: string): TaxYear {
   yearStart.setDate(yearStart.getDate() + 1);
   const startYear = yearStart.getFullYear();
   const endYear = yearEnd.getFullYear();
-  return {
-    label: `${startYear}–${String(endYear).slice(2)}`,
-    start: toInputDate(yearStart),
-    end: toInputDate(yearEnd),
-  };
+  return { label: `${startYear}–${String(endYear).slice(2)}`, start: toInputDate(yearStart), end: toInputDate(yearEnd) };
 }
 
 function getQuartersForTaxYear(taxYear: TaxYear): Omit<Quarter, "income" | "expenses" | "transactionCount">[] {
@@ -122,11 +118,7 @@ function BusinessSwitcher({ currentId, onSwitch }: { currentId: string; onSwitch
           key={b.id}
           type="button"
           onClick={() => onSwitch(b.id)}
-          className={`rounded-xl border px-3 py-1.5 text-xs transition ${
-            b.id === currentId
-              ? "border-[#2E88D0] bg-[#2E88D0] text-white"
-              : "border-[#B8D0EB] bg-[#DEE9F8] text-[#3B5A78] hover:bg-[#CCE0F5] hover:text-[#0F1C2E]"
-          }`}
+          className={`rounded-xl border px-3 py-1.5 text-xs transition ${b.id === currentId ? "border-[#2E88D0] bg-[#2E88D0] text-white" : "border-[#B8D0EB] bg-[#DEE9F8] text-[#3B5A78] hover:bg-[#CCE0F5] hover:text-[#0F1C2E]"}`}
         >
           {b.emoji} {b.name}
         </button>
@@ -234,18 +226,12 @@ function BusinessView({ business }: { business: DemoBusiness }) {
 
   return (
     <div>
-      {/* Business header */}
       <div className="flex flex-wrap items-center gap-3">
-        <h2 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">
-          {business.emoji} {business.name}
-        </h2>
+        <h2 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">{business.emoji} {business.name}</h2>
         <span className="text-sm text-[#3B5A78]">{business.tagline}</span>
-        <span className="rounded-full border border-[#B8D0EB] bg-[#DEE9F8] px-2.5 py-1 text-[11px] text-[#3B5A78]">
-          {formatBusinessType(business.business_type)}
-        </span>
+        <span className="rounded-full border border-[#B8D0EB] bg-[#DEE9F8] px-2.5 py-1 text-[11px] text-[#3B5A78]">{formatBusinessType(business.business_type)}</span>
       </div>
 
-      {/* Year selector */}
       {availableYears.length > 0 && selectedYear ? (
         <div className="mt-6 flex items-center gap-3">
           <label className="text-sm text-[#3B5A78]">Tax year</label>
@@ -255,7 +241,6 @@ function BusinessView({ business }: { business: DemoBusiness }) {
         </div>
       ) : null}
 
-      {/* Quarterly cards */}
       {quarters.length > 0 && selectedYear ? (
         <div className="mt-6">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -263,9 +248,7 @@ function BusinessView({ business }: { business: DemoBusiness }) {
               <div key={q.periodKey} className={`rounded-2xl border p-4 ${q.isFuture ? "border-[#B8D0EB] bg-[#DEE9F8] opacity-50" : q.isCurrent ? "border-[#2E88D0]/30 bg-[#CCE0F5]" : "border-amber-600/20 bg-amber-50"}`}>
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#3B5A78]">{q.label}</p>
-                  {!q.isFuture ? (
-                    <span className="rounded-full border border-[#B8D0EB] bg-[#DEE9F8] px-2 py-0.5 text-[10px] text-[#3B5A78]">Estimate</span>
-                  ) : null}
+                  {!q.isFuture ? <span className="rounded-full border border-[#B8D0EB] bg-[#DEE9F8] px-2 py-0.5 text-[10px] text-[#3B5A78]">Estimate</span> : null}
                 </div>
                 <p className="mt-2 text-[11px] text-[#3B5A78]">{formatDate(q.quarterStart)} – {formatDate(q.quarterEnd)}</p>
                 <div className="mt-3 space-y-1">
@@ -283,7 +266,6 @@ function BusinessView({ business }: { business: DemoBusiness }) {
             ))}
           </div>
 
-          {/* Annual totals */}
           <div className="mt-4 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-4">
             <div className="flex flex-wrap items-center gap-6">
               <p className="text-xs font-semibold uppercase tracking-wide text-[#3B5A78]">{selectedYear.label} estimated totals</p>
@@ -293,13 +275,10 @@ function BusinessView({ business }: { business: DemoBusiness }) {
             </div>
           </div>
 
-          <div className="mt-4">
-            <SignUpBanner />
-          </div>
+          <div className="mt-4"><SignUpBanner /></div>
         </div>
       ) : null}
 
-      {/* Transactions */}
       <div className="mt-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h2 className="text-lg font-medium text-[#0F1C2E]">
@@ -372,9 +351,7 @@ function BusinessView({ business }: { business: DemoBusiness }) {
           </div>
         ) : null}
 
-        <div className="mt-8">
-          <SignUpBanner />
-        </div>
+        <div className="mt-8"><SignUpBanner /></div>
       </div>
     </div>
   );
@@ -382,12 +359,11 @@ function BusinessView({ business }: { business: DemoBusiness }) {
 
 // ─── Main demo page ───────────────────────────────────────────────────────────
 
-export default function DemoPage() {
+function DemoPageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialId = searchParams.get("business") ?? demoBusinesses[0].id;
   const [selectedId, setSelectedId] = useState(initialId);
-
   const business = getDemoBusiness(selectedId) ?? demoBusinesses[0];
 
   function handleSwitch(id: string) {
@@ -398,24 +374,31 @@ export default function DemoPage() {
   return (
     <SiteShell>
       <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
-
-        {/* Demo banner */}
         <div className="mb-6 flex items-center gap-3 rounded-2xl border border-[#2E88D0]/30 bg-[#2E88D0]/10 px-5 py-3">
           <span className="shrink-0 rounded-full bg-[#2E88D0] px-2.5 py-0.5 text-xs font-semibold text-white">DEMO</span>
           <p className="text-sm text-[#0F1C2E]">These are example businesses with fictional data. Nothing is connected to HMRC.</p>
           <Link href="/" className="ml-auto shrink-0 text-xs text-[#3B5A78] transition hover:text-[#0F1C2E]">← Back</Link>
         </div>
-
-        {/* Business switcher */}
         <div className="mb-6">
           <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Switch business</p>
           <BusinessSwitcher currentId={selectedId} onSwitch={handleSwitch} />
         </div>
-
-        {/* Business content */}
         <BusinessView key={selectedId} business={business} />
-
       </section>
     </SiteShell>
+  );
+}
+
+export default function DemoPage() {
+  return (
+    <Suspense fallback={
+      <SiteShell>
+        <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
+          <p className="text-sm text-[#3B5A78]">Loading...</p>
+        </section>
+      </SiteShell>
+    }>
+      <DemoPageInner />
+    </Suspense>
   );
 }
