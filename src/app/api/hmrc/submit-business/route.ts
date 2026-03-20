@@ -4,6 +4,7 @@ import {
   applyHmrcCookieMutations,
   hmrcFetchWithAuth,
   getValidHmrcAccessToken,
+  getNinoForUser,
 } from "@/utils/hmrc/server";
 import {
   buildFraudPreventionHeaders,
@@ -20,7 +21,7 @@ type HMRCErrorResponse = {
 
 function getTaxYearFromPeriodEnd(periodEnd: string) {
   const endDate = new Date(`${periodEnd}T00:00:00`);
-  const year = endDate.getFullYear();
+  const year = endDate.getUTCFullYear();
   const april5 = new Date(`${year}-04-05T00:00:00`);
   if (endDate <= april5) return `${year - 1}-${String(year).slice(2)}`;
   return `${year}-${String(year + 1).slice(2)}`;
@@ -32,23 +33,41 @@ function parsePeriodKey(periodKey: string): { quarterStart: string; quarterEnd: 
   return { quarterStart: parts[0], quarterEnd: parts[1] };
 }
 
-// Given an accounting year end and a date within the tax year,
-// return all 4 quarter start/end pairs for that tax year
+// Get the tax year start date for a given period end date and accounting year end
+function getTaxYearStart(periodEnd: string, accountingYearEnd: string): string {
+  const [endMonth, endDay] = accountingYearEnd.split("-").map(Number);
+  const periodEndDate = new Date(`${periodEnd}T00:00:00`);
+  const year = periodEndDate.getUTCFullYear();
+
+  let yearEnd = new Date(Date.UTC(year, endMonth - 1, endDay));
+  if (yearEnd < periodEndDate) {
+    yearEnd = new Date(Date.UTC(year + 1, endMonth - 1, endDay));
+  }
+
+  const yearStart = new Date(yearEnd);
+  yearStart.setUTCFullYear(yearStart.getUTCFullYear() - 1);
+  yearStart.setUTCDate(yearStart.getUTCDate() + 1);
+
+  return yearStart.toISOString().slice(0, 10);
+}
+
+// Get all 4 quarters for a tax year
 function getQuartersForTaxYear(
   accountingYearEnd: string,
   referenceDateStr: string
 ): { quarterStart: string; quarterEnd: string; periodKey: string }[] {
   const [endMonth, endDay] = accountingYearEnd.split("-").map(Number);
   const referenceDate = new Date(`${referenceDateStr}T00:00:00`);
+  const year = referenceDate.getUTCFullYear();
 
-  let yearEnd = new Date(referenceDate.getFullYear(), endMonth - 1, endDay);
+  let yearEnd = new Date(Date.UTC(year, endMonth - 1, endDay));
   if (yearEnd < referenceDate) {
-    yearEnd = new Date(referenceDate.getFullYear() + 1, endMonth - 1, endDay);
+    yearEnd = new Date(Date.UTC(year + 1, endMonth - 1, endDay));
   }
 
   const yearStart = new Date(yearEnd);
-  yearStart.setFullYear(yearStart.getFullYear() - 1);
-  yearStart.setDate(yearStart.getDate() + 1);
+  yearStart.setUTCFullYear(yearStart.getUTCFullYear() - 1);
+  yearStart.setUTCDate(yearStart.getUTCDate() + 1);
 
   const quarters = [];
   const cursor = new Date(yearStart);
@@ -56,8 +75,8 @@ function getQuartersForTaxYear(
   for (let i = 0; i < 4; i++) {
     const periodStart = new Date(cursor);
     const periodEnd = new Date(cursor);
-    periodEnd.setMonth(periodEnd.getMonth() + 3);
-    periodEnd.setDate(periodEnd.getDate() - 1);
+    periodEnd.setUTCMonth(periodEnd.getUTCMonth() + 3);
+    periodEnd.setUTCDate(periodEnd.getUTCDate() - 1);
 
     const quarterStart = periodStart.toISOString().slice(0, 10);
     const quarterEnd = periodEnd.toISOString().slice(0, 10);
@@ -68,7 +87,7 @@ function getQuartersForTaxYear(
       periodKey: `${quarterStart}_${quarterEnd}`,
     });
 
-    cursor.setMonth(cursor.getMonth() + 3);
+    cursor.setUTCMonth(cursor.getUTCMonth() + 3);
   }
 
   return quarters;
@@ -90,11 +109,6 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "invalid_period_key" }, { status: 400 });
   }
 
-  const testNino = process.env.HMRC_TEST_NINO;
-  if (!testNino) {
-    return NextResponse.json({ error: "missing_hmrc_test_nino" }, { status: 500 });
-  }
-
   const tokenResult = await getValidHmrcAccessToken();
   if (!tokenResult.ok) {
     const response = NextResponse.json({ error: tokenResult.error }, { status: tokenResult.status });
@@ -108,9 +122,14 @@ export async function GET(request: Request) {
     return applyHmrcCookieMutations(response, tokenResult.cookieMutations);
   }
 
+  const nino = await getNinoForUser(user.id);
+  if (!nino) {
+    return NextResponse.json({ error: "missing_nino", message: "Please add your National Insurance number in your profile" }, { status: 400 });
+  }
+
   const { data: business, error: businessError } = await supabase
     .from("businesses")
-    .select("id, name, hmrc_business_id, business_type")
+    .select("id, name, hmrc_business_id, business_type, accounting_year_end")
     .eq("id", businessId)
     .eq("user_id", user.id)
     .single();
@@ -125,12 +144,16 @@ export async function GET(request: Request) {
     return applyHmrcCookieMutations(response, tokenResult.cookieMutations);
   }
 
+  // Cumulative — fetch from tax year start to period end
+  const accountingYearEnd = business.accounting_year_end ?? "04-05";
+  const taxYearStart = getTaxYearStart(parsed.quarterEnd, accountingYearEnd);
+
   const { data: txData } = await supabase
     .from("transactions")
     .select("type, amount")
     .eq("business_id", businessId)
     .eq("user_id", user.id)
-    .gte("date", parsed.quarterStart)
+    .gte("date", taxYearStart)
     .lte("date", parsed.quarterEnd);
 
   const transactions = txData ?? [];
@@ -158,6 +181,7 @@ export async function GET(request: Request) {
     ok: true,
     is_amend: isAmend,
     tax_year: taxYear,
+    tax_year_start: taxYearStart,
     business: {
       id: business.id,
       name: business.name,
@@ -172,8 +196,8 @@ export async function GET(request: Request) {
     totals: { turnover, expenses },
     existing_submission: existingSubmission ?? null,
     hmrc_endpoint: isProperty
-      ? `/individuals/business/property/uk/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`
-      : `/individuals/business/self-employment/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`,
+      ? `/individuals/business/property/uk/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`
+      : `/individuals/business/self-employment/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`,
   });
 
   return applyHmrcCookieMutations(response, tokenResult.cookieMutations);
@@ -195,11 +219,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_period_key" }, { status: 400 });
   }
 
-  const testNino = process.env.HMRC_TEST_NINO;
-  if (!testNino) {
-    return NextResponse.json({ error: "missing_hmrc_test_nino" }, { status: 500 });
-  }
-
   let clientFraudData: ClientFraudData | null = null;
   try {
     const body = await request.json();
@@ -210,6 +229,11 @@ export async function POST(request: Request) {
   const { data: { user }, error: userError } = await supabase.auth.getUser();
   if (userError || !user) {
     return NextResponse.json({ error: "not_logged_in" }, { status: 401 });
+  }
+
+  const nino = await getNinoForUser(user.id);
+  if (!nino) {
+    return NextResponse.json({ error: "missing_nino", message: "Please add your National Insurance number in your profile" }, { status: 400 });
   }
 
   const { data: business, error: businessError } = await supabase
@@ -231,13 +255,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "unsupported_business_type" }, { status: 400 });
   }
 
-  // Calculate totals from transactions — source of truth
+  // Cumulative — fetch from tax year start to period end
+  const accountingYearEnd = business.accounting_year_end ?? "04-05";
+  const taxYearStart = getTaxYearStart(parsed.quarterEnd, accountingYearEnd);
+
   const { data: txData } = await supabase
     .from("transactions")
     .select("type, amount")
     .eq("business_id", businessId)
     .eq("user_id", user.id)
-    .gte("date", parsed.quarterStart)
+    .gte("date", taxYearStart)
     .lte("date", parsed.quarterEnd);
 
   const transactions = txData ?? [];
@@ -286,8 +313,8 @@ export async function POST(request: Request) {
   const isProperty = business.business_type === "uk_property";
 
   const hmrcUrl = isProperty
-    ? `https://test-api.service.hmrc.gov.uk/individuals/business/property/uk/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`
-    : `https://test-api.service.hmrc.gov.uk/individuals/business/self-employment/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`;
+    ? `https://test-api.service.hmrc.gov.uk/individuals/business/property/uk/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`
+    : `https://test-api.service.hmrc.gov.uk/individuals/business/self-employment/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`;
 
   const acceptHeader = isProperty
     ? "application/vnd.hmrc.6.0+json"
@@ -295,20 +322,20 @@ export async function POST(request: Request) {
 
   const payload = isProperty
     ? {
-        fromDate: parsed.quarterStart,
+        fromDate: taxYearStart,
         toDate: parsed.quarterEnd,
         ukProperty: {
-          income: { periodAmount: turnover },
-          expenses: { consolidatedExpenses: expenses },
+          ...(turnover > 0 ? { income: { periodAmount: Math.round(turnover * 100) / 100 } } : {}),
+          ...(expenses > 0 ? { expenses: { consolidatedExpenses: Math.round(expenses * 100) / 100 } } : {}),
         },
       }
     : {
         periodDates: {
-          periodStartDate: parsed.quarterStart,
+          periodStartDate: taxYearStart,
           periodEndDate: parsed.quarterEnd,
         },
-        periodIncome: { turnover },
-        periodExpenses: { consolidatedExpenses: expenses },
+        periodIncome: { turnover: Math.round(turnover * 100) / 100, other: 0 },
+periodExpenses: { consolidatedExpenses: Math.round(expenses * 100) / 100 },
       };
 
   const hmrcResult = await hmrcFetchWithAuth(hmrcUrl, {
@@ -353,7 +380,7 @@ export async function POST(request: Request) {
 
   const submittedAt = new Date().toISOString();
 
-  // Upsert this quarter's row
+  // Upsert this quarter's submission row
   if (existingSubmission) {
     await supabase
       .from("quarterly_updates")
@@ -374,8 +401,8 @@ export async function POST(request: Request) {
     });
   }
 
-  // ── Fixes 1 & 2: auto-create rows for any earlier unsubmitted quarters
-  // that are covered by this submission
+  // Auto-create covered rows for any earlier quarters in the same tax year
+  // that don't yet have a submission row — these are covered by this cumulative submission
   try {
     const { data: allSubmissions } = await supabase
       .from("quarterly_updates")
@@ -387,91 +414,65 @@ export async function POST(request: Request) {
       (allSubmissions ?? []).map((r) => `${r.quarter_start}_${r.quarter_end}`)
     );
 
-    // Find tax year start — everything from year start up to this quarter start
-    const accountingYearEnd = business.accounting_year_end ?? "04-05";
-    const [endMonth, endDay] = accountingYearEnd.split("-").map(Number);
-    const periodEndDate = new Date(`${parsed.quarterEnd}T00:00:00`);
-    let yearEnd = new Date(periodEndDate.getFullYear(), endMonth - 1, endDay);
-    if (yearEnd < periodEndDate) {
-      yearEnd = new Date(periodEndDate.getFullYear() + 1, endMonth - 1, endDay);
-    }
-    const yearStart = new Date(yearEnd);
-    yearStart.setFullYear(yearStart.getFullYear() - 1);
-    yearStart.setDate(yearStart.getDate() + 1);
-    const yearStartStr = yearStart.toISOString().slice(0, 10);
+    const allQuarters = getQuartersForTaxYear(accountingYearEnd, parsed.quarterEnd);
 
-    // Find any transactions that fall before this quarter's start
-    // and are in the current tax year but not yet in any submission row
-    const { data: earlierTxData } = await supabase
-      .from("transactions")
-      .select("date, type, amount")
-      .eq("business_id", businessId)
-      .eq("user_id", user.id)
-      .gte("date", yearStartStr)
-      .lt("date", parsed.quarterStart);
+    for (const q of allQuarters) {
+      // Only process quarters that end before the submitted quarter
+      if (q.quarterEnd >= parsed.quarterStart) break;
 
-    {
-      // Group transactions by quarter using same logic as business page
-      const cursor = new Date(`${yearStartStr}T00:00:00`);
-      for (let i = 0; i < 3; i++) {
-        const periodStart = new Date(cursor);
-        const periodEnd = new Date(cursor);
-        periodEnd.setMonth(periodEnd.getMonth() + 3);
-        periodEnd.setDate(periodEnd.getDate() - 1);
+      if (existingKeys.has(q.periodKey)) continue;
 
-        const qStart = periodStart.toISOString().slice(0, 10);
-        const qEnd = periodEnd.toISOString().slice(0, 10);
+      // Get transactions for this specific quarter period only (for record keeping)
+      const { data: qTxData } = await supabase
+        .from("transactions")
+        .select("type, amount")
+        .eq("business_id", businessId)
+        .eq("user_id", user.id)
+        .gte("date", q.quarterStart)
+        .lte("date", q.quarterEnd);
 
-        // Stop if this quarter overlaps with the submitted quarter
-        if (qStart >= parsed.quarterStart) break;
+      const qTx = qTxData ?? [];
+      const qTurnover = qTx
+        .filter((t) => t.type === "income")
+        .reduce((sum, t) => sum + Number(t.amount), 0);
+      const qExpenses = qTx
+        .filter((t) => t.type === "expense")
+        .reduce((sum, t) => sum + Number(t.amount), 0);
 
-        const key = `${qStart}_${qEnd}`;
-        if (!existingKeys.has(key)) {
-          const qTx = (earlierTxData ?? []).filter((t) => t.date >= qStart && t.date <= qEnd);
-          const qTurnover = qTx
-            .filter((t) => t.type === "income")
-            .reduce((sum, t) => sum + Number(t.amount), 0);
-          const qExpenses = qTx
-            .filter((t) => t.type === "expense")
-            .reduce((sum, t) => sum + Number(t.amount), 0);
+      const { data: insertedRow } = await supabase
+        .from("quarterly_updates")
+        .insert({
+          business_id: businessId,
+          user_id: user.id,
+          period_key: q.periodKey,
+          quarter_start: q.quarterStart,
+          quarter_end: q.quarterEnd,
+          turnover: qTurnover,
+          expenses: qExpenses,
+          status: "submitted",
+          submitted_at: submittedAt,
+        })
+        .select("id")
+        .single();
 
-          const { data: insertedRow } = await supabase
-            .from("quarterly_updates")
-            .insert({
-              business_id: businessId,
-              user_id: user.id,
-              period_key: key,
-              quarter_start: qStart,
-              quarter_end: qEnd,
-              turnover: qTurnover,
-              expenses: qExpenses,
-              status: "submitted",
-              submitted_at: submittedAt,
-            })
-            .select("id")
-            .single();
-
-          await supabase.from("submission_history").insert({
-            user_id: user.id,
-            business_id: businessId,
-            quarterly_update_id: insertedRow?.id ?? null,
-            period_key: key,
-            quarter_start: qStart,
-            quarter_end: qEnd,
-            turnover: qTurnover,
-            expenses: qExpenses,
-            tax_year: taxYear,
-            action: "submitted",
-            submitted_at: submittedAt,
-          });
-        }
-
-        cursor.setMonth(cursor.getMonth() + 3);
-      }
+      await supabase.from("submission_history").insert({
+        user_id: user.id,
+        business_id: businessId,
+        quarterly_update_id: insertedRow?.id ?? null,
+        period_key: q.periodKey,
+        quarter_start: q.quarterStart,
+        quarter_end: q.quarterEnd,
+        turnover: qTurnover,
+        expenses: qExpenses,
+        tax_year: taxYear,
+        action: "covered",
+        submitted_at: submittedAt,
+      });
     }
   } catch {
     // Non-fatal — submission already succeeded
   }
+
   // Log this submission to history
   try {
     await supabase.from("submission_history").insert({
@@ -510,6 +511,7 @@ export async function POST(request: Request) {
     submitted: true,
     is_amend: isAmend,
     tax_year: taxYear,
+    tax_year_start: taxYearStart,
     business: {
       id: business.id,
       name: business.name,

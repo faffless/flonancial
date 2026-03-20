@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { SiteHeader } from "@/components/site-header";
 import { SiteShell } from "@/components/site-shell";
+import { SpreadsheetUpload, ExtractedFigures } from "@/components/spreadsheet-upload";
 import { createClient } from "@/utils/supabase/client";
+import { collectFraudData } from "@/utils/hmrc/collect-fraud-data";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -16,15 +19,6 @@ type Business = {
   hmrc_business_id: string | null;
 };
 
-type Transaction = {
-  id: number;
-  date: string;
-  type: "income" | "expense";
-  amount: number;
-  description: string | null;
-  created_at: string;
-};
-
 type QuarterlySubmission = {
   id: number;
   period_key: string | null;
@@ -32,8 +26,24 @@ type QuarterlySubmission = {
   quarter_end: string;
   turnover: number;
   expenses: number;
+  other_income: number;
   status: "draft" | "submitted";
   submitted_at: string | null;
+  hmrc_correlation_id: string | null;
+};
+
+type SubmissionHistoryRow = {
+  id: number;
+  period_key: string;
+  quarter_start: string;
+  quarter_end: string;
+  turnover: number;
+  expenses: number;
+  other_income: number;
+  tax_year: string;
+  action: string;
+  submitted_at: string;
+  hmrc_correlation_id: string | null;
 };
 
 type HmrcObligation = {
@@ -46,14 +56,11 @@ type HmrcObligation = {
 
 type Quarter = {
   label: string;
+  shortLabel: string;
   quarterStart: string;
   quarterEnd: string;
   periodKey: string;
   submission: QuarterlySubmission | null;
-  income: number;
-  expenses: number;
-  transactionCount: number;
-  isLocked: boolean;
   isCurrent: boolean;
   isFuture: boolean;
   isPast: boolean;
@@ -65,37 +72,30 @@ type TaxYear = {
   end: string;
 };
 
-type SortField = "date" | "description" | "type" | "amount";
-type SortDir = "asc" | "desc";
-
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+function encodeFraudDataHeader(): string {
+  const data = collectFraudData();
+  return btoa(JSON.stringify(data));
+}
+
 function formatCurrency(value: number) {
-  return new Intl.NumberFormat("en-GB", {
-    style: "currency",
-    currency: "GBP",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
+  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
 }
 
 function formatDate(value: string) {
-  return new Date(`${value}T00:00:00`).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  return new Date(`${value}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 }
 
-function formatBusinessType(value: string | null) {
-  if (value === "sole_trader") return "Sole trader";
-  if (value === "uk_property") return "UK property";
-  if (value === "overseas_property") return "Overseas property";
-  return null;
+function formatDateTime(value: string) {
+  return new Date(value).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 
 function toInputDate(date: Date) {
-  return date.toISOString().slice(0, 10);
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(date.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
 
 function makePeriodKey(start: string, end: string) {
@@ -104,145 +104,135 @@ function makePeriodKey(start: string, end: string) {
 
 function getTaxYearForDate(dateStr: string, accountingYearEnd: string): TaxYear {
   const [endMonth, endDay] = accountingYearEnd.split("-").map(Number);
-  const date = new Date(`${dateStr}T00:00:00`);
-  const year = date.getFullYear();
+  const date = new Date(`${dateStr}T00:00:00Z`);
+  const year = date.getUTCFullYear();
 
-  let yearEnd = new Date(year, endMonth - 1, endDay);
-  if (date > yearEnd) yearEnd = new Date(year + 1, endMonth - 1, endDay);
+  let yearEnd = new Date(Date.UTC(year, endMonth - 1, endDay));
+  if (yearEnd < date) yearEnd = new Date(Date.UTC(year + 1, endMonth - 1, endDay));
 
   const yearStart = new Date(yearEnd);
-  yearStart.setFullYear(yearStart.getFullYear() - 1);
-  yearStart.setDate(yearStart.getDate() + 1);
+  yearStart.setUTCFullYear(yearStart.getUTCFullYear() - 1);
+  yearStart.setUTCDate(yearStart.getUTCDate() + 1);
 
-  const startYear = yearStart.getFullYear();
-  const endYear = yearEnd.getFullYear();
+  const startYear = yearStart.getUTCFullYear();
+  const endYear = yearEnd.getUTCFullYear();
   const label = startYear === endYear ? String(startYear) : `${startYear}–${String(endYear).slice(2)}`;
-
   return { label, start: toInputDate(yearStart), end: toInputDate(yearEnd) };
 }
 
-function getQuartersForTaxYear(taxYear: TaxYear): Omit<Quarter, "submission" | "income" | "expenses" | "transactionCount" | "isLocked">[] {
+function getCurrentTaxYear(accountingYearEnd: string): TaxYear {
+  return getTaxYearForDate(toInputDate(new Date()), accountingYearEnd);
+}
+
+function getQuartersForTaxYear(taxYear: TaxYear): Omit<Quarter, "submission">[] {
   const now = new Date();
-  const cursor = new Date(`${taxYear.start}T00:00:00`);
-  const quarters = [];
+  const cursor = new Date(`${taxYear.start}T00:00:00Z`);
+  const quarters: Omit<Quarter, "submission">[] = [];
 
   for (let i = 0; i < 4; i++) {
     const periodStart = new Date(cursor);
-    const periodEnd = new Date(cursor);
-    periodEnd.setMonth(periodEnd.getMonth() + 3);
-    periodEnd.setDate(periodEnd.getDate() - 1);
+    const periodEnd = new Date(Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth() + 3, cursor.getUTCDate() - 1));
 
     const quarterStart = toInputDate(periodStart);
     const quarterEnd = toInputDate(periodEnd);
-    const isFuture = new Date(`${quarterStart}T00:00:00`) > now;
-    const isPast = new Date(`${quarterEnd}T23:59:59`) < now;
+    const isFuture = new Date(`${quarterStart}T00:00:00Z`) > now;
+    const isPast = new Date(`${quarterEnd}T23:59:59Z`) < now;
     const isCurrent = !isFuture && !isPast;
 
-    let label = `Q${i + 1}`;
-    if (isCurrent) label += " · current";
-    else if (isFuture) label += " · upcoming";
+    const shortLabel = `Q${i + 1}`;
+    let label = shortLabel;
+    if (isCurrent) label += " · CURRENT";
 
-    quarters.push({ label, quarterStart, quarterEnd, periodKey: makePeriodKey(quarterStart, quarterEnd), isCurrent, isFuture, isPast });
-    cursor.setMonth(cursor.getMonth() + 3);
+    quarters.push({ label, shortLabel, quarterStart, quarterEnd, periodKey: makePeriodKey(quarterStart, quarterEnd), isCurrent, isFuture, isPast });
+    cursor.setUTCMonth(cursor.getUTCMonth() + 3);
   }
 
   return quarters;
 }
 
-function deriveAvailableYears(transactions: Transaction[], accountingYearEnd: string): TaxYear[] {
-  const yearMap = new Map<string, TaxYear>();
-
-  for (const t of transactions) {
-    const ty = getTaxYearForDate(t.date, accountingYearEnd);
-    if (!yearMap.has(ty.label)) yearMap.set(ty.label, ty);
-  }
-
-  const today = toInputDate(new Date());
-  const currentTy = getTaxYearForDate(today, accountingYearEnd);
-  if (!yearMap.has(currentTy.label)) yearMap.set(currentTy.label, currentTy);
-
-  return Array.from(yearMap.values()).sort((a, b) => b.start.localeCompare(a.start));
+function getAvailableYears(accountingYearEnd: string): TaxYear[] {
+  const current = getCurrentTaxYear(accountingYearEnd);
+  const prevStart = new Date(`${current.start}T00:00:00Z`);
+  prevStart.setUTCFullYear(prevStart.getUTCFullYear() - 1);
+  const prev = getTaxYearForDate(toInputDate(prevStart), accountingYearEnd);
+  return [current, prev];
 }
 
-// ─── Modal ────────────────────────────────────────────────────────────────────
+function getQuarterLabel(quarterStart: string, quarters: Quarter[]): string {
+  const match = quarters.find((q) => q.quarterStart === quarterStart);
+  return match?.shortLabel ?? "";
+}
 
-type ModalMode = "add" | "edit" | null;
+function isCoveredQuarter(submission: QuarterlySubmission | null): boolean {
+  if (!submission) return false;
+  return submission.turnover === 0 && submission.expenses === 0 && submission.other_income === 0;
+}
 
-type TransactionModalProps = {
-  mode: ModalMode;
-  transaction?: Transaction | null;
-  onClose: () => void;
-  onSave: (data: { date: string; type: "income" | "expense"; amount: number; description: string }) => Promise<void>;
-  onDelete?: () => Promise<void>;
-  saving: boolean;
-};
+// ─── HMRC held data display ───────────────────────────────────────────────────
 
-function TransactionModal({ mode, transaction, onClose, onSave, onDelete, saving }: TransactionModalProps) {
-  const [date, setDate] = useState(transaction?.date ?? toInputDate(new Date()));
-  const [type, setType] = useState<"income" | "expense">(transaction?.type ?? "income");
-  const [amount, setAmount] = useState(transaction ? String(transaction.amount) : "");
-  const [description, setDescription] = useState(transaction?.description ?? "");
-  const [error, setError] = useState("");
+function HmrcHeldSummary({ data, businessType }: { data: unknown; businessType: string | null }) {
+  const d = data as Record<string, unknown>;
 
-  async function handleSave() {
-    if (!date) { setError("Enter a date"); return; }
-    const amt = Number(amount);
-    if (!amount || !Number.isFinite(amt) || amt <= 0) { setError("Enter a valid amount greater than zero"); return; }
-    setError("");
-    await onSave({ date, type, amount: amt, description: description.trim() });
+  let periodStart: string | null = null;
+  let periodEnd: string | null = null;
+  let turnover: number | null = null;
+  let expenses: number | null = null;
+  let submittedOn: string | null = null;
+
+  try {
+    submittedOn = typeof d.submittedOn === "string" ? d.submittedOn : null;
+
+    if (businessType === "uk_property") {
+      periodStart = typeof d.fromDate === "string" ? d.fromDate : null;
+      periodEnd = typeof d.toDate === "string" ? d.toDate : null;
+      const ukProp = d.ukProperty as Record<string, unknown> | undefined;
+      const income = ukProp?.income as Record<string, number> | undefined;
+      const exp = ukProp?.expenses as Record<string, number> | undefined;
+      turnover = income?.periodAmount ?? null;
+      expenses = exp?.consolidatedExpenses ?? null;
+    } else {
+      const dates = d.periodDates as Record<string, string> | undefined;
+      periodStart = dates?.periodStartDate ?? null;
+      periodEnd = dates?.periodEndDate ?? null;
+      const income = d.periodIncome as Record<string, number> | undefined;
+      const exp = d.periodExpenses as Record<string, number> | undefined;
+      turnover = income?.turnover ?? null;
+      expenses = exp?.consolidatedExpenses ?? null;
+    }
+  } catch {
+    return <p className="mt-3 text-xs text-[#3B5A78]">Unable to read the data from HMRC.</p>;
+  }
+
+  if (!periodStart && !periodEnd && turnover === null && expenses === null) {
+    return <p className="mt-3 text-xs text-[#3B5A78]">No data held by HMRC for this tax year.</p>;
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="w-full max-w-md rounded-2xl border border-[#B8D0EB] bg-white p-6 shadow-xl">
-        <h2 className="text-lg font-medium text-[#0F1C2E]">
-          {mode === "add" ? "Add transaction" : "Edit transaction"}
-        </h2>
-        <div className="mt-5 space-y-4">
-          <div>
-            <label className="mb-2 block text-sm text-[#0F1C2E]">Date</label>
-            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]" />
-          </div>
-          <div>
-            <label className="mb-2 block text-sm text-[#0F1C2E]">Type</label>
-            <select value={type} onChange={(e) => setType(e.target.value as "income" | "expense")} className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]">
-              <option value="income">Income</option>
-              <option value="expense">Expense</option>
-            </select>
-          </div>
-          <div>
-            <label className="mb-2 block text-sm text-[#0F1C2E]">Amount (£)</label>
-            <input type="number" min="0.01" step="0.01" placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)} className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0]" />
-          </div>
-          <div>
-            <label className="mb-2 block text-sm text-[#0F1C2E]">Description <span className="text-[#3B5A78]">(optional)</span></label>
-            <input type="text" maxLength={255} placeholder="e.g. Invoice #123, Office supplies" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0]" />
-          </div>
-          {error ? <p className="text-sm text-red-600">{error}</p> : null}
+    <div className="mt-3 space-y-2">
+      {periodStart && periodEnd ? (
+        <div className="flex justify-between rounded-xl border border-[#B8D0EB] bg-white px-4 py-3">
+          <p className="text-xs text-[#3B5A78]">Period</p>
+          <p className="text-xs font-medium text-[#0F1C2E]">{formatDate(periodStart)} – {formatDate(periodEnd)}</p>
         </div>
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex gap-3">
-            <button type="button" onClick={handleSave} disabled={saving} className="rounded-xl bg-[#2E88D0] px-4 py-2.5 text-sm text-white transition hover:opacity-90 disabled:opacity-60">
-              {saving ? "Saving..." : mode === "add" ? "Add transaction" : "Save changes"}
-            </button>
-            <button type="button" onClick={onClose} disabled={saving} className="rounded-xl border border-[#B8D0EB] bg-[#CCE0F5] px-4 py-2.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]">
-              Cancel
-            </button>
-          </div>
-          {mode === "edit" && onDelete ? (
-            <button type="button" onClick={onDelete} disabled={saving} className="text-sm text-red-600 transition hover:text-red-800 disabled:opacity-60">Delete</button>
-          ) : null}
+      ) : null}
+      {turnover !== null ? (
+        <div className="flex justify-between rounded-xl border border-[#B8D0EB] bg-white px-4 py-3">
+          <p className="text-xs text-[#3B5A78]">Turnover</p>
+          <p className="text-xs font-medium text-[#0F1C2E]">{formatCurrency(turnover)}</p>
         </div>
-      </div>
+      ) : null}
+      {expenses !== null ? (
+        <div className="flex justify-between rounded-xl border border-[#B8D0EB] bg-white px-4 py-3">
+          <p className="text-xs text-[#3B5A78]">Expenses</p>
+          <p className="text-xs font-medium text-[#0F1C2E]">{formatCurrency(expenses)}</p>
+        </div>
+      ) : null}
+      {submittedOn ? (
+        <p className="text-[10px] text-[#3B5A78]">Last updated: {formatDateTime(submittedOn)}</p>
+      ) : null}
+      <p className="text-[10px] text-[#3B5A78]">This is what HMRC holds based on your most recent cumulative submission.</p>
     </div>
   );
-}
-
-// ─── Sort indicator ───────────────────────────────────────────────────────────
-
-function SortIndicator({ field, current, dir }: { field: SortField; current: SortField; dir: SortDir }) {
-  if (field !== current) return <span className="ml-1 text-[#B8D0EB]">↕</span>;
-  return <span className="ml-1 text-[#2E88D0]">{dir === "asc" ? "↑" : "↓"}</span>;
 }
 
 // ─── Main page ────────────────────────────────────────────────────────────────
@@ -254,7 +244,6 @@ export default function BusinessPage() {
   const businessId = Number(params.id);
 
   const [business, setBusiness] = useState<Business | null>(null);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [submissions, setSubmissions] = useState<QuarterlySubmission[]>([]);
   const [obligations, setObligations] = useState<HmrcObligation[]>([]);
   const [loadingObligations, setLoadingObligations] = useState(false);
@@ -262,52 +251,46 @@ export default function BusinessPage() {
   const [notFound, setNotFound] = useState(false);
 
   const [selectedYearLabel, setSelectedYearLabel] = useState<string | null>(null);
-  const [modalMode, setModalMode] = useState<ModalMode>(null);
-  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
-  const [modalSaving, setModalSaving] = useState(false);
-
-  const [filterType, setFilterType] = useState<"all" | "income" | "expense">("all");
-  const [filterSearch, setFilterSearch] = useState("");
-  const [filterQuarter, setFilterQuarter] = useState<string>("all");
-  const [sortField, setSortField] = useState<SortField>("date");
-  const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [uploadingQuarter, setUploadingQuarter] = useState<string | null>(null);
+  const [history, setHistory] = useState<SubmissionHistoryRow[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [hmrcHeldData, setHmrcHeldData] = useState<unknown>(null);
+  const [loadingHmrcData, setLoadingHmrcData] = useState(false);
+  const [showHmrcData, setShowHmrcData] = useState(false);
 
   const loadData = useCallback(async () => {
     if (!Number.isFinite(businessId)) { setNotFound(true); setLoading(false); return; }
-
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) { router.replace("/login"); return; }
 
     const { data: businessData, error: businessError } = await supabase
-      .from("businesses")
-      .select("id, name, business_type, accounting_year_end, hmrc_business_id")
-      .eq("id", businessId)
-      .eq("user_id", user.id)
-      .single();
-
+      .from("businesses").select("id, name, business_type, accounting_year_end, hmrc_business_id")
+      .eq("id", businessId).eq("user_id", user.id).single();
     if (businessError || !businessData) { setNotFound(true); setLoading(false); return; }
 
-    const { data: txData } = await supabase
-      .from("transactions")
-      .select("id, date, type, amount, description, created_at")
-      .eq("business_id", businessId)
-      .eq("user_id", user.id)
-      .order("date", { ascending: false });
-
-    const { data: subData } = await supabase
-      .from("quarterly_updates")
-      .select("id, period_key, quarter_start, quarter_end, turnover, expenses, status, submitted_at")
-      .eq("business_id", businessId)
-      .eq("user_id", user.id)
-      .order("quarter_start", { ascending: true });
+    const { data: subData } = await supabase.from("quarterly_updates")
+      .select("id, period_key, quarter_start, quarter_end, turnover, expenses, other_income, status, submitted_at, hmrc_correlation_id")
+      .eq("business_id", businessId).eq("user_id", user.id).order("quarter_start", { ascending: true });
 
     setBusiness(businessData);
-    setTransactions((txData ?? []) as Transaction[]);
     setSubmissions((subData ?? []) as QuarterlySubmission[]);
+
+    const { data: historyData } = await supabase.from("submission_history")
+      .select("id, period_key, quarter_start, quarter_end, turnover, expenses, other_income, tax_year, action, submitted_at, hmrc_correlation_id")
+      .eq("business_id", businessId).eq("user_id", user.id)
+      .order("submitted_at", { ascending: false });
+    setHistory((historyData ?? []) as SubmissionHistoryRow[]);
     setLoading(false);
   }, [businessId, supabase, router]);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  useEffect(() => {
+    if (!successMessage) return;
+    const timer = setTimeout(() => setSuccessMessage(null), 10000);
+    return () => clearTimeout(timer);
+  }, [successMessage]);
 
   const fetchObligations = useCallback(async (taxYear: TaxYear) => {
     if (!business?.hmrc_business_id) return;
@@ -315,29 +298,54 @@ export default function BusinessPage() {
     try {
       const response = await fetch(
         `/api/hmrc/obligations?businessId=${businessId}&fromDate=${taxYear.start}&toDate=${taxYear.end}`,
-        { method: "GET", credentials: "include", cache: "no-store" }
+        {
+          method: "GET",
+          credentials: "include",
+          cache: "no-store",
+          headers: { "X-Fraud-Data": encodeFraudDataHeader() },
+        }
       );
       if (!response.ok) { setObligations([]); return; }
       const data = await response.json();
       setObligations(data.obligations ?? []);
-    } catch {
-      setObligations([]);
-    } finally {
-      setLoadingObligations(false);
-    }
+    } catch { setObligations([]); }
+    finally { setLoadingObligations(false); }
+  }, [business?.hmrc_business_id, businessId]);
+
+  const fetchHmrcHeldData = useCallback(async () => {
+    if (!business?.hmrc_business_id || !selectedYear) return;
+    setLoadingHmrcData(true);
+    try {
+      const taxYear = selectedYear.label.replace("–", "-");
+      const response = await fetch(
+        `/api/hmrc/retrieve-cumulative?businessId=${businessId}&taxYear=${taxYear}`,
+        {
+          method: "GET",
+          credentials: "include",
+          cache: "no-store",
+          headers: { "X-Fraud-Data": encodeFraudDataHeader() },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setHmrcHeldData(data.hmrcData);
+      } else {
+        setHmrcHeldData(null);
+      }
+    } catch { setHmrcHeldData(null); }
+    finally { setLoadingHmrcData(false); }
   }, [business?.hmrc_business_id, businessId]);
 
   const availableYears = useMemo(() => {
     if (!business?.accounting_year_end) return [];
-    return deriveAvailableYears(transactions, business.accounting_year_end);
-  }, [transactions, business]);
+    return getAvailableYears(business.accounting_year_end);
+  }, [business]);
 
   const selectedYear = useMemo(() => {
     if (availableYears.length === 0) return null;
     if (selectedYearLabel) return availableYears.find((y) => y.label === selectedYearLabel) ?? availableYears[0];
-    const yearsWithTx = availableYears.filter((y) => transactions.some((t) => t.date >= y.start && t.date <= y.end));
-    return yearsWithTx.length > 0 ? yearsWithTx[0] : availableYears[0];
-  }, [availableYears, selectedYearLabel, transactions]);
+    return availableYears[0];
+  }, [availableYears, selectedYearLabel]);
 
   useEffect(() => {
     if (selectedYear && business?.hmrc_business_id) fetchObligations(selectedYear);
@@ -347,161 +355,63 @@ export default function BusinessPage() {
     if (!selectedYear || !business?.accounting_year_end) return [];
     return getQuartersForTaxYear(selectedYear).map((q) => {
       const submission = submissions.find((s) => s.quarter_start === q.quarterStart && s.quarter_end === q.quarterEnd) ?? null;
-      const qTransactions = transactions.filter((t) => t.date >= q.quarterStart && t.date <= q.quarterEnd);
-      const income = qTransactions.filter((t) => t.type === "income").reduce((sum, t) => sum + Number(t.amount), 0);
-      const expenses = qTransactions.filter((t) => t.type === "expense").reduce((sum, t) => sum + Number(t.amount), 0);
-      const isLocked = submission?.status === "submitted";
-      return { ...q, submission, income, expenses, transactionCount: qTransactions.length, isLocked };
+      return { ...q, submission };
     });
-  }, [selectedYear, business, transactions, submissions]);
+  }, [selectedYear, business, submissions]);
 
-  const annualTotals = useMemo(() => {
-    if (!selectedYear) return { income: 0, expenses: 0 };
-    const yt = transactions.filter((t) => t.date >= selectedYear.start && t.date <= selectedYear.end);
-    return {
-      income: yt.filter((t) => t.type === "income").reduce((sum, t) => sum + Number(t.amount), 0),
-      expenses: yt.filter((t) => t.type === "expense").reduce((sum, t) => sum + Number(t.amount), 0),
-    };
-  }, [selectedYear, transactions]);
+  const latestSubmittedPeriodKey = useMemo(() => {
+    const submitted = quarters.filter((q) => q.submission?.status === "submitted").sort((a, b) => b.quarterEnd.localeCompare(a.quarterEnd));
+    return submitted[0]?.periodKey ?? null;
+  }, [quarters]);
 
-  const yearTransactions = useMemo(() => {
-    if (!selectedYear) return transactions;
-    return transactions.filter((t) => t.date >= selectedYear.start && t.date <= selectedYear.end);
-  }, [transactions, selectedYear]);
-
-  const filteredTransactions = useMemo(() => {
-    let result = [...yearTransactions];
-    if (filterType !== "all") result = result.filter((t) => t.type === filterType);
-    if (filterSearch) {
-      const s = filterSearch.toLowerCase();
-      result = result.filter((t) => t.description?.toLowerCase().includes(s) || String(t.amount).includes(s));
-    }
-    if (filterQuarter !== "all") {
-      const q = quarters.find((q) => q.periodKey === filterQuarter);
-      if (q) result = result.filter((t) => t.date >= q.quarterStart && t.date <= q.quarterEnd);
-    }
-    result.sort((a, b) => {
-      let valA: string | number;
-      let valB: string | number;
-      if (sortField === "date") { valA = a.date; valB = b.date; }
-      else if (sortField === "description") { valA = a.description?.toLowerCase() ?? ""; valB = b.description?.toLowerCase() ?? ""; }
-      else if (sortField === "type") { valA = a.type; valB = b.type; }
-      else { valA = Number(a.amount); valB = Number(b.amount); }
-      if (valA < valB) return sortDir === "asc" ? -1 : 1;
-      if (valA > valB) return sortDir === "asc" ? 1 : -1;
-      return 0;
-    });
-    return result;
-  }, [yearTransactions, filterType, filterSearch, filterQuarter, quarters, sortField, sortDir]);
-
-  function handleSort(field: SortField) {
-    if (sortField === field) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-    else { setSortField(field); setSortDir(field === "date" ? "desc" : "asc"); }
-  }
-
-  function isTransactionLocked(transaction: Transaction): boolean {
-    return quarters.some((q) => q.isLocked && transaction.date >= q.quarterStart && transaction.date <= q.quarterEnd);
-  }
-
-  function isLatestSubmission(periodKey: string): boolean {
-    const submittedQuarters = quarters.filter((q) => q.isLocked).sort((a, b) => b.quarterEnd.localeCompare(a.quarterEnd));
-    return submittedQuarters[0]?.periodKey === periodKey;
-  }
-
-  function isCoveredByLaterSubmission(quarterEnd: string): boolean {
-    return quarters.some((q) => q.isLocked && q.quarterEnd > quarterEnd);
-  }
-
-  function hasOpenObligation(quarterStart: string, quarterEnd: string): boolean {
-    if (!business?.hmrc_business_id) return true;
-    if (loadingObligations) return false;
-    if (obligations.length === 0) return false;
-    return obligations.some((o) => {
+  function getDueDate(quarterStart: string, quarterEnd: string): string | null {
+    const ob = obligations.find((o) => {
       if (!o.quarter_start || !o.quarter_end) return false;
-      const isOpen = o.status === "O" || o.status === "open";
-      if (!isOpen) return false;
       return quarterStart >= o.quarter_start && quarterEnd <= o.quarter_end;
     });
+    return ob?.due_date ?? null;
   }
 
-  function exportTransactions() {
-    const toExport = selectedYear
-      ? transactions.filter((t) => t.date >= selectedYear.start && t.date <= selectedYear.end)
-      : transactions;
+  async function handleSubmit(figures: ExtractedFigures) {
+    if (!uploadingQuarter || !business) return;
+    const quarter = quarters.find((q) => q.periodKey === uploadingQuarter);
+    if (!quarter) return;
 
-    const rows = [
-      ["Date", "Type", "Amount (GBP)", "Description"],
-      ...toExport
-        .sort((a, b) => a.date.localeCompare(b.date))
-        .map((t) => [
-          t.date,
-          t.type === "income" ? "Income" : "Expense",
-          Number(t.amount).toFixed(2),
-          t.description ?? "",
-        ]),
-    ];
+    setSubmitting(true);
+    try {
+      const response = await fetch("/api/hmrc/submit-quarterly", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          businessId,
+          quarterStart: quarter.quarterStart,
+          quarterEnd: quarter.quarterEnd,
+          periodKey: quarter.periodKey,
+          turnover: figures.turnover,
+          expenses: figures.expenses,
+          otherIncome: figures.otherIncome,
+          fraudData: collectFraudData(),
+        }),
+      });
 
-    const csv = rows
-      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
-      .join("\n");
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.message ?? err.error ?? "HMRC submission failed");
+      }
 
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${business?.name ?? "transactions"}_${selectedYear?.label ?? "all"}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
+      const result = await response.json();
 
-  async function handleAddTransaction(data: { date: string; type: "income" | "expense"; amount: number; description: string }) {
-    setModalSaving(true);
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { router.push("/login"); return; }
-    const { error } = await supabase.from("transactions").insert({
-      user_id: user.id,
-      business_id: businessId,
-      date: data.date,
-      type: data.type,
-      amount: data.amount,
-      description: data.description || null,
-    });
-    setModalSaving(false);
-    if (error) { window.alert(error.message); return; }
-    setModalMode(null);
-    await loadData();
-  }
-
-  async function handleEditTransaction(data: { date: string; type: "income" | "expense"; amount: number; description: string }) {
-    if (!editingTransaction) return;
-    setModalSaving(true);
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { router.push("/login"); return; }
-    const { error } = await supabase
-      .from("transactions")
-      .update({ date: data.date, type: data.type, amount: data.amount, description: data.description || null })
-      .eq("id", editingTransaction.id)
-      .eq("user_id", user.id);
-    setModalSaving(false);
-    if (error) { window.alert(error.message); return; }
-    setModalMode(null);
-    setEditingTransaction(null);
-    await loadData();
-  }
-
-  async function handleDeleteTransaction() {
-    if (!editingTransaction) return;
-    const confirmed = window.confirm("Delete this transaction? This cannot be undone.");
-    if (!confirmed) return;
-    setModalSaving(true);
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { router.push("/login"); return; }
-    const { error } = await supabase.from("transactions").delete().eq("id", editingTransaction.id).eq("user_id", user.id);
-    setModalSaving(false);
-    if (error) { window.alert(error.message); return; }
-    setModalMode(null);
-    setEditingTransaction(null);
-    await loadData();
+      setUploadingQuarter(null);
+      setSuccessMessage(
+        `Submitted to HMRC for ${business.name} (${quarter.shortLabel}): Turnover ${formatCurrency(figures.turnover)}, Expenses ${formatCurrency(figures.expenses)}. Confirmation ID: ${result.correlationId ?? "pending"}`
+      );
+      await loadData();
+    } catch (err) {
+      console.error("Submission failed:", err);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   // ─── Render ───────────────────────────────────────────────────────────────
@@ -527,218 +437,203 @@ export default function BusinessPage() {
     );
   }
 
-  const businessType = formatBusinessType(business.business_type);
   const isHmrcReady = Boolean(business.hmrc_business_id);
 
   return (
-    <SiteShell>
-      <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
+    <>
+      <SiteHeader
+        businessEmoji=""
+        businessName={business.name}
+        businessTagline=""
+        businessType={business.business_type ?? ""}
+        hmrcReady={isHmrcReady}
+        editBusinessHref={`/edit-business/${business.id}`}
+      />
+      <main className="min-h-screen">
+        <section className="mx-auto w-full max-w-[1000px] px-6 py-6 sm:px-8 lg:px-10">
 
-        {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">{business.name}</h1>
-            {businessType ? <span className="text-sm text-[#3B5A78]">{businessType}</span> : null}
-            {isHmrcReady ? (
-              <span className="rounded-full border border-emerald-600/20 bg-emerald-50 px-2.5 py-1 text-[11px] text-emerald-700">HMRC ready</span>
-            ) : (
-              <span className="rounded-full border border-amber-600/20 bg-amber-50 px-2.5 py-1 text-[11px] text-amber-700">Not matched to HMRC</span>
-            )}
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href={`/edit-business/${business.id}`} className="text-sm text-[#3B5A78] transition hover:text-[#0F1C2E]">Edit business</Link>
-            <Link href="/dashboard" className="text-sm text-[#3B5A78] transition hover:text-[#0F1C2E]">Dashboard</Link>
-          </div>
-        </div>
-
-        {/* Year selector */}
-        {availableYears.length > 0 && selectedYear ? (
-          <div className="mt-6 flex items-center gap-3">
-            <label className="text-sm text-[#3B5A78]">Tax year</label>
-            <select value={selectedYear.label} onChange={(e) => { setSelectedYearLabel(e.target.value); setFilterQuarter("all"); }} className="rounded-xl border border-[#B8D0EB] bg-white px-3 py-2 text-sm text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]">
-              {availableYears.map((y) => <option key={y.label} value={y.label}>{y.label}</option>)}
-            </select>
-            {isHmrcReady && loadingObligations ? <span className="text-xs text-[#3B5A78]">Checking HMRC obligations...</span> : null}
-          </div>
-        ) : null}
-
-        {/* Quarterly summary cards */}
-        {quarters.length > 0 && selectedYear ? (
-          <div className="mt-6">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {quarters.map((q) => (
-                <div key={q.periodKey} className={`rounded-2xl border p-4 ${q.isFuture ? "border-[#B8D0EB] bg-[#DEE9F8] opacity-50" : q.isLocked ? "border-emerald-600/20 bg-emerald-50" : q.isCurrent ? "border-[#2E88D0]/30 bg-[#CCE0F5]" : "border-amber-600/20 bg-amber-50"}`}>
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[#3B5A78]">{q.label}</p>
-                    {q.isLocked ? (
-                      <span className="rounded-full border border-emerald-600/20 bg-emerald-100 px-2 py-0.5 text-[10px] text-emerald-700">
-                        {isCoveredByLaterSubmission(q.quarterEnd) ? "Covered" : "Submitted"}
-                      </span>
-                    ) : q.isFuture ? null : (
-                      <span className="rounded-full border border-amber-600/20 bg-amber-100 px-2 py-0.5 text-[10px] text-amber-700">Not submitted</span>
-                    )}
-                  </div>
-                  <p className="mt-2 text-[11px] text-[#3B5A78]">{formatDate(q.quarterStart)} – {formatDate(q.quarterEnd)}</p>
-                  <div className="mt-3 space-y-1">
-                    <p className="text-xs text-[#3B5A78]">Income: <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.income)}</span></p>
-                    <p className="text-xs text-[#3B5A78]">Expenses: <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.expenses)}</span></p>
-                    <p className="text-xs text-[#3B5A78]">Net income: <span className={`font-medium ${q.income - q.expenses >= 0 ? "text-emerald-700" : "text-red-600"}`}>{formatCurrency(q.income - q.expenses)}</span></p>
-                  </div>
-                  <p className="mt-2 text-[10px] text-[#3B5A78]">{q.transactionCount} transaction{q.transactionCount !== 1 ? "s" : ""}</p>
-
-                  {!q.isFuture && isHmrcReady ? (
-                    <div className="mt-3">
-                      {q.isLocked && isLatestSubmission(q.periodKey) ? (
-                        <Link href={`/hmrc-submit?businessId=${business.id}&periodKey=${encodeURIComponent(q.periodKey)}`} className="text-xs text-[#3B5A78] transition hover:text-[#0F1C2E]">Amend →</Link>
-                      ) : q.isLocked ? (
-                        <p className="text-[10px] text-[#3B5A78]">Any corrections carry forward to your next submission</p>
-                      ) : q.isPast && !isCoveredByLaterSubmission(q.quarterEnd) && hasOpenObligation(q.quarterStart, q.quarterEnd) && q.transactionCount > 0 ? (
-                        <Link href={`/hmrc-submit?businessId=${business.id}&periodKey=${encodeURIComponent(q.periodKey)}`} className="text-xs font-medium text-[#2E88D0] transition hover:opacity-75">Submit to HMRC →</Link>
-                      ) : q.isPast && !isCoveredByLaterSubmission(q.quarterEnd) && hasOpenObligation(q.quarterStart, q.quarterEnd) ? (
-                        <p className="text-[10px] text-[#3B5A78]">No transactions to submit</p>
-                      ) : q.isPast && !isCoveredByLaterSubmission(q.quarterEnd) && !loadingObligations ? (
-                        <p className="text-[10px] text-[#3B5A78]">No open HMRC obligation for this period</p>
-                      ) : q.isPast && isCoveredByLaterSubmission(q.quarterEnd) ? (
-                        <p className="text-[10px] text-[#3B5A78]">Covered by a later submission</p>
-                      ) : (
-                        <p className="text-[10px] text-[#3B5A78]">Available to submit after {formatDate(q.quarterEnd)}</p>
-                      )}
-                    </div>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-
-            {/* Annual totals */}
-            <div className="mt-4 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-4">
-              <div className="flex flex-wrap items-center gap-6">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[#3B5A78]">{selectedYear.label} totals</p>
-                <p className="text-xs text-[#3B5A78]">Income: <span className="font-medium text-[#0F1C2E]">{formatCurrency(annualTotals.income)}</span></p>
-                <p className="text-xs text-[#3B5A78]">Expenses: <span className="font-medium text-[#0F1C2E]">{formatCurrency(annualTotals.expenses)}</span></p>
-                <p className="text-xs text-[#3B5A78]">Net income: <span className={`font-medium ${annualTotals.income - annualTotals.expenses >= 0 ? "text-emerald-700" : "text-red-600"}`}>{formatCurrency(annualTotals.income - annualTotals.expenses)}</span></p>
+          {successMessage ? (
+            <div className="mb-4 flex items-start gap-3 rounded-2xl border border-emerald-600/20 bg-emerald-50 px-5 py-4">
+              <span className="mt-0.5 shrink-0 text-emerald-600">✓</span>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-emerald-700">Quarterly update submitted</p>
+                <p className="mt-0.5 text-xs text-emerald-600">{successMessage}</p>
               </div>
-            </div>
-          </div>
-        ) : null}
-
-        {/* Transactions */}
-        <div className="mt-10">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <h2 className="text-lg font-medium text-[#0F1C2E]">
-              Transactions
-              {selectedYear ? <span className="ml-2 text-sm font-normal text-[#3B5A78]">{selectedYear.label}</span> : null}
-            </h2>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={exportTransactions}
-                disabled={yearTransactions.length === 0}
-                className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-2 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB] disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                Export CSV
-              </button>
-              <button
-                type="button"
-                onClick={() => { setEditingTransaction(null); setModalMode("add"); }}
-                className="rounded-xl bg-[#2E88D0] px-4 py-2 text-sm text-white transition hover:opacity-90"
-              >
-                + Add transaction
-              </button>
-            </div>
-          </div>
-
-          {/* Filters */}
-          <div className="mt-4 flex flex-wrap gap-3">
-            <select value={filterType} onChange={(e) => setFilterType(e.target.value as "all" | "income" | "expense")} className="rounded-xl border border-[#B8D0EB] bg-white px-3 py-2 text-sm text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]">
-              <option value="all">All types</option>
-              <option value="income">Income only</option>
-              <option value="expense">Expenses only</option>
-            </select>
-            <select value={filterQuarter} onChange={(e) => setFilterQuarter(e.target.value)} className="rounded-xl border border-[#B8D0EB] bg-white px-3 py-2 text-sm text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]">
-              <option value="all">All quarters</option>
-              {quarters.map((q) => <option key={q.periodKey} value={q.periodKey}>{q.label}</option>)}
-            </select>
-            <input type="text" placeholder="Search description..." value={filterSearch} onChange={(e) => setFilterSearch(e.target.value)} className="rounded-xl border border-[#B8D0EB] bg-white px-3 py-2 text-sm text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0]" />
-            {filterType !== "all" || filterQuarter !== "all" || filterSearch ? (
-              <button type="button" onClick={() => { setFilterType("all"); setFilterQuarter("all"); setFilterSearch(""); }} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-3 py-2 text-sm text-[#3B5A78] transition hover:bg-[#B8D0EB]">Clear filters</button>
-            ) : null}
-          </div>
-
-          {/* Table */}
-          <div className="mt-4 overflow-hidden rounded-2xl border border-[#B8D0EB]">
-            {filteredTransactions.length === 0 ? (
-              <div className="p-8 text-center">
-                <p className="text-sm text-[#3B5A78]">
-                  {yearTransactions.length === 0 ? "No transactions yet for this year. Add your first transaction to get started." : "No transactions match your filters."}
-                </p>
-              </div>
-            ) : (
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-[#CCE0F5] text-[#3B5A78] text-xs uppercase tracking-wide">
-                    {([
-                      { field: "date" as SortField, label: "Date", align: "left" },
-                      { field: "description" as SortField, label: "Description", align: "left" },
-                      { field: "type" as SortField, label: "Type", align: "left" },
-                      { field: "amount" as SortField, label: "Amount", align: "right" },
-                    ] as const).map(({ field, label, align }) => (
-                      <th key={field} onClick={() => handleSort(field)} className={`px-5 py-3 font-semibold cursor-pointer select-none hover:text-[#0F1C2E] text-${align}`}>
-                        {label}<SortIndicator field={field} current={sortField} dir={sortDir} />
-                      </th>
-                    ))}
-                    <th className="px-5 py-3" />
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredTransactions.map((t, i) => {
-                    const locked = isTransactionLocked(t);
-                    return (
-                      <tr key={t.id} className={`${i % 2 === 0 ? "bg-white" : "bg-[#f4f8fd]"} ${locked ? "opacity-50" : ""}`}>
-                        <td className="px-5 py-3 text-[#3B5A78] whitespace-nowrap">{formatDate(t.date)}</td>
-                        <td className="px-5 py-3 text-[#0F1C2E]">{t.description || <span className="text-[#3B5A78]">—</span>}</td>
-                        <td className="px-5 py-3">
-                          <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${t.type === "income" ? "bg-emerald-50 text-emerald-700 border border-emerald-600/20" : "bg-amber-50 text-amber-700 border border-amber-600/20"}`}>
-                            {t.type === "income" ? "Income" : "Expense"}
-                          </span>
-                        </td>
-                        <td className="px-5 py-3 text-right font-medium text-[#0F1C2E]">{formatCurrency(Number(t.amount))}</td>
-                        <td className="px-5 py-3 text-right">
-                          {locked ? (
-                            <span className="text-xs text-[#3B5A78]">🔒</span>
-                          ) : (
-                            <button type="button" onClick={() => { setEditingTransaction(t); setModalMode("edit"); }} className="text-xs text-[#3B5A78] transition hover:text-[#0F1C2E]">Edit</button>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            )}
-          </div>
-
-          {/* Filtered totals footer */}
-          {filteredTransactions.length > 0 ? (
-            <div className="mt-3 flex flex-wrap gap-6 px-1">
-              <p className="text-xs text-[#3B5A78]">{filteredTransactions.length} transaction{filteredTransactions.length !== 1 ? "s" : ""}</p>
-              <p className="text-xs text-[#3B5A78]">Income: <span className="font-medium text-[#0F1C2E]">{formatCurrency(filteredTransactions.filter((t) => t.type === "income").reduce((s, t) => s + Number(t.amount), 0))}</span></p>
-              <p className="text-xs text-[#3B5A78]">Expenses: <span className="font-medium text-[#0F1C2E]">{formatCurrency(filteredTransactions.filter((t) => t.type === "expense").reduce((s, t) => s + Number(t.amount), 0))}</span></p>
-              <p className="text-xs text-[#3B5A78]">Net income: <span className="font-medium text-[#0F1C2E]">{formatCurrency(filteredTransactions.filter((t) => t.type === "income").reduce((s, t) => s + Number(t.amount), 0) - filteredTransactions.filter((t) => t.type === "expense").reduce((s, t) => s + Number(t.amount), 0))}</span></p>
+              <button type="button" onClick={() => setSuccessMessage(null)} className="shrink-0 text-xs text-emerald-600 hover:text-emerald-800">Dismiss</button>
             </div>
           ) : null}
-        </div>
-      </section>
 
-      {modalMode ? (
-        <TransactionModal
-          mode={modalMode}
-          transaction={editingTransaction}
-          onClose={() => { setModalMode(null); setEditingTransaction(null); }}
-          onSave={modalMode === "add" ? handleAddTransaction : handleEditTransaction}
-          onDelete={modalMode === "edit" ? handleDeleteTransaction : undefined}
-          saving={modalSaving}
-        />
-      ) : null}
-    </SiteShell>
+          {availableYears.length > 0 && selectedYear ? (
+            <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] px-4 py-3">
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-[#3B5A78]">Tax year</label>
+                <select
+                  value={selectedYear.label}
+                  onChange={(e) => { setSelectedYearLabel(e.target.value); setUploadingQuarter(null); setShowHmrcData(false); }}
+                  className="rounded-xl border border-[#B8D0EB] bg-white px-3 py-1.5 text-sm text-[#0F1C2E] outline-none transition focus:border-[#2E88D0]"
+                >
+                  {availableYears.map((y) => <option key={y.label} value={y.label}>{y.label}</option>)}
+                </select>
+              </div>
+              <div className="h-4 w-px bg-[#B8D0EB]" />
+              <p className="text-xs text-[#3B5A78]">{formatDate(selectedYear.start)} – {formatDate(selectedYear.end)}</p>
+              {isHmrcReady && loadingObligations ? <span className="ml-auto text-xs text-[#3B5A78]">Checking HMRC...</span> : null}
+              {!isHmrcReady ? (
+                <span className="ml-auto text-xs text-amber-700">
+                  <Link href={`/edit-business/${business.id}`} className="underline hover:no-underline">Connect to HMRC</Link> to submit
+                </span>
+              ) : null}
+            </div>
+          ) : null}
+
+          {quarters.length > 0 ? (
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {quarters.map((q) => {
+                const isSubmitted = q.submission?.status === "submitted";
+                const isLatestSubmitted = q.periodKey === latestSubmittedPeriodKey;
+                const isCovered = isCoveredQuarter(q.submission);
+                const canSubmit = !q.isFuture && isHmrcReady;
+
+                return (
+                  <div
+                    key={q.periodKey}
+                    className={`rounded-2xl border p-4 ${
+                      q.isFuture ? "border-[#B8D0EB] bg-[#DEE9F8] opacity-50" :
+                      isSubmitted ? "border-emerald-600/20 bg-emerald-50" :
+                      q.isCurrent ? "border-[#2E88D0]/30 bg-[#CCE0F5]" :
+                      "border-amber-600/20 bg-amber-50"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[#3B5A78]">{q.label}</p>
+                      {isSubmitted ? (
+                        <span className="rounded-full border border-emerald-600/20 bg-emerald-100 px-2 py-0.5 text-[10px] text-emerald-700">
+                          {isCovered ? "Covered" : "Submitted"}
+                        </span>
+                      ) : q.isFuture ? null : (
+                        <span className="rounded-full border border-amber-600/20 bg-amber-100 px-2 py-0.5 text-[10px] text-amber-700">Not submitted</span>
+                      )}
+                    </div>
+
+                    <p className="mt-2 text-[11px] text-[#3B5A78]">{formatDate(q.quarterStart)} – {formatDate(q.quarterEnd)}</p>
+                    {getDueDate(q.quarterStart, q.quarterEnd) ? <p className="mt-0.5 text-[10px] text-[#3B5A78]">Due: {formatDate(getDueDate(q.quarterStart, q.quarterEnd)!)}</p> : null}
+
+                    {isSubmitted && q.submission ? (
+                      <div className="mt-3 space-y-1">
+                        {isCovered ? (
+                          <p className="text-xs text-[#3B5A78]">Covered by your cumulative submission for a later quarter.</p>
+                        ) : (
+                          <>
+                            <p className="text-xs text-[#3B5A78]">Turnover (YTD): <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.submission.turnover)}</span></p>
+                            <p className="text-xs text-[#3B5A78]">Expenses (YTD): <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.submission.expenses)}</span></p>
+                            {q.submission.other_income > 0 ? (
+                              <p className="text-xs text-[#3B5A78]">Other income (YTD): <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.submission.other_income)}</span></p>
+                            ) : null}
+                            <p className="mt-1 text-[10px] text-[#3B5A78]">Submitted {formatDateTime(q.submission.submitted_at!)}</p>
+                          </>
+                        )}
+                      </div>
+                    ) : null}
+
+                    {!q.isFuture ? (
+                      <div className="mt-3">
+                        {isSubmitted && isLatestSubmitted && !isCovered ? (
+                          <button type="button" onClick={() => setUploadingQuarter(q.periodKey)} className="text-xs text-[#3B5A78] transition hover:text-[#0F1C2E]">Amend →</button>
+                        ) : isSubmitted && !isLatestSubmitted && !isCovered ? (
+                          <p className="text-[10px] text-[#3B5A78]">To update, amend your latest submitted quarter</p>
+                        ) : !isSubmitted && canSubmit ? (
+                          <button type="button" onClick={() => { setUploadingQuarter(q.periodKey); setSuccessMessage(null); }} className="rounded-lg bg-[#2E88D0] px-3 py-1.5 text-xs font-medium text-white transition hover:opacity-90">Upload & Submit</button>
+                        ) : !isHmrcReady ? (
+                          <p className="text-[10px] text-[#3B5A78]">Connect to HMRC first</p>
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
+
+          {uploadingQuarter ? (
+            <div className="mt-6">
+              <SpreadsheetUpload
+                quarterLabel={quarters.find((q) => q.periodKey === uploadingQuarter)?.shortLabel ?? ""}
+                onSubmit={handleSubmit}
+                onCancel={() => setUploadingQuarter(null)}
+                submitting={submitting}
+              />
+            </div>
+          ) : null}
+
+          {isHmrcReady && selectedYear && !uploadingQuarter ? (
+            <div className="mt-6">
+              {!showHmrcData ? (
+                <button type="button" onClick={() => { setShowHmrcData(true); fetchHmrcHeldData(); }} className="text-xs text-[#3B5A78] transition hover:text-[#0F1C2E]">View what HMRC currently holds for this tax year →</button>
+              ) : (
+                <div className="rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] p-5">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium text-[#0F1C2E]">What HMRC holds for {selectedYear.label}</p>
+                    <button type="button" onClick={() => setShowHmrcData(false)} className="text-xs text-[#3B5A78] hover:text-[#0F1C2E]">Hide</button>
+                  </div>
+                  {loadingHmrcData ? (
+                    <p className="mt-3 text-xs text-[#3B5A78]">Loading from HMRC...</p>
+                  ) : hmrcHeldData ? (
+                    <HmrcHeldSummary data={hmrcHeldData} businessType={business.business_type} />
+                  ) : (
+                    <p className="mt-3 text-xs text-[#3B5A78]">No data held by HMRC for this tax year, or unable to retrieve.</p>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : null}
+
+          {history.length > 0 ? (
+            <div className="mt-8">
+              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Submission history</p>
+              <div className="overflow-hidden rounded-2xl border border-[#B8D0EB]">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-[#CCE0F5] text-[#3B5A78] text-xs uppercase tracking-wide">
+                      <th className="px-4 py-3 text-left font-semibold">Quarter</th>
+                      <th className="px-4 py-3 text-left font-semibold">Period</th>
+                      <th className="px-4 py-3 text-left font-semibold">Submitted</th>
+                      <th className="px-4 py-3 text-right font-semibold">Turnover</th>
+                      <th className="px-4 py-3 text-right font-semibold">Expenses</th>
+                      <th className="px-4 py-3 text-left font-semibold">Action</th>
+                      <th className="px-4 py-3 text-left font-semibold">HMRC Ref</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {history.map((s, i) => (
+                      <tr key={s.id} className={i % 2 === 0 ? "bg-white" : "bg-[#f4f8fd]"}>
+                        <td className="px-4 py-3 text-xs font-medium text-[#0F1C2E]">{getQuarterLabel(s.quarter_start, quarters)}</td>
+                        <td className="px-4 py-3 text-xs text-[#0F1C2E]">{formatDate(s.quarter_start)} – {formatDate(s.quarter_end)}</td>
+                        <td className="px-4 py-3 text-xs text-[#3B5A78] whitespace-nowrap">{s.submitted_at ? formatDateTime(s.submitted_at) : "—"}</td>
+                        <td className="px-4 py-3 text-right text-xs font-medium text-[#0F1C2E]">{formatCurrency(s.turnover)}</td>
+                        <td className="px-4 py-3 text-right text-xs font-medium text-[#0F1C2E]">{formatCurrency(s.expenses)}</td>
+                        <td className="px-4 py-3 text-xs text-[#3B5A78]">{s.action === "amended" ? "Amended" : s.action === "covered" ? "Covered" : "Submitted"}</td>
+                        <td className="px-4 py-3 text-xs text-[#3B5A78] font-mono">{s.hmrc_correlation_id ?? "—"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : null}
+
+          {selectedYear ? (
+            <div className="mt-8 rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] px-6 py-5">
+              <p className="text-sm font-medium text-[#0F1C2E]">Final Declaration (year-end)</p>
+              <p className="mt-1 text-xs leading-5 text-[#3B5A78]">
+                Flonancial handles quarterly updates only. For the year-end Final Declaration, use{" "}
+                <a href="https://www.gov.uk/personal-tax-account" target="_blank" rel="noopener noreferrer" className="text-[#2E88D0] underline hover:no-underline">HMRC's online service</a>{" "}
+                or another compatible product. The deadline is 31 January following the end of the tax year.
+              </p>
+            </div>
+          ) : null}
+
+        </section>
+      </main>
+    </>
   );
 }

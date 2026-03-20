@@ -286,3 +286,17 @@ export function applyHmrcCookieMutations(
 
   return response;
 }
+
+export async function getNinoForUser(userId: string): Promise<string | null> {
+  const { createClient } = await import("@/utils/supabase/server");
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("user_profiles")
+    .select("nino")
+    .eq("user_id", userId)
+    .single();
+
+  if (error || !data?.nino) return null;
+  return data.nino;
+}

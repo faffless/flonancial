@@ -8,6 +8,14 @@ export type ClientFraudData = {
   windowSize: string;   // e.g. "width=1256&height=803"
 };
 
+const EMPTY_FRAUD_DATA: ClientFraudData = {
+  browserJSUserAgent: "",
+  deviceId: "",
+  screens: "",
+  timezone: "",
+  windowSize: "",
+};
+
 function pct(value: string): string {
   return encodeURIComponent(value);
 }
@@ -16,6 +24,44 @@ function getClientPublicIP(requestHeaders: Headers): string | null {
   const forwarded = requestHeaders.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0].trim();
   return null;
+}
+
+/**
+ * Parse fraud data from X-Fraud-Data header (base64-encoded JSON).
+ * Used by GET routes (obligations, retrieve-cumulative) where the business page
+ * sends fraud data as a custom header.
+ */
+export function parseFraudDataFromHeader(headerValue: string | null): ClientFraudData {
+  if (!headerValue) return EMPTY_FRAUD_DATA;
+  try {
+    const decoded = Buffer.from(headerValue, "base64").toString("utf-8");
+    const parsed = JSON.parse(decoded);
+    if (typeof parsed.browserJSUserAgent === "string" && typeof parsed.deviceId === "string") {
+      return parsed as ClientFraudData;
+    }
+    return EMPTY_FRAUD_DATA;
+  } catch {
+    return EMPTY_FRAUD_DATA;
+  }
+}
+
+/**
+ * Parse fraud data from a cookie (URL-encoded JSON).
+ * Used by the callback route where the ConnectHmrcButton stores fraud data
+ * in a cookie before navigating to HMRC OAuth.
+ */
+export function parseFraudDataFromCookie(cookieValue: string | null | undefined): ClientFraudData {
+  if (!cookieValue) return EMPTY_FRAUD_DATA;
+  try {
+    const decoded = decodeURIComponent(cookieValue);
+    const parsed = JSON.parse(decoded);
+    if (typeof parsed.browserJSUserAgent === "string" && typeof parsed.deviceId === "string") {
+      return parsed as ClientFraudData;
+    }
+    return EMPTY_FRAUD_DATA;
+  } catch {
+    return EMPTY_FRAUD_DATA;
+  }
 }
 
 export function buildFraudPreventionHeaders(
@@ -34,9 +80,9 @@ export function buildFraudPreventionHeaders(
   headers["Gov-Vendor-Product-Name"] = "Flonancial";
   headers["Gov-Vendor-Version"] = `Flonancial=${pct(appVersion)}`;
 
-  // --- From browser (passed in POST body) ---
+  // --- From browser (passed in POST body, custom header, or cookie) ---
   if (clientData.browserJSUserAgent) {
-    headers["Gov-Client-Browser-JS-User-Agent"] = clientData.browserJSUserAgent;
+    headers["Gov-Client-Browser-JS-User-Agent"] = encodeURIComponent(clientData.browserJSUserAgent);
   }
   if (clientData.deviceId) {
     headers["Gov-Client-Device-ID"] = clientData.deviceId;

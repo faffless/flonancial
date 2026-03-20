@@ -4,6 +4,7 @@ import {
   applyHmrcCookieMutations,
   hmrcFetchWithAuth,
   getValidHmrcAccessToken,
+  getNinoForUser,
 } from "@/utils/hmrc/server";
 import {
   buildFraudPreventionHeaders,
@@ -40,11 +41,6 @@ export async function GET(_request: Request, context: RouteContext) {
     return NextResponse.json({ error: "invalid_update_id" }, { status: 400 });
   }
 
-  const testNino = process.env.HMRC_TEST_NINO;
-  if (!testNino) {
-    return NextResponse.json({ error: "missing_hmrc_test_nino" }, { status: 500 });
-  }
-
   const tokenResult = await getValidHmrcAccessToken();
   if (!tokenResult.ok) {
     const response = NextResponse.json({ error: tokenResult.error }, { status: tokenResult.status });
@@ -57,6 +53,11 @@ export async function GET(_request: Request, context: RouteContext) {
   if (userError || !user) {
     const response = NextResponse.json({ error: "not_logged_in" }, { status: 401 });
     return applyHmrcCookieMutations(response, tokenResult.cookieMutations);
+  }
+
+  const nino = await getNinoForUser(user.id);
+  if (!nino) {
+    return NextResponse.json({ error: "missing_nino", message: "Please add your National Insurance number in your profile" }, { status: 400 });
   }
 
   const { data: update, error: updateError } = await supabase
@@ -122,8 +123,8 @@ export async function GET(_request: Request, context: RouteContext) {
       submitted_at: update.submitted_at,
     },
     hmrc_endpoint: isProperty
-      ? `/individuals/business/property/uk/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`
-      : `/individuals/business/self-employment/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`,
+      ? `/individuals/business/property/uk/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`
+      : `/individuals/business/self-employment/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`,
   });
 
   return applyHmrcCookieMutations(response, tokenResult.cookieMutations);
@@ -137,11 +138,6 @@ export async function POST(request: Request, context: RouteContext) {
 
   if (!Number.isFinite(updateId)) {
     return NextResponse.json({ error: "invalid_update_id" }, { status: 400 });
-  }
-
-  const testNino = process.env.HMRC_TEST_NINO;
-  if (!testNino) {
-    return NextResponse.json({ error: "missing_hmrc_test_nino" }, { status: 500 });
   }
 
   let clientFraudData: ClientFraudData | null = null;
@@ -160,6 +156,11 @@ export async function POST(request: Request, context: RouteContext) {
 
   if (userError || !user) {
     return NextResponse.json({ error: "not_logged_in" }, { status: 401 });
+  }
+
+  const nino = await getNinoForUser(user.id);
+  if (!nino) {
+    return NextResponse.json({ error: "missing_nino", message: "Please add your National Insurance number in your profile" }, { status: 400 });
   }
 
   const { data: update, error: updateError } = await supabase
@@ -220,8 +221,8 @@ export async function POST(request: Request, context: RouteContext) {
   const isProperty = business.business_type === "uk_property";
 
   const hmrcUrl = isProperty
-    ? `https://test-api.service.hmrc.gov.uk/individuals/business/property/uk/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`
-    : `https://test-api.service.hmrc.gov.uk/individuals/business/self-employment/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`;
+    ? `https://test-api.service.hmrc.gov.uk/individuals/business/property/uk/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`
+    : `https://test-api.service.hmrc.gov.uk/individuals/business/self-employment/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`;
 
   const acceptHeader = isProperty
     ? "application/vnd.hmrc.6.0+json"
@@ -350,8 +351,8 @@ export async function POST(request: Request, context: RouteContext) {
       submitted_at: submittedAt,
     },
     hmrc_endpoint: isProperty
-      ? `/individuals/business/property/uk/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`
-      : `/individuals/business/self-employment/${testNino}/${business.hmrc_business_id}/cumulative/${taxYear}`,
+      ? `/individuals/business/property/uk/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`
+      : `/individuals/business/self-employment/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`,
     hmrc_response: hmrcBody,
   });
 

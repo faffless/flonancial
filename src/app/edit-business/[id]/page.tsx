@@ -30,6 +30,8 @@ export default function EditBusinessPage() {
   const [accountingYearEnd, setAccountingYearEnd] = useState("04-05");
   const [tradingName, setTradingName] = useState<string | null>(null);
   const [hmrcBusinessId, setHmrcBusinessId] = useState<string | null>(null);
+  const [address, setAddress] = useState<string | null>(null);
+  const [commencementDate, setCommencementDate] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -46,7 +48,7 @@ export default function EditBusinessPage() {
 
       const { data: businessData, error: businessError } = await supabase
         .from("businesses")
-        .select("id, name, trading_name, business_type, accounting_year_end, hmrc_business_id, user_id")
+        .select("id, name, trading_name, business_type, accounting_year_end, hmrc_business_id, user_id, address_line_1, address_line_2, address_line_3, address_line_4, address_postcode, address_country_code, commencement_date")
         .eq("id", businessId)
         .eq("user_id", user.id)
         .single();
@@ -64,6 +66,17 @@ export default function EditBusinessPage() {
       setAccountingYearEnd(businessData.accounting_year_end ?? "04-05");
       setTradingName(businessData.trading_name ?? null);
       setHmrcBusinessId(businessData.hmrc_business_id ?? null);
+
+      const addressParts = [
+        businessData.address_line_1,
+        businessData.address_line_2,
+        businessData.address_line_3,
+        businessData.address_line_4,
+        businessData.address_postcode,
+      ].filter(Boolean);
+      setAddress(addressParts.length > 0 ? addressParts.join(", ") : null);
+      setCommencementDate(businessData.commencement_date ?? null);
+
       setSubmissionCount(count ?? 0);
       setLoading(false);
     }
@@ -198,6 +211,36 @@ export default function EditBusinessPage() {
                   Business type cannot be changed after creation.
                 </p>
               </div>
+
+              {/* Business address — read only, from HMRC */}
+              {address ? (
+                <div>
+                  <label className="mb-2 block text-sm text-[#0F1C2E]">
+                    Business address (from HMRC)
+                  </label>
+                  <input
+                    type="text"
+                    value={address}
+                    disabled
+                    className="w-full rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3 text-[#3B5A78] outline-none cursor-not-allowed"
+                  />
+                </div>
+              ) : null}
+
+              {/* Business start date — read only, from HMRC */}
+              {commencementDate ? (
+                <div>
+                  <label className="mb-2 block text-sm text-[#0F1C2E]">
+                    Business start date (from HMRC)
+                  </label>
+                  <input
+                    type="text"
+                    value={new Date(`${commencementDate}T00:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+                    disabled
+                    className="w-full rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3 text-[#3B5A78] outline-none cursor-not-allowed"
+                  />
+                </div>
+              ) : null}
 
               {/* Accounting year end — editable with warning if submissions exist */}
               <div>

@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { getNinoForUser } from "@/utils/hmrc/server";
+import {
+  buildFraudPreventionHeaders,
+  parseFraudDataFromCookie,
+} from "@/utils/hmrc/fraud-prevention";
 
 type HMRCTokenResponse = {
   access_token: string;
@@ -95,11 +100,15 @@ export async function GET(request: NextRequest) {
   const clientId = process.env.HMRC_CLIENT_ID;
   const clientSecret = process.env.HMRC_CLIENT_SECRET;
   const redirectUri = process.env.HMRC_REDIRECT_URI;
-  const testNino = process.env.HMRC_TEST_NINO;
 
   if (!clientId || !clientSecret || !redirectUri) {
     return NextResponse.redirect(new URL("/dashboard?hmrc_error=missing_hmrc_env", appBaseUrl));
   }
+
+  // ── Read fraud data from cookie (set by ConnectHmrcButton before OAuth redirect) ──
+  const clientFraudData = parseFraudDataFromCookie(
+    request.cookies.get("flo_fraud_data")?.value
+  );
 
   // ── Exchange code for token ──────────────────────────────────────────────
 
@@ -133,22 +142,34 @@ export async function GET(request: NextRequest) {
 
   // ── Fetch businesses from HMRC and sync to Supabase ─────────────────────
 
-  // Track what changed so we can notify the user on the dashboard
   const notifications: string[] = [];
 
-  if (testNino) {
-    try {
-      const supabase = await createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
-      if (user) {
+    if (user) {
+      const nino = await getNinoForUser(user.id);
+
+      if (nino) {
+        // Build fraud headers for the business sync calls
+        const fraudHeaders = buildFraudPreventionHeaders(
+          request.headers,
+          clientFraudData,
+          user.id,
+          user.email
+        );
+
+        // NOTE: Gov-Test-Scenario: BUSINESS_AND_PROPERTY is for sandbox only — remove before going to production
         const listResponse = await fetch(
-          `https://test-api.service.hmrc.gov.uk/individuals/business/details/${testNino}/list`,
+          `https://test-api.service.hmrc.gov.uk/individuals/business/details/${nino}/list`,
           {
             method: "GET",
             headers: {
               Accept: "application/vnd.hmrc.2.0+json",
               Authorization: `Bearer ${tokenJson.access_token}`,
+              "Gov-Test-Scenario": "BUSINESS_AND_PROPERTY",
+              ...fraudHeaders,
             },
             cache: "no-store",
           }
@@ -165,13 +186,16 @@ export async function GET(request: NextRequest) {
             // Get detailed info
             let detail: HMRCBusinessDetail | null = null;
             try {
+              // NOTE: Gov-Test-Scenario: BUSINESS_AND_PROPERTY is for sandbox only — remove before going to production
               const detailResponse = await fetch(
-                `https://test-api.service.hmrc.gov.uk/individuals/business/details/${testNino}/${hmrcBusiness.businessId}`,
+                `https://test-api.service.hmrc.gov.uk/individuals/business/details/${nino}/${hmrcBusiness.businessId}`,
                 {
                   method: "GET",
                   headers: {
                     Accept: "application/vnd.hmrc.2.0+json",
                     Authorization: `Bearer ${tokenJson.access_token}`,
+                    "Gov-Test-Scenario": "BUSINESS_AND_PROPERTY",
+                    ...fraudHeaders,
                   },
                   cache: "no-store",
                 }
@@ -193,19 +217,23 @@ export async function GET(request: NextRequest) {
               .maybeSingle();
 
             if (existing) {
-              // Business already matched — update HMRC fields but NEVER overwrite user's nickname
               const updates: Record<string, string | null> = {
                 trading_name: tradingName,
                 business_type: ourType,
                 accounting_year_end: accountingYearEnd,
+                address_line_1: detail?.businessAddressLineOne ?? null,
+                address_line_2: detail?.businessAddressLineTwo ?? null,
+                address_line_3: detail?.businessAddressLineThree ?? null,
+                address_line_4: detail?.businessAddressLineFour ?? null,
+                address_postcode: detail?.businessAddressPostcode ?? null,
+                address_country_code: detail?.businessAddressCountryCode ?? null,
+                commencement_date: detail?.commencementDate ?? null,
               };
 
-              // Notify if year end changed
               if (existing.accounting_year_end !== accountingYearEnd) {
                 notifications.push(`year_end_changed:${existing.name}:${accountingYearEnd}`);
               }
 
-              // Notify if business type changed
               if (existing.business_type !== ourType) {
                 notifications.push(`type_changed:${existing.name}:${ourType}`);
               }
@@ -217,7 +245,6 @@ export async function GET(request: NextRequest) {
                 .eq("user_id", user.id);
 
             } else {
-              // Look for unmatched business — try exact type match first
               let unmatched = null;
 
               const { data: exactMatch } = await supabase
@@ -231,7 +258,6 @@ export async function GET(request: NextRequest) {
               if (exactMatch) {
                 unmatched = exactMatch;
               } else {
-                // Try any unmatched business as fallback (handles type mismatch)
                 const { data: anyMatch } = await supabase
                   .from("businesses")
                   .select("id, name, accounting_year_end, business_type")
@@ -241,7 +267,6 @@ export async function GET(request: NextRequest) {
 
                 if (anyMatch) {
                   unmatched = anyMatch;
-                  // Notify about type correction
                   if ((anyMatch as any).business_type !== ourType) {
                     notifications.push(`type_changed:${anyMatch.name}:${ourType}`);
                   }
@@ -249,16 +274,20 @@ export async function GET(request: NextRequest) {
               }
 
               if (unmatched) {
-                // Match existing unlinked business
-                // Preserve user's existing nickname — only update HMRC fields
                 const updates: Record<string, string | null> = {
                   trading_name: tradingName,
                   business_type: ourType,
                   hmrc_business_id: hmrcBusiness.businessId,
                   accounting_year_end: accountingYearEnd,
+                  address_line_1: detail?.businessAddressLineOne ?? null,
+                  address_line_2: detail?.businessAddressLineTwo ?? null,
+                  address_line_3: detail?.businessAddressLineThree ?? null,
+                  address_line_4: detail?.businessAddressLineFour ?? null,
+                  address_postcode: detail?.businessAddressPostcode ?? null,
+                  address_country_code: detail?.businessAddressCountryCode ?? null,
+                  commencement_date: detail?.commencementDate ?? null,
                 };
 
-                // Notify if year end changed
                 if (unmatched.accounting_year_end !== accountingYearEnd) {
                   notifications.push(`year_end_changed:${unmatched.name}:${accountingYearEnd}`);
                 }
@@ -270,8 +299,6 @@ export async function GET(request: NextRequest) {
                   .eq("user_id", user.id);
 
               } else {
-                // No existing business — create new one
-                // Use trading name if available, otherwise a sensible fallback
                 const newName = tradingName?.trim() || getFallbackName(ourType);
 
                 await supabase.from("businesses").insert({
@@ -281,20 +308,26 @@ export async function GET(request: NextRequest) {
                   business_type: ourType,
                   hmrc_business_id: hmrcBusiness.businessId,
                   accounting_year_end: accountingYearEnd,
+                  address_line_1: detail?.businessAddressLineOne ?? null,
+                  address_line_2: detail?.businessAddressLineTwo ?? null,
+                  address_line_3: detail?.businessAddressLineThree ?? null,
+                  address_line_4: detail?.businessAddressLineFour ?? null,
+                  address_postcode: detail?.businessAddressPostcode ?? null,
+                  address_country_code: detail?.businessAddressCountryCode ?? null,
+                  commencement_date: detail?.commencementDate ?? null,
                 });
               }
             }
           }
         }
       }
-    } catch {
-      // Sync failed silently — tokens still set, user lands on dashboard
     }
+  } catch {
+    // Sync failed silently — tokens still set, user lands on dashboard
   }
 
   // ── Set cookies and redirect ─────────────────────────────────────────────
 
-  // Pass notifications as URL param so dashboard can show them
   const dashboardUrl = new URL("/dashboard", appBaseUrl);
   if (notifications.length > 0) {
     dashboardUrl.searchParams.set("hmrc_notifications", encodeURIComponent(JSON.stringify(notifications)));
@@ -302,7 +335,11 @@ export async function GET(request: NextRequest) {
 
   const response = NextResponse.redirect(dashboardUrl);
 
+  // Clear OAuth state and fraud data cookies
   response.cookies.set("hmrc_oauth_state", "", { httpOnly: true, sameSite: "lax", secure: getSecureCookieFlag(), path: "/", maxAge: 0 });
+  response.cookies.set("flo_fraud_data", "", { httpOnly: false, sameSite: "lax", secure: getSecureCookieFlag(), path: "/", maxAge: 0 });
+
+  // Set HMRC auth cookies
   response.cookies.set("hmrc_access_token", tokenJson.access_token, { httpOnly: true, sameSite: "lax", secure: getSecureCookieFlag(), path: "/", maxAge: tokenJson.expires_in });
   response.cookies.set("hmrc_refresh_token", tokenJson.refresh_token, { httpOnly: true, sameSite: "lax", secure: getSecureCookieFlag(), path: "/", maxAge: 60 * 60 * 24 * 30 });
   response.cookies.set("hmrc_token_expires_at", String(Date.now() + tokenJson.expires_in * 1000), { httpOnly: true, sameSite: "lax", secure: getSecureCookieFlag(), path: "/", maxAge: tokenJson.expires_in });

@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { SiteShell } from "@/components/site-shell";
 import { createClient } from "@/utils/supabase/server";
+import { NinoPrompt } from "@/components/nino-prompt";
+import { ConnectHmrcButton } from "@/components/connect-hmrc-button";
 
 type Business = {
   id: number;
@@ -81,6 +83,14 @@ export default async function DashboardPage({
   const { data: { user }, error: userError } = await supabase.auth.getUser();
   if (userError || !user) redirect("/login");
 
+  const { data: profile } = await supabase
+    .from("user_profiles")
+    .select("nino")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  const hasNino = Boolean(profile?.nino);
+
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("hmrc_access_token")?.value;
   const refreshToken = cookieStore.get("hmrc_refresh_token")?.value;
@@ -123,7 +133,6 @@ export default async function DashboardPage({
     <SiteShell>
       <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
 
-        {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Dashboard</h1>
@@ -134,140 +143,147 @@ export default async function DashboardPage({
           </Link>
         </div>
 
-        {/* Business added confirmation */}
-        {businessAdded ? (
-          <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-600/20 bg-emerald-50 px-4 py-3">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-            <p className="text-sm text-emerald-700">Business added. Connect your HMRC account to match it and fetch your obligations.</p>
-          </div>
-        ) : null}
-
-        {/* HMRC sync notifications */}
-        {notifications.length > 0 ? (
-          <div className="mt-4 space-y-2">
-            {notifications.map((n, i) => {
-              const parts = n.split(":");
-              const type = parts[0];
-              const businessName = parts[1] ?? "Your business";
-              const value = parts[2] ?? "";
-
-              let message = "";
-              if (type === "year_end_changed") {
-                message = `Your accounting period for "${businessName}" has been updated to match your HMRC records (${formatYearEnd(value)}). Your transaction history has been adjusted automatically.`;
-              } else if (type === "type_changed") {
-                message = `The business type for "${businessName}" has been updated to ${formatTypeLabel(value)} to match your HMRC records.`;
-              }
-
-              if (!message) return null;
-
-              return (
-                <div key={i} className="flex items-start gap-2 rounded-xl border border-blue-600/20 bg-blue-50 px-4 py-3">
-                  <span className="mt-0.5 inline-block h-2 w-2 shrink-0 rounded-full bg-blue-400" />
-                  <p className="text-sm text-blue-700">{message}</p>
-                </div>
-              );
-            })}
-          </div>
-        ) : null}
-
-        {/* HMRC connection banner */}
-        {hmrcConnected ? (
-          <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-600/20 bg-emerald-50 px-4 py-3">
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-            <p className="text-sm text-emerald-700">Connected to HMRC</p>
-          </div>
-        ) : (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-600/20 bg-amber-50 px-4 py-3">
-            <div className="flex items-center gap-2">
-              <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
-              <p className="text-sm text-amber-700">Not connected to HMRC — connect your account to submit quarterly updates</p>
-            </div>
-            <a href="/api/hmrc/start" className="rounded-xl bg-[#2E88D0] px-4 py-2 text-sm text-white transition hover:opacity-90">Connect HMRC</a>
-          </div>
-        )}
-
-        {/* No businesses */}
-        {businesses.length === 0 ? (
-          <div className="mt-8 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-8 text-center">
-            <p className="text-base font-medium text-[#0F1C2E]">No businesses yet</p>
-            <p className="mt-2 text-sm text-[#3B5A78]">
-              Add a business to start keeping records, or connect your HMRC account to import your businesses automatically.
-            </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link href="/add-business" className="rounded-xl bg-[#2E88D0] px-5 py-3 text-sm text-white transition hover:opacity-90">Add business manually</Link>
-              {!hmrcConnected ? (
-                <a href="/api/hmrc/start" className="rounded-xl border border-[#B8D0EB] bg-white px-5 py-3 text-sm text-[#0F1C2E] transition hover:bg-[#DEE9F8]">Connect HMRC</a>
-              ) : null}
-            </div>
+        {!hasNino ? (
+          <div className="mt-6">
+            <NinoPrompt userId={user.id} />
           </div>
         ) : (
           <>
-            <div className="mt-8 space-y-4">
-              {businesses.map((business) => {
-                const businessType = formatBusinessType(business.business_type);
-                const isHmrcReady = Boolean(business.hmrc_business_id);
-                const lastSub = lastSubmissionMap.get(business.id);
+            {businessAdded ? (
+              <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-600/20 bg-emerald-50 px-4 py-3">
+                <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+                <p className="text-sm text-emerald-700">Business added. Connect your HMRC account to match it and fetch your obligations.</p>
+              </div>
+            ) : null}
 
-                let badge = null;
-                if (hmrcConnected) {
-                  if (isHmrcReady) {
-                    badge = (
-                      <span className="rounded-full border border-emerald-600/20 bg-emerald-50 px-2.5 py-1 text-[11px] text-emerald-700">
-                        HMRC ready
-                      </span>
-                    );
-                  } else {
-                    badge = (
-                      <span className="rounded-full border border-amber-600/20 bg-amber-50 px-2.5 py-1 text-[11px] text-amber-700">
-                        Not matched to HMRC
-                      </span>
-                    );
+            {notifications.length > 0 ? (
+              <div className="mt-4 space-y-2">
+                {notifications.map((n, i) => {
+                  const parts = n.split(":");
+                  const type = parts[0];
+                  const businessName = parts[1] ?? "Your business";
+                  const value = parts[2] ?? "";
+
+                  let message = "";
+                  if (type === "year_end_changed") {
+                    message = `Your accounting period for "${businessName}" has been updated to match your HMRC records (${formatYearEnd(value)}). Your transaction history has been adjusted automatically.`;
+                  } else if (type === "type_changed") {
+                    message = `The business type for "${businessName}" has been updated to ${formatTypeLabel(value)} to match your HMRC records.`;
                   }
-                }
 
-                return (
-                  <div key={business.id} className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 sm:p-6">
-                    <div className="flex flex-wrap items-center justify-between gap-4">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <h2 className="text-lg font-medium text-[#0F1C2E]">{business.name}</h2>
-                        {businessType ? <span className="text-sm text-[#3B5A78]">{businessType}</span> : null}
-                        {badge}
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <Link href={`/edit-business/${business.id}`} className="text-sm text-[#3B5A78] transition hover:text-[#0F1C2E]">
-                          Edit
-                        </Link>
-                        <Link href={`/business/${business.id}`} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-3 py-1.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]">
-                          View
-                        </Link>
-                      </div>
+                  if (!message) return null;
+
+                  return (
+                    <div key={i} className="flex items-start gap-2 rounded-xl border border-blue-600/20 bg-blue-50 px-4 py-3">
+                      <span className="mt-0.5 inline-block h-2 w-2 shrink-0 rounded-full bg-blue-400" />
+                      <p className="text-sm text-blue-700">{message}</p>
                     </div>
+                  );
+                })}
+              </div>
+            ) : null}
 
-                    {lastSub ? (
-                      <div className="mt-4 border-t border-[#B8D0EB] pt-4">
-                        <p className="text-xs text-[#3B5A78]">
-                          Last submission —{" "}
-                          <span className="text-[#0F1C2E]">{formatDate(lastSub.quarter_start)} to {formatDate(lastSub.quarter_end)}</span>
-                          {" · "}Turnover: <span className="text-[#0F1C2E]">{formatCurrency(Number(lastSub.turnover))}</span>
-                          {" · "}Expenses: <span className="text-[#0F1C2E]">{formatCurrency(Number(lastSub.expenses))}</span>
-                          {lastSub.submitted_at ? <> · Submitted {formatDate(lastSub.submitted_at.slice(0, 10))}</> : null}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="mt-4 border-t border-[#B8D0EB] pt-4">
-                        <p className="text-xs text-[#3B5A78]">No submissions yet.</p>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            {hmrcConnected ? (
+              <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-600/20 bg-emerald-50 px-4 py-3">
+                <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+                <p className="text-sm text-emerald-700">Connected to HMRC</p>
+              </div>
+            ) : (
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-600/20 bg-amber-50 px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
+                  <p className="text-sm text-amber-700">Not connected to HMRC — connect your account to submit quarterly updates</p>
+                </div>
+                <ConnectHmrcButton className="rounded-xl bg-[#2E88D0] px-4 py-2 text-sm text-white transition hover:opacity-90">
+                  Connect HMRC
+                </ConnectHmrcButton>
+              </div>
+            )}
 
-            <div className="mt-6">
-              <Link href="/add-business" className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-2.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]">
-                + Add business
-              </Link>
-            </div>
+            {businesses.length === 0 ? (
+              <div className="mt-8 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-8 text-center">
+                <p className="text-base font-medium text-[#0F1C2E]">No businesses yet</p>
+                <p className="mt-2 text-sm text-[#3B5A78]">
+                  Connect your HMRC account to import your businesses automatically.
+                </p>
+                <div className="mt-6 flex flex-wrap justify-center gap-3">
+                  <ConnectHmrcButton className="rounded-xl bg-[#2E88D0] px-5 py-3 text-sm text-white transition hover:opacity-90">
+                    Connect HMRC to import your businesses
+                  </ConnectHmrcButton>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="mt-8 space-y-4">
+                  {businesses.map((business) => {
+                    const businessType = formatBusinessType(business.business_type);
+                    const isHmrcReady = Boolean(business.hmrc_business_id);
+                    const lastSub = lastSubmissionMap.get(business.id);
+
+                    let badge = null;
+                    if (hmrcConnected) {
+                      if (isHmrcReady) {
+                        badge = (
+                          <span className="rounded-full border border-emerald-600/20 bg-emerald-50 px-2.5 py-1 text-[11px] text-emerald-700">
+                            HMRC ready
+                          </span>
+                        );
+                      } else {
+                        badge = (
+                          <span className="rounded-full border border-amber-600/20 bg-amber-50 px-2.5 py-1 text-[11px] text-amber-700">
+                            Not matched to HMRC
+                          </span>
+                        );
+                      }
+                    }
+
+                    return (
+                      <div key={business.id} className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 sm:p-6">
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                          <div className="flex flex-wrap items-center gap-3">
+                            <h2 className="text-lg font-medium text-[#0F1C2E]">{business.name}</h2>
+                            {businessType ? <span className="text-sm text-[#3B5A78]">{businessType}</span> : null}
+                            {badge}
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <Link href={`/edit-business/${business.id}`} className="text-sm text-[#3B5A78] transition hover:text-[#0F1C2E]">
+                              Edit
+                            </Link>
+                            <Link href={`/business/${business.id}`} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-3 py-1.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]">
+                              View
+                            </Link>
+                          </div>
+                        </div>
+
+                        {lastSub ? (
+                          <div className="mt-4 border-t border-[#B8D0EB] pt-4">
+                            <p className="text-xs text-[#3B5A78]">
+                              Last submission —{" "}
+                              <span className="text-[#0F1C2E]">{formatDate(lastSub.quarter_start)} to {formatDate(lastSub.quarter_end)}</span>
+                              {" · "}Turnover: <span className="text-[#0F1C2E]">{formatCurrency(Number(lastSub.turnover))}</span>
+                              {" · "}Expenses: <span className="text-[#0F1C2E]">{formatCurrency(Number(lastSub.expenses))}</span>
+                              {lastSub.submitted_at ? <> · Submitted {formatDate(lastSub.submitted_at.slice(0, 10))}</> : null}
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="mt-4 border-t border-[#B8D0EB] pt-4">
+                            <p className="text-xs text-[#3B5A78]">No submissions yet.</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-6">
+                  {!hmrcConnected ? (
+                    <ConnectHmrcButton className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-2.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]">
+                      Connect HMRC to add businesses
+                    </ConnectHmrcButton>
+                  ) : null}
+                </div>
+              </>
+            )}
           </>
         )}
       </section>

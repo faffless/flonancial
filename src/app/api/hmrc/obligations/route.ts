@@ -3,7 +3,12 @@ import { createClient } from "@/utils/supabase/server";
 import {
   applyHmrcCookieMutations,
   hmrcFetchWithAuth,
+  getNinoForUser,
 } from "@/utils/hmrc/server";
+import {
+  buildFraudPreventionHeaders,
+  parseFraudDataFromHeader,
+} from "@/utils/hmrc/fraud-prevention";
 
 type HMRCObligationGroup = {
   typeOfBusiness?: string;
@@ -35,16 +40,25 @@ export async function GET(request: Request) {
   const fromDateParam = url.searchParams.get("fromDate");
   const toDateParam = url.searchParams.get("toDate");
 
-  const testNino = process.env.HMRC_TEST_NINO;
-  if (!testNino) {
-    return NextResponse.json({ error: "missing_hmrc_test_nino" }, { status: 500 });
-  }
-
   const supabase = await createClient();
   const { data: { user }, error: userError } = await supabase.auth.getUser();
   if (userError || !user) {
     return NextResponse.json({ error: "not_logged_in" }, { status: 401 });
   }
+
+  const nino = await getNinoForUser(user.id);
+  if (!nino) {
+    return NextResponse.json({ error: "missing_nino", message: "Please add your National Insurance number in your profile" }, { status: 400 });
+  }
+
+  // Parse fraud data from custom header (sent by business page)
+  const clientFraudData = parseFraudDataFromHeader(request.headers.get("x-fraud-data"));
+  const fraudHeaders = buildFraudPreventionHeaders(
+    request.headers,
+    clientFraudData,
+    user.id,
+    user.email
+  );
 
   let businessQuery = supabase
     .from("businesses")
@@ -66,7 +80,6 @@ export async function GET(request: Request) {
     return NextResponse.json({ obligations: [] });
   }
 
-  // Default to current tax year if no dates provided
   const fromDate = fromDateParam ?? "2025-04-06";
   const toDate = toDateParam ?? "2026-04-05";
 
@@ -78,7 +91,7 @@ export async function GET(request: Request) {
 
     const hmrcBusinessType = toHmrcBusinessType(business.business_type);
     const hmrcUrl = new URL(
-      `https://test-api.service.hmrc.gov.uk/obligations/details/${encodeURIComponent(testNino)}/income-and-expenditure`
+      `https://test-api.service.hmrc.gov.uk/obligations/details/${encodeURIComponent(nino)}/income-and-expenditure`
     );
     hmrcUrl.searchParams.set("typeOfBusiness", hmrcBusinessType);
     hmrcUrl.searchParams.set("businessId", business.hmrc_business_id);
@@ -89,7 +102,7 @@ export async function GET(request: Request) {
       method: "GET",
       headers: {
         Accept: "application/vnd.hmrc.3.0+json",
-        "Gov-Test-Scenario": "DYNAMIC",
+        ...fraudHeaders,
       },
     });
 
