@@ -82,7 +82,7 @@ export function buildFraudPreventionHeaders(
 
   // --- From browser (passed in POST body, custom header, or cookie) ---
   if (clientData.browserJSUserAgent) {
-    headers["Gov-Client-Browser-JS-User-Agent"] = encodeURIComponent(clientData.browserJSUserAgent);
+    headers["Gov-Client-Browser-JS-User-Agent"] = clientData.browserJSUserAgent;
   }
   if (clientData.deviceId) {
     headers["Gov-Client-Device-ID"] = clientData.deviceId;
