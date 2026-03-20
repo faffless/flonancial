@@ -41,6 +41,13 @@ type HMRCBusinessDetail = {
   typeOfBusiness: string;
   tradingName?: string;
   accountingPeriods?: HMRCAccountingPeriod[];
+  businessAddressLineOne?: string;
+  businessAddressLineTwo?: string;
+  businessAddressLineThree?: string;
+  businessAddressLineFour?: string;
+  businessAddressPostcode?: string;
+  businessAddressCountryCode?: string;
+  commencementDate?: string;
 };
 
 function getSecureCookieFlag() {
