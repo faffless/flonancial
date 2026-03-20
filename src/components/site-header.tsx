@@ -73,7 +73,7 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
 
           {/* Logo */}
           <Link href="/" className="flex shrink-0 flex-col items-start transition hover:opacity-90">
-            <div className="w-[120px]">
+            <div className="w-[90px]">
               <img src="/brand/77d.png" alt="Flonancial" className="h-full w-full object-contain" />
             </div>
             <p className="mt-0 w-full text-left text-base font-bold tracking-tight text-[#0F1C2E]">Flonancial</p>
