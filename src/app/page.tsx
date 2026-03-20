@@ -476,8 +476,8 @@ export default function HomePage() {
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           {[
             { step: "Step 2", title: "Connect to HMRC", text: "Authorise securely with your Government Gateway account. One-time setup — connection is valid for 18 months." },
-            { step: "Step 3", title: "Review your figures", text: "Check your outstanding HMRC obligatinons and double check your figures before anything is submitted" },
-            { step: "Step 4", title: "Submit to HMRC", text: "Confirm and submit your quarterly update directly. Your cumulative figures are sent — Ensure you keep your records safe" },
+            { step: "Step 3", title: "Review your figures", text: "Check your outstanding HMRC obligations and double check your figures before anything is submitted." },
+            { step: "Step 4", title: "Submit to HMRC", text: "Confirm and submit your quarterly update directly. Your cumulative figures are sent — Ensure you keep your records safe." },
           ].map(({ step, title, text }) => (
             <div key={title} className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 text-center">
               <span className="inline-flex items-center justify-center rounded-full bg-[#2E88D0] px-3 py-1 text-xs font-bold text-white">{step}</span>

@@ -587,6 +587,16 @@ export default function BusinessPage() {
             </div>
           ) : null}
 
+{history.length === 0 ? (
+            <div className="mt-8">
+              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Submission history</p>
+              <div className="rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] px-6 py-6 text-center">
+                <p className="text-sm text-[#3B5A78]">No submissions yet.</p>
+                <p className="mt-2 text-xs text-[#3B5A78]/60">If you uploaded a spreadsheet before signing up, those figures were for preview only and were not stored. Please upload your spreadsheet again above to submit to HMRC — this ensures your data is authenticated and securely linked to your account.</p>
+              </div>
+            </div>
+          ) : null}
+
           {history.length > 0 ? (
             <div className="mt-8">
               <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Submission history</p>

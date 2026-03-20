@@ -135,8 +135,7 @@ export default function PreviewPage() {
   const hasFigures = turnover !== null && expenses !== null;
 
   function handleSignUp() {
-    // Figures already in sessionStorage from landing page
-    router.push("/login");
+    router.push("/signup");
   }
 
   if (!loaded) {
@@ -178,6 +177,13 @@ export default function PreviewPage() {
                 Create free account →
               </button>
             </div>
+          </div>
+
+          {/* Preview-only notice */}
+          <div className="mt-4 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3">
+            <p className="text-xs text-[#3B5A78]">
+              Preview figures are not stored. After signing up and connecting to HMRC, you&apos;ll upload your spreadsheet again from your business page — this ensures your data is authenticated and securely linked to your account.
+            </p>
           </div>
 
           {/* HMRC not connected warning */}
@@ -262,7 +268,7 @@ export default function PreviewPage() {
           {/* Quarter assumption disclaimer */}
           <div className="mt-4 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3">
             <p className="text-xs text-[#3B5A78]">
-              Based on today's date, we've placed your figures in the current quarter. Once you connect to HMRC, we'll check your actual open obligations and confirm the correct period.
+              Based on today&apos;s date, we&apos;ve placed your figures in the current quarter. Once you connect to HMRC, we&apos;ll check your actual open obligations and confirm the correct period.
             </p>
           </div>
 

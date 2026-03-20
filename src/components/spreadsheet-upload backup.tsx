@@ -45,7 +45,6 @@ export function SpreadsheetUpload({
   const [otherInputValue, setOtherInputValue] = useState("0");
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
 
   const parseNumber = (val: unknown): number | null => {
     if (val == null || val === "") return null;
@@ -188,7 +187,7 @@ export function SpreadsheetUpload({
       <div className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-6">
         <p className="text-sm font-medium text-[#0F1C2E]">Upload & submit — {quarterLabel}</p>
         <p className="mt-1 text-xs text-[#3B5A78]">
-          Upload your spreadsheet and choose the relevant cells. If it has a <strong className="text-[#0F1C2E]">Flo</strong> tab, your figures will be read automatically.
+          Upload your spreadsheet. If it has a <strong className="text-[#0F1C2E]">Flo</strong> tab, your figures will be read automatically.
         </p>
 
         <div
@@ -371,15 +370,7 @@ export function SpreadsheetUpload({
         <div className="flex items-center justify-between rounded-xl border border-[#B8D0EB] bg-white px-5 py-4">
           <div>
             <p className="text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Other business income</p>
-            <p className="text-xs text-[#3B5A78] flex items-center gap-1.5">
-              Grants, insurance payouts etc. — most sole traders and landlords leave this as £0. 
-              <span className="group relative">
-                <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#B8D0EB] text-[9px] font-bold text-[#3B5A78] cursor-help">?</span>
-                <span className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-56 -translate-x-1/2 rounded-lg border border-[#B8D0EB] bg-white px-3 py-2 text-[11px] leading-4 text-[#3B5A78] opacity-0 shadow-lg transition group-hover:opacity-100">
-                  This covers things like business grants, insurance payouts for business losses, or government support payments. Please consult an accountant if you're unsure whether this applies to you.Presently, Flonancial doesn't allow this £0 to be edited - if you do need a different value declared within other business income, please email us at hello@flonancial.co.uk and we&apos;ll help.
-                </span>
-              </span>
-            </p>
+            <p className="text-xs text-[#3B5A78]">Grants, insurance payouts etc. — most people leave this as £0. <a href="https://www.gov.uk/guidance/how-to-report-your-earnings-and-claim-tax-relief-as-a-self-employed-person" target="_blank" rel="noopener noreferrer" className="text-[#2E88D0] underline underline-offset-2 hover:opacity-75">What counts?</a></p>
           </div>
           <p className="text-xl font-semibold text-[#0F1C2E]">{formatCurrency(figures.otherIncome)}</p>
         </div>
@@ -392,23 +383,13 @@ export function SpreadsheetUpload({
         </p>
       </div>
 
-<label className="mt-4 flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={confirmed}
-                  onChange={(e) => setConfirmed(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 rounded border-[#B8D0EB] accent-[#2E88D0]"
-                />
-                <span className="text-sm text-[#0F1C2E]">I confirm these figures are correct to the best of my knowledge</span>
-              </label>
-
       {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
 
       <div className="mt-5 flex flex-wrap gap-3">
         <button
           type="button"
           onClick={() => onSubmit(figures)}
-          disabled={submitting || !confirmed}
+          disabled={submitting}
           className="rounded-xl bg-[#2E88D0] px-6 py-2.5 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-60"
         >
           {submitting ? "Submitting to HMRC..." : "Submit to HMRC"}

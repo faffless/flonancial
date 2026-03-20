@@ -1,0 +1,24 @@
+TO DO
+
+How can turnover be less?figures
+sign up points to sign up.
+After confirm email, take user to dashboard.
+Screen going to wrong places after signup
+MUST add trust pilot or something after a submission to encourage user to leave positive review.
+Need to fix all the example profiles and the example business page is not right.
+Cut some of the fat on the main landing page.
+Explain more about the free aspect.
+Ensure you had pricing for something before LIVE.
+If you try to submit last year, no error message. 
+
+Claude's analysis 20/03/2026
+Accessibility check — run your site through a WCAG checker, fix contrast/keyboard issues
+Cookie banner — UK law requires one even for essential cookies
+Terms and conditions page — HMRC will check this URL exists
+Penetration testing — run OWASP ZAP (free) against your Vercel URL
+NINO encryption at rest — pgcrypto in Supabase
+Error handling — map HMRC error codes to human-readable messages
+OAuth denial handling — what happens if user clicks "Do not grant authority"
+Token expiry handling — show "Reconnect to HMRC" when refresh token dies
+Remove Gov-Test-Scenario: BUSINESS_AND_PROPERTY from callback before production
+Mobile testing — check the whole flow on your phone

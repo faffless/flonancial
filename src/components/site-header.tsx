@@ -137,6 +137,7 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
               <button type="button" onClick={handleSignOut} disabled={signingOut} className="text-base font-bold tracking-tight text-[#0F1C2E] transition hover:opacity-75 disabled:opacity-50">
                 {signingOut ? "Signing out..." : "Sign out"}
               </button>
+              <Link href="/settings" className="text-base font-bold tracking-tight text-[#0F1C2E] transition hover:text-[#0F1C2E]">Settings</Link>
               <Link href="/dashboard" className="text-base font-bold tracking-tight text-[#0F1C2E] transition hover:opacity-75">Dashboard</Link>
             </div>
           ) : (

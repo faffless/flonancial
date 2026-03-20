@@ -38,11 +38,14 @@ export default function SignupPage() {
     const { error } = await supabase.auth.signUp({
       email: email.trim(),
       password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/dashboard`,
+      },
     });
 
     if (error) { setMessage(error.message); setWorking(false); return; }
 
-    setMessage("Check your email to confirm your account, then log in.");
+    setMessage("Check your email (including spam folder) to confirm your account. You'll be taken to your dashboard automatically.");
     setWorking(false);
   }
 
