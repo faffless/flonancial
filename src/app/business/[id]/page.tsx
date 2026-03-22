@@ -638,13 +638,13 @@ export default function BusinessPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-[#CCE0F5] text-[#2E4A63] text-xs uppercase tracking-wide">
-                      <th className="px-4 py-3 text-left font-semibold">Quarter</th>
-                      <th className="px-4 py-3 text-left font-semibold">Period</th>
-                      <th className="px-4 py-3 text-left font-semibold">Submitted</th>
-                      <th className="px-4 py-3 text-right font-semibold">Turnover</th>
-                      <th className="px-4 py-3 text-right font-semibold">Expenses</th>
-                      <th className="px-4 py-3 text-left font-semibold">Action</th>
-                      <th className="px-4 py-3 text-left font-semibold">HMRC Ref</th>
+                      <th scope="col" className="px-4 py-3 text-left font-semibold">Quarter</th>
+                      <th scope="col" className="px-4 py-3 text-left font-semibold">Period</th>
+                      <th scope="col" className="px-4 py-3 text-left font-semibold">Submitted</th>
+                      <th scope="col" className="px-4 py-3 text-right font-semibold">Turnover</th>
+                      <th scope="col" className="px-4 py-3 text-right font-semibold">Expenses</th>
+                      <th scope="col" className="px-4 py-3 text-left font-semibold">Action</th>
+                      <th scope="col" className="px-4 py-3 text-left font-semibold">HMRC Ref</th>
                     </tr>
                   </thead>
                   <tbody>

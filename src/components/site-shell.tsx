@@ -5,8 +5,11 @@ import { SiteHeader } from "@/components/site-header";
 export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <main className="min-h-screen text-[#0F1C2E]">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-[#2E88D0] focus:px-4 focus:py-2 focus:text-white">
+        Skip to main content
+      </a>
       <SiteHeader />
-      <div>{children}</div>
+      <div id="main-content">{children}</div>
       <Footer />
     </main>
   );

@@ -153,12 +153,12 @@ export default async function HistoryPage() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-[#CCE0F5] text-[#2E4A63] text-xs uppercase tracking-wide">
-                        <th className="text-left px-5 py-3 font-semibold">Period</th>
-                        <th className="text-left px-5 py-3 font-semibold">Tax year</th>
-                        <th className="text-right px-5 py-3 font-semibold">Turnover</th>
-                        <th className="text-right px-5 py-3 font-semibold">Expenses</th>
-                        <th className="text-left px-5 py-3 font-semibold">Action</th>
-                        <th className="text-left px-5 py-3 font-semibold">Date</th>
+                        <th scope="col" className="text-left px-5 py-3 font-semibold">Period</th>
+                        <th scope="col" className="text-left px-5 py-3 font-semibold">Tax year</th>
+                        <th scope="col" className="text-right px-5 py-3 font-semibold">Turnover</th>
+                        <th scope="col" className="text-right px-5 py-3 font-semibold">Expenses</th>
+                        <th scope="col" className="text-left px-5 py-3 font-semibold">Action</th>
+                        <th scope="col" className="text-left px-5 py-3 font-semibold">Date</th>
                       </tr>
                     </thead>
                     <tbody>

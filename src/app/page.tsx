@@ -350,9 +350,9 @@ export default function HomePage() {
                         <table className="w-full border-collapse text-xs">
                           <thead className="sticky top-0 z-10">
                             <tr className="bg-[#DEE9F8]">
-                              <th className="w-8 border-b border-r border-[#B8D0EB] px-2 py-1.5 text-center text-[10px] font-medium text-[#2E4A63]" />
+                              <th scope="col" className="w-8 border-b border-r border-[#B8D0EB] px-2 py-1.5 text-center text-[10px] font-medium text-[#2E4A63]" />
                               {Array.from({ length: maxCols }, (_, c) => (
-                                <th key={c} className="min-w-[80px] border-b border-r border-[#B8D0EB] px-2 py-1.5 text-center text-[10px] font-medium text-[#2E4A63]">
+                                <th key={c} scope="col" className="min-w-[80px] border-b border-r border-[#B8D0EB] px-2 py-1.5 text-center text-[10px] font-medium text-[#2E4A63]">
                                   {XLSX.utils.encode_col(c)}
                                 </th>
                               ))}
@@ -371,7 +371,10 @@ export default function HomePage() {
                                   return (
                                     <td
                                       key={cIdx}
+                                      role="button"
+                                      tabIndex={0}
                                       onClick={() => handleCellClick(rIdx, cIdx)}
+                                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleCellClick(rIdx, cIdx); } }}
                                       className={`cursor-pointer whitespace-nowrap border-b border-r border-[#B8D0EB] px-2 py-1 transition ${
                                         isSelTurnover ? "bg-blue-100 ring-2 ring-inset ring-[#2E88D0]" :
                                         isSelExpenses ? "bg-emerald-100 ring-2 ring-inset ring-emerald-500" :

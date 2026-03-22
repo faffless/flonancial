@@ -10,9 +10,28 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: "Flonancial — Free MTD tax submissions for the self-employed",
-  description: "Submit your quarterly Making Tax Digital updates directly to HMRC. Free during beta. No accountant needed.",
+  description: "Submit your quarterly Making Tax Digital updates directly to HMRC. Completely free. No accountant needed.",
   icons: {
     icon: "/brand/990.png",
+  },
+  openGraph: {
+    title: "Flonancial — Free MTD tax submissions for the self-employed",
+    description: "Submit your quarterly Making Tax Digital updates directly to HMRC. Completely free. No accountant needed.",
+    url: "https://flonancial.co.uk",
+    siteName: "Flonancial",
+    type: "website",
+    locale: "en_GB",
+    images: [
+      {
+        url: "https://flonancial.co.uk/brand/logo.png",
+        alt: "Flonancial",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "Flonancial — Free MTD tax submissions for the self-employed",
+    description: "Submit your quarterly Making Tax Digital updates directly to HMRC. Completely free. No accountant needed.",
   },
 };
 
