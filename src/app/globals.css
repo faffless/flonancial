@@ -6,3 +6,19 @@
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+/* Blog content styling */
+.blog-content h2 { font-size: 1.125rem; font-weight: 600; color: #0F1C2E; margin-top: 2rem; margin-bottom: 0.75rem; }
+.blog-content h3 { font-size: 1rem; font-weight: 600; color: #0F1C2E; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+.blog-content p { margin-top: 0.75rem; }
+.blog-content ul, .blog-content ol { margin-top: 0.75rem; padding-left: 1.5rem; }
+.blog-content ul { list-style-type: disc; }
+.blog-content ol { list-style-type: decimal; }
+.blog-content li { margin-top: 0.375rem; }
+.blog-content a { color: #2E88D0; text-decoration: underline; text-underline-offset: 2px; }
+.blog-content a:hover { opacity: 0.75; }
+.blog-content strong { color: #0F1C2E; }
+.blog-content table { margin-top: 1rem; width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+.blog-content th, .blog-content td { border: 1px solid #B8D0EB; padding: 0.5rem 0.75rem; text-align: left; }
+.blog-content th { background: #F0F5FB; color: #0F1C2E; font-weight: 600; }
+.blog-content td { color: #2E4A63; }

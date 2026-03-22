@@ -20,6 +20,7 @@ function Footer() {
           <p>© {new Date().getFullYear()} Flonancial Ltd</p>
           <div className="flex flex-wrap gap-6">
             <Link href="/dashboard" className="hover:text-[#0F1C2E]">Dashboard</Link>
+            <Link href="/blog" className="hover:text-[#0F1C2E]">Guides</Link>
             <Link href="/about" className="hover:text-[#0F1C2E]">About</Link>
             <Link href="/privacy" className="hover:text-[#0F1C2E]">Privacy</Link>
             <Link href="/terms" className="hover:text-[#0F1C2E]">Terms</Link>
