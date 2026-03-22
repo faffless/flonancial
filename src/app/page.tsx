@@ -466,7 +466,7 @@ export default function HomePage() {
         </div>
 
         {/* ── Steps 2, 3, 4 ──────────────────────────────────────── */}
-        <div className="mt-10 grid gap-4 sm:grid-cols-3">
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
           {[
             { step: "Step 2", title: "Connect to HMRC", text: "Authorise securely with your Government Gateway account. One-time setup — connection is valid for 18 months." },
             { step: "Step 3", title: "Review your figures", text: "Check your outstanding HMRC obligations and double check your figures before anything is submitted." },
@@ -481,7 +481,7 @@ export default function HomePage() {
         </div>
 
         {/* ── See how it looks ─────────────────────────────────────── */}
-        <div className="mt-12">
+        <div className="mt-8">
           <div className="text-center">
             <h2 className="text-2xl font-bold tracking-tight text-[#0F1C2E]">See how it looks</h2>
             <p className="mt-2 text-sm text-[#2E4A63]">Choose an example business to see how Flonancial works:</p>
@@ -516,7 +516,7 @@ export default function HomePage() {
         </div>
 
         {/* ── Built for sole traders ───────────────────────────────── */}
-        <div className="mt-12 rounded-3xl border border-[#B8D0EB]/60 bg-white px-8 py-8 shadow-sm">
+        <div className="mt-8 rounded-3xl border border-[#B8D0EB]/60 bg-white px-8 py-8 shadow-sm">
           <h2 className="text-xl font-bold text-[#0F1C2E]">Built for sole traders and UK landlords</h2>
           <ul className="mt-5 space-y-3">
             {[
@@ -537,7 +537,7 @@ export default function HomePage() {
         </div>
 
         {/* ── FAQ ──────────────────────────────────────────────────── */}
-        <div className="mt-12 rounded-3xl border border-[#B8D0EB]/60 bg-white px-8 py-8 shadow-sm">
+        <div className="mt-8 rounded-3xl border border-[#B8D0EB]/60 bg-white px-8 py-8 shadow-sm">
           <h2 className="text-xl font-bold text-[#0F1C2E]">Frequently asked questions</h2>
           <div className="mt-4">
             {faqs.map((faq) => <FaqItem key={faq.q} q={faq.q} a={faq.a} />)}
@@ -545,7 +545,7 @@ export default function HomePage() {
         </div>
 
         {/* ── CTA ──────────────────────────────────────────────────── */}
-        <div className="mt-12 overflow-hidden rounded-3xl bg-gradient-to-r from-[#2E88D0] to-[#1a6db5] px-8 py-12 text-center shadow-lg">
+        <div className="mt-8 overflow-hidden rounded-3xl bg-gradient-to-r from-[#2E88D0] to-[#1a6db5] px-8 py-12 text-center shadow-lg">
           <h2 className="text-2xl font-bold text-white">Ready to submit?</h2>
           <p className="mx-auto mt-3 max-w-[440px] text-sm leading-6 text-white/80">
             Create your free account, connect to HMRC to find your business, and submit your first quarterly update.
