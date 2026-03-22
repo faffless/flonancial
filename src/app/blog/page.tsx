@@ -28,16 +28,24 @@ export default function BlogIndexPage() {
             <Link
               key={article.slug}
               href={`/blog/${article.slug}`}
-              className="block rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 transition hover:border-[#2E88D0] hover:shadow-md sm:p-6"
+              className="group block overflow-hidden rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] transition hover:border-[#2E88D0] hover:shadow-md"
             >
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-full border border-[#B8D0EB] bg-[#F0F5FB] px-2 py-0.5 text-[10px] text-[#2E4A63]">
-                  {categoryLabels[article.category] ?? article.category}
-                </span>
-                <span className="text-[10px] text-[#2E4A63]">{article.publishedDate}</span>
+              <img
+                src={article.image}
+                alt=""
+                aria-hidden="true"
+                className="h-40 w-full object-cover sm:h-48"
+              />
+              <div className="p-5 sm:p-6">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full border border-[#B8D0EB] bg-[#F0F5FB] px-2 py-0.5 text-[10px] text-[#2E4A63]">
+                    {categoryLabels[article.category] ?? article.category}
+                  </span>
+                  <span className="text-[10px] text-[#2E4A63]">{article.publishedDate}</span>
+                </div>
+                <h2 className="mt-2 text-base font-medium text-[#0F1C2E]">{article.title}</h2>
+                <p className="mt-1 text-sm text-[#2E4A63]">{article.metaDescription}</p>
               </div>
-              <h2 className="mt-2 text-base font-medium text-[#0F1C2E]">{article.title}</h2>
-              <p className="mt-1 text-sm text-[#2E4A63]">{article.metaDescription}</p>
             </Link>
           ))}
         </div>

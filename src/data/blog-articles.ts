@@ -4,6 +4,7 @@ export type BlogArticle = {
   metaDescription: string;
   category: "guide" | "comparison" | "reference";
   publishedDate: string;
+  image: string;
   content: string;
 };
 
@@ -14,6 +15,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "You don't need to ditch your spreadsheet for MTD. Learn how to use Excel or Google Sheets with free bridging software to submit quarterly updates to HMRC.",
     category: "guide",
     publishedDate: "2026-03-22",
+    image: "/blog1.png",
     content: `
       <p>If you already track your income and expenses in Excel or Google Sheets, you might be wondering whether Making Tax Digital forces you to switch to accounting software like Xero or QuickBooks.</p>
       <p>The short answer: <strong>no</strong>. You can absolutely keep using your spreadsheet. You just need a piece of bridging software to send your figures to HMRC.</p>
@@ -58,6 +60,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Submit your Making Tax Digital quarterly updates to HMRC for free. Upload your spreadsheet, pick your figures, and submit. No accounting software needed.",
     category: "comparison",
     publishedDate: "2026-03-22",
+    image: "/blog2.png",
     content: `
       <p>Most Making Tax Digital software costs between £12 and £35 per month. If you're a sole trader or landlord with straightforward finances, that feels like a lot to pay for something the government is forcing you to do.</p>
       <p>Flonancial is free MTD bridging software. It connects your existing spreadsheet to HMRC so you can submit your quarterly updates without paying for accounting software you don't need.</p>
@@ -97,6 +100,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "UK landlords earning over £50,000 must comply with MTD from April 2026. Learn what's required and how to submit quarterly updates for free with your spreadsheet.",
     category: "guide",
     publishedDate: "2026-03-22",
+    image: "/blog3.png",
     content: `
       <p>If you earn rental income from UK property and your total income exceeds £50,000, Making Tax Digital for Income Tax applies to you from 6 April 2026.</p>
       <p>This guide covers what landlords need to know, what changes, and how to submit your quarterly updates without switching to expensive accounting software.</p>
@@ -150,6 +154,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Compare the best Making Tax Digital software for 2026 — pricing, features, and what sole traders and landlords actually need. Includes free options.",
     category: "comparison",
     publishedDate: "2026-03-22",
+    image: "/blog4.png",
     content: `
       <p>There are dozens of MTD-compatible software options, but most sole traders and landlords only need the basics. Here's an honest comparison of what's available, what it costs, and what you actually need.</p>
 
@@ -209,6 +214,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Bridging software connects your spreadsheet to HMRC for Making Tax Digital. Learn what it does, how it works, and whether you need it.",
     category: "guide",
     publishedDate: "2026-03-22",
+    image: "/blog5.png",
     content: `
       <p>You'll see the term "bridging software" a lot when researching Making Tax Digital. Here's what it actually means and whether it's what you need.</p>
 
@@ -249,6 +255,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Self-employed and worried about MTD? You don't need to switch to accounting software. Learn how sole traders can comply using their existing spreadsheet.",
     category: "guide",
     publishedDate: "2026-03-22",
+    image: "/blog6.png",
     content: `
       <p>Making Tax Digital for Income Tax starts on 6 April 2026. If you're self-employed and earn over £50,000, you need to start submitting quarterly updates to HMRC using compatible software.</p>
       <p>That doesn't mean you need to buy Xero or learn QuickBooks. If you keep your records in a spreadsheet, you can keep doing exactly that.</p>
@@ -301,6 +308,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "A practical step-by-step guide to submitting your first Making Tax Digital quarterly update to HMRC using your spreadsheet and free bridging software.",
     category: "guide",
     publishedDate: "2026-03-22",
+    image: "/blog7.png",
     content: `
       <p>Your first MTD quarterly submission can feel daunting. Here's exactly what happens, step by step, so there are no surprises.</p>
 
@@ -346,6 +354,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "All the Making Tax Digital quarterly submission deadlines for the 2026/27 tax year. Don't miss a deadline — know exactly when to submit.",
     category: "reference",
     publishedDate: "2026-03-22",
+    image: "/blog8.png",
     content: `
       <p>Making Tax Digital for Income Tax starts on 6 April 2026 for anyone earning over £50,000. Here are all the deadlines you need for the first tax year.</p>
 
@@ -384,6 +393,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "What happens if you submit late or get your MTD figures wrong? Understand the new penalty points system, fines, and the first-year grace period.",
     category: "reference",
     publishedDate: "2026-03-22",
+    image: "/blog9.png",
     content: `
       <p>One of the biggest anxieties around Making Tax Digital is penalties. What if you submit late? What if you get the numbers wrong? Here's how the system actually works.</p>
 
@@ -435,6 +445,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Find out if Making Tax Digital applies to you. Check the income thresholds, exemptions, and timeline for MTD for Income Tax.",
     category: "guide",
     publishedDate: "2026-03-22",
+    image: "/blog10.png",
     content: `
       <p>Not sure if Making Tax Digital affects you? Here's a quick way to check.</p>
 
@@ -490,6 +501,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Everything you need to know about Making Tax Digital for Income Tax in 2026. Who's affected, what's required, deadlines, and how to comply.",
     category: "guide",
     publishedDate: "2026-03-22",
+    image: "/blog11.png",
     content: `
       <p>Making Tax Digital (MTD) for Income Tax is the biggest change to UK tax reporting in decades. From 6 April 2026, hundreds of thousands of sole traders and landlords must start submitting quarterly digital updates to HMRC.</p>
       <p>This guide covers everything you need to know.</p>
@@ -537,6 +549,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Confused about the difference between MTD and Self Assessment? Here's what's changing, what stays the same, and what you need to do differently.",
     category: "guide",
     publishedDate: "2026-03-22",
+    image: "/blog12.png",
     content: `
       <p>If you already do Self Assessment, Making Tax Digital might sound like a completely new system. It's not — it's more of an extension. Here's what's actually changing.</p>
 
@@ -577,6 +590,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Looking for free MTD software? Here are the genuinely free options for Making Tax Digital for Income Tax — no trials, no hidden fees.",
     category: "comparison",
     publishedDate: "2026-03-22",
+    image: "/blog13.png",
     content: `
       <p>Searching for free MTD software and finding that "free" usually means "free trial" or "free for VAT only"? Here's what's genuinely available for Making Tax Digital for Income Tax without paying.</p>
 
@@ -623,6 +637,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Download a free Making Tax Digital spreadsheet template for sole traders and landlords. Track income, expenses, and submit to HMRC with one click.",
     category: "reference",
     publishedDate: "2026-03-22",
+    image: "/blog14.png",
     content: `
       <p>If you need a spreadsheet to track your income and expenses for Making Tax Digital, you can download our free template. It's designed to work seamlessly with Flonancial's upload — but you can also use it standalone.</p>
 

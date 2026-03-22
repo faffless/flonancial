@@ -41,6 +41,13 @@ export default async function BlogArticlePage({
         <h1 className="mt-6 text-2xl font-normal tracking-tight text-[#0F1C2E]">{article.title}</h1>
         <p className="mt-2 text-sm text-[#2E4A63]">{article.publishedDate}</p>
 
+        <img
+          src={article.image}
+          alt=""
+          aria-hidden="true"
+          className="mt-6 w-full rounded-2xl object-cover"
+        />
+
         <div
           className="blog-content mt-8 text-sm leading-7 text-[#2E4A63]"
           dangerouslySetInnerHTML={{ __html: article.content }}
