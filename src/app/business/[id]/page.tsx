@@ -405,7 +405,11 @@ export default function BusinessPage() {
       if (!response.ok) {
         if (response.status === 401) { setHmrcNeedsReconnect(true); throw new Error("Your HMRC connection has expired. Please reconnect to HMRC."); }
         const err = await response.json().catch(() => ({}));
-        throw new Error(err.message ?? err.error ?? "HMRC submission failed");
+        let errorMsg = err.message ?? err.error ?? "HMRC submission failed";
+        if (/not authorised|CLIENT_OR_AGENT_NOT_AUTHORISED/i.test(errorMsg)) {
+          errorMsg += " — check that the National Insurance number in your Settings matches the HMRC account you connected with.";
+        }
+        throw new Error(errorMsg);
       }
 
       const result = await response.json();

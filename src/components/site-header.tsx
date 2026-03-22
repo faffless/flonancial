@@ -12,6 +12,7 @@ type SiteHeaderProps = {
   hmrcReady?: boolean | null;
   isDemo?: boolean;
   editBusinessHref?: string;
+  showBrandOnMobile?: boolean;
 };
 
 function useDaysUntil(targetDate: string): number {
@@ -41,7 +42,7 @@ function formatBusinessType(value: string) {
   return value;
 }
 
-export function SiteHeader({ businessEmoji, businessName, businessTagline, businessType, hmrcReady, isDemo, editBusinessHref }: SiteHeaderProps = {}) {
+export function SiteHeader({ businessEmoji, businessName, businessTagline, businessType, hmrcReady, isDemo, editBusinessHref, showBrandOnMobile }: SiteHeaderProps = {}) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
 
@@ -74,7 +75,7 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
             <div className="w-[72px] sm:w-[112px]">
               <img src="/brand/77h.png" alt="Flonancial" className="h-full w-full object-contain" />
             </div>
-            <span className="hidden text-xl font-bold tracking-tight text-[#0F1C2E] sm:inline">Flonancial</span>
+            <span className={`${showBrandOnMobile ? "inline" : "hidden sm:inline"} text-xl font-bold tracking-tight text-[#0F1C2E]`}>Flonancial</span>
           </Link>
 
           {/* Centre */}

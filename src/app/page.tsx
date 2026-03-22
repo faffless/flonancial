@@ -206,7 +206,7 @@ export default function HomePage() {
       <img src="/wave2.png" alt="" aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[800px] z-0 w-[1400px] max-w-none -translate-x-1/2 opacity-[0.06]" style={{ maskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)", WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)" }} />
       <img src="/wave.png" alt="" aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[1600px] z-0 w-[1400px] max-w-none -translate-x-1/2 opacity-[0.06]" style={{ maskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)", WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)" }} />
       <img src="/wave2.png" alt="" aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[2400px] z-0 w-[1400px] max-w-none -translate-x-1/2 opacity-[0.06]" style={{ maskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)", WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)" }} />
-      <SiteHeader />
+      <SiteHeader showBrandOnMobile />
 
       {/* ── Hero ──────────────────────────────────────────────────────── */}
       <section className="relative pb-4 pt-8">
