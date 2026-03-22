@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import { SiteShell } from "@/components/site-shell";
+
+export const metadata: Metadata = {
+  title: "Disclaimer — Flonancial",
+  description: "Flonancial is bridging software, not a tax advisory service. Read our full disclaimer.",
+  alternates: { canonical: "https://flonancial.co.uk/disclaimer" },
+};
 
 export default function DisclaimerPage() {
   return (

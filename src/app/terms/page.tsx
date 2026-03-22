@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import { SiteShell } from "@/components/site-shell";
+
+export const metadata: Metadata = {
+  title: "Terms of Service — Flonancial",
+  description: "Terms of service for Flonancial, free Making Tax Digital bridging software for sole traders and landlords.",
+  alternates: { canonical: "https://flonancial.co.uk/terms" },
+};
 
 export default function TermsPage() {
   return (

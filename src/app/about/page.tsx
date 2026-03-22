@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import { SiteShell } from "@/components/site-shell";
+
+export const metadata: Metadata = {
+  title: "About Flonancial — Free Making Tax Digital Software",
+  description: "Flonancial is free MTD bridging software for sole traders and landlords. Connect your spreadsheet to HMRC and submit quarterly updates in minutes.",
+  alternates: { canonical: "https://flonancial.co.uk/about" },
+};
 
 export default function AboutPage() {
   return (

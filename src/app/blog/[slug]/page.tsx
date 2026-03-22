@@ -16,9 +16,25 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = blogArticles.find((a) => a.slug === slug);
   if (!article) return {};
+  const url = `https://flonancial.co.uk/blog/${article.slug}`;
   return {
     title: `${article.title} — Flonancial`,
     description: article.metaDescription,
+    alternates: { canonical: url },
+    openGraph: {
+      title: article.title,
+      description: article.metaDescription,
+      url,
+      siteName: "Flonancial",
+      type: "article",
+      locale: "en_GB",
+      images: [{ url: `https://flonancial.co.uk${article.image}`, alt: article.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.title,
+      description: article.metaDescription,
+    },
   };
 }
 
@@ -33,6 +49,21 @@ export default async function BlogArticlePage({
 
   return (
     <SiteShell>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: article.title,
+            description: article.metaDescription,
+            image: `https://flonancial.co.uk${article.image}`,
+            datePublished: article.publishedDate,
+            author: { "@type": "Organization", name: "Flonancial" },
+            publisher: { "@type": "Organization", name: "Flonancial", url: "https://flonancial.co.uk" },
+          }),
+        }}
+      />
       <article className="mx-auto w-full max-w-[680px] px-6 py-10 sm:px-8">
         <Link href="/blog" className="text-sm text-[#2E4A63] underline underline-offset-4 transition hover:text-[#0F1C2E]">
           ← All guides
@@ -43,8 +74,7 @@ export default async function BlogArticlePage({
 
         <img
           src={article.image}
-          alt=""
-          aria-hidden="true"
+          alt={article.title}
           className="mt-6 w-full rounded-2xl object-cover"
         />
 

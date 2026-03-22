@@ -6,6 +6,15 @@ import { blogArticles } from "@/data/blog-articles";
 export const metadata: Metadata = {
   title: "MTD Guides & Resources — Flonancial",
   description: "Free guides, comparisons, and resources for Making Tax Digital. Everything sole traders and landlords need to know about MTD for Income Tax.",
+  alternates: { canonical: "https://flonancial.co.uk/blog" },
+  openGraph: {
+    title: "MTD Guides & Resources — Flonancial",
+    description: "Free guides, comparisons, and resources for Making Tax Digital.",
+    url: "https://flonancial.co.uk/blog",
+    siteName: "Flonancial",
+    type: "website",
+    locale: "en_GB",
+  },
 };
 
 const categoryLabels: Record<string, string> = {
@@ -32,8 +41,7 @@ export default function BlogIndexPage() {
             >
               <img
                 src={article.image}
-                alt=""
-                aria-hidden="true"
+                alt={article.title}
                 className="h-40 w-full object-cover sm:h-48"
               />
               <div className="p-5 sm:p-6">

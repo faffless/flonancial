@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import { SiteShell } from "@/components/site-shell";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy — Flonancial",
+  description: "How Flonancial handles your data. Your spreadsheet never leaves your browser. We only store the summary figures you submit to HMRC.",
+  alternates: { canonical: "https://flonancial.co.uk/privacy" },
+};
 
 export default function PrivacyPage() {
   return (
