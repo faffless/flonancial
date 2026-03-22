@@ -107,7 +107,7 @@ Flonancial (flonancial.co.uk) — free MTD Income Tax bridging software for UK s
 
 ### Blocking for Production Approval:
 1. Accessibility audit (WCAG AA) — run Lighthouse, fix issues
-2. Cookie banner — UK legal requirement, essential cookies only
+2. ~~Cookie banner~~ — NOT NEEDED. All cookies are strictly necessary (Supabase auth, HMRC OAuth tokens, fraud prevention). No consent required under UK PECR. Privacy policy already lists all cookies with purposes.
 3. Terms and conditions page content — HMRC checks this URL
 4. Breach notification procedure — written document for HMRC checklist
 5. Penetration testing — OWASP ZAP basic scan

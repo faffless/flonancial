@@ -18,7 +18,7 @@ export default function TermsPage() {
 
             <div>
               <h2 className="text-base font-medium text-[#0F1C2E]">The service</h2>
-              <p className="mt-3">Flonancial provides software to help individuals submit quarterly updates to HMRC under Making Tax Digital for Income Tax. The service is provided free of charge during beta. We reserve the right to introduce pricing in future with reasonable notice.</p>
+              <p className="mt-3">Flonancial provides software to help individuals submit quarterly updates to HMRC under Making Tax Digital for Income Tax. The service is free for individuals. We may introduce paid plans for accountants and other professional users in future.</p>
               <p className="mt-3">Flonancial is currently in beta. We make no guarantees of uptime, availability, or fitness for any particular purpose during this period.</p>
             </div>
 
