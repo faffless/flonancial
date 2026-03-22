@@ -71,10 +71,10 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
 
           {/* Logo + brand name (horizontal) */}
           <Link href="/" className="flex shrink-0 items-center gap-2.5 transition hover:opacity-90">
-            <div className="w-[112px]">
+            <div className="w-[72px] sm:w-[112px]">
               <img src="/brand/77h.png" alt="Flonancial" className="h-full w-full object-contain" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-[#0F1C2E]">Flonancial</span>
+            <span className="hidden text-xl font-bold tracking-tight text-[#0F1C2E] sm:inline">Flonancial</span>
           </Link>
 
           {/* Centre */}

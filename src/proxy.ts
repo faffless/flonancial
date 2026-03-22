@@ -36,33 +36,37 @@ export async function proxy(request: NextRequest) {
   );
 
   // Handle Supabase auth code exchange (email confirmation, password reset, etc.)
+  // Skip API routes — the HMRC callback uses its own `code` param
   const { searchParams, pathname } = request.nextUrl;
-  const code = searchParams.get("code");
-  const tokenHash = searchParams.get("token_hash");
-  const type = searchParams.get("type");
 
-  if (code) {
-    await supabase.auth.exchangeCodeForSession(code);
-    const url = request.nextUrl.clone();
-    url.searchParams.delete("code");
-    if (pathname === "/") {
-      url.pathname = "/dashboard";
-    }
-    return NextResponse.redirect(url);
-  }
+  if (!pathname.startsWith("/api/")) {
+    const code = searchParams.get("code");
+    const tokenHash = searchParams.get("token_hash");
+    const type = searchParams.get("type");
 
-  if (tokenHash && type) {
-    await supabase.auth.verifyOtp({
-      token_hash: tokenHash,
-      type: type as "signup" | "email" | "recovery" | "invite",
-    });
-    const url = request.nextUrl.clone();
-    url.searchParams.delete("token_hash");
-    url.searchParams.delete("type");
-    if (pathname === "/") {
-      url.pathname = "/dashboard";
+    if (code) {
+      await supabase.auth.exchangeCodeForSession(code);
+      const url = request.nextUrl.clone();
+      url.searchParams.delete("code");
+      if (pathname === "/") {
+        url.pathname = "/dashboard";
+      }
+      return NextResponse.redirect(url);
     }
-    return NextResponse.redirect(url);
+
+    if (tokenHash && type) {
+      await supabase.auth.verifyOtp({
+        token_hash: tokenHash,
+        type: type as "signup" | "email" | "recovery" | "invite",
+      });
+      const url = request.nextUrl.clone();
+      url.searchParams.delete("token_hash");
+      url.searchParams.delete("type");
+      if (pathname === "/") {
+        url.pathname = "/dashboard";
+      }
+      return NextResponse.redirect(url);
+    }
   }
 
   const {
