@@ -83,7 +83,6 @@ ${truncated}`,
 
     if (!claudeResponse.ok) {
       const errorText = await claudeResponse.text();
-      console.error("Claude API error:", errorText);
       return NextResponse.json({ error: "AI parsing failed" }, { status: 500 });
     }
 
@@ -99,7 +98,6 @@ ${truncated}`,
       const clean = rawText.replace(/```json|```/g, "").trim();
       parsed = JSON.parse(clean);
     } catch {
-      console.error("Failed to parse Claude response:", rawText);
       return NextResponse.json({ error: "Could not parse AI response" }, { status: 500 });
     }
 
@@ -194,7 +192,6 @@ ${truncated}`,
     });
 
   } catch (err) {
-    console.error("Parse route error:", err);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
 }

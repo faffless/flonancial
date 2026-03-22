@@ -7,9 +7,9 @@ export default function PrivacyPage() {
         <div className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 sm:p-8">
 
           <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Privacy policy</h1>
-          <p className="mt-2 text-sm text-[#3B5A78]">Last updated: 20 March 2026</p>
+          <p className="mt-2 text-sm text-[#2E4A63]">Last updated: 20 March 2026</p>
 
-          <div className="mt-8 space-y-8 text-sm leading-7 text-[#3B5A78]">
+          <div className="mt-8 space-y-8 text-sm leading-7 text-[#2E4A63]">
 
             <div>
               <h2 className="text-base font-medium text-[#0F1C2E]">Who we are</h2>
@@ -98,7 +98,7 @@ export default function PrivacyPage() {
               <p className="mt-3">You can exercise most of these rights directly from your <a href="/settings" className="text-[#2E88D0] hover:opacity-75">Settings page</a>. For any other requests, email us at <a href="mailto:hello@flonancial.co.uk" className="text-[#2E88D0] hover:opacity-75">hello@flonancial.co.uk</a> and we will respond within 30 days.</p>
             </div>
 
-            <div>
+            <div id="cookies">
               <h2 className="text-base font-medium text-[#0F1C2E]">Cookies</h2>
               <p className="mt-3">Flonancial uses essential cookies only:</p>
               <ul className="mt-3 space-y-2">
@@ -107,7 +107,7 @@ export default function PrivacyPage() {
                 <li>— <strong className="text-[#0F1C2E]">Device identifier cookie</strong> (<code className="text-[#0F1C2E]">flo_device_id</code>) — a UUID used for HMRC fraud prevention headers, expires after 10 years</li>
                 <li>— <strong className="text-[#0F1C2E]">Fraud data cookie</strong> (<code className="text-[#0F1C2E]">flo_fraud_data</code>) — temporary cookie used during HMRC connection only, expires after 10 minutes and is deleted after use</li>
               </ul>
-              <p className="mt-3">We do not use tracking cookies, advertising cookies, or third-party analytics cookies.</p>
+              <p className="mt-3">We do not use tracking cookies, advertising cookies, or third-party analytics cookies. Because every cookie we use is strictly essential, no cookie consent banner is needed — and you won&apos;t see one.</p>
             </div>
 
             <div>

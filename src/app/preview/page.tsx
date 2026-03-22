@@ -167,7 +167,7 @@ export default function PreviewPage() {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold text-[#0F1C2E]">This is a preview of your dashboard</p>
-                <p className="mt-1 text-sm text-[#3B5A78]">Your spreadsheet figures are shown below. Create a free account and connect to HMRC to submit them.</p>
+                <p className="mt-1 text-sm text-[#2E4A63]">Your spreadsheet figures are shown below. Create a free account and connect to HMRC to submit them.</p>
               </div>
               <button
                 type="button"
@@ -181,7 +181,7 @@ export default function PreviewPage() {
 
           {/* Preview-only notice */}
           <div className="mt-4 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3">
-            <p className="text-xs text-[#3B5A78]">
+            <p className="text-xs text-[#2E4A63]">
               Preview figures are not stored. After signing up and connecting to HMRC, you&apos;ll upload your spreadsheet again from your business page — this ensures your data is authenticated and securely linked to your account.
             </p>
           </div>
@@ -197,11 +197,11 @@ export default function PreviewPage() {
           {/* Tax year bar */}
           <div className="mt-4 flex flex-wrap items-center gap-4 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] px-4 py-3">
             <div className="flex items-center gap-2">
-              <label className="text-xs text-[#3B5A78]">Tax year</label>
+              <label className="text-xs text-[#2E4A63]">Tax year</label>
               <span className="rounded-xl border border-[#B8D0EB] bg-white px-3 py-1.5 text-sm text-[#0F1C2E]">{taxYear.label}</span>
             </div>
             <div className="h-4 w-px bg-[#B8D0EB]" />
-            <p className="text-xs text-[#3B5A78]">{formatDate(taxYear.start)} – {formatDate(taxYear.end)}</p>
+            <p className="text-xs text-[#2E4A63]">{formatDate(taxYear.start)} – {formatDate(taxYear.end)}</p>
           </div>
 
           {/* Quarterly cards */}
@@ -225,7 +225,7 @@ export default function PreviewPage() {
                 >
                   {/* Header */}
                   <div className="flex items-center justify-between">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[#3B5A78]">{q.label}</p>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#2E4A63]">{q.label}</p>
                     {hasData ? (
                       <span className="rounded-full border border-[#2E88D0]/20 bg-[#2E88D0]/10 px-2 py-0.5 text-[10px] text-[#2E88D0]">Ready to submit</span>
                     ) : q.isFuture ? null : (
@@ -234,15 +234,15 @@ export default function PreviewPage() {
                   </div>
 
                   {/* Dates */}
-                  <p className="mt-2 text-[11px] text-[#3B5A78]">{formatDate(q.quarterStart)} – {formatDate(q.quarterEnd)}</p>
-                  <p className="mt-0.5 text-[10px] text-[#3B5A78]">Due: {DEADLINES[i]}</p>
+                  <p className="mt-2 text-[11px] text-[#2E4A63]">{formatDate(q.quarterStart)} – {formatDate(q.quarterEnd)}</p>
+                  <p className="mt-0.5 text-[10px] text-[#2E4A63]">Due: {DEADLINES[i]}</p>
 
                   {/* Figures — only on active quarter */}
                   {hasData ? (
                     <div className="mt-3 space-y-1">
-                      <p className="text-xs text-[#3B5A78]">Turnover: <span className="font-medium text-[#0F1C2E]">{formatCurrency(turnover!)}</span></p>
-                      <p className="text-xs text-[#3B5A78]">Expenses: <span className="font-medium text-[#0F1C2E]">{formatCurrency(expenses!)}</span></p>
-                      <p className="mt-1 text-[10px] text-[#3B5A78] italic">Cumulative year-to-date</p>
+                      <p className="text-xs text-[#2E4A63]">Turnover: <span className="font-medium text-[#0F1C2E]">{formatCurrency(turnover!)}</span></p>
+                      <p className="text-xs text-[#2E4A63]">Expenses: <span className="font-medium text-[#0F1C2E]">{formatCurrency(expenses!)}</span></p>
+                      <p className="mt-1 text-[10px] text-[#2E4A63] italic">Cumulative year-to-date</p>
                     </div>
                   ) : null}
 
@@ -257,7 +257,7 @@ export default function PreviewPage() {
                         Sign up to submit →
                       </button>
                     ) : q.isFuture ? null : (
-                      <p className="text-[10px] text-[#3B5A78]">Connect to HMRC to submit</p>
+                      <p className="text-[10px] text-[#2E4A63]">Connect to HMRC to submit</p>
                     )}
                   </div>
                 </div>
@@ -267,23 +267,23 @@ export default function PreviewPage() {
 
           {/* Quarter assumption disclaimer */}
           <div className="mt-4 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3">
-            <p className="text-xs text-[#3B5A78]">
+            <p className="text-xs text-[#2E4A63]">
               Based on today&apos;s date, we&apos;ve placed your figures in the current quarter. Once you connect to HMRC, we&apos;ll check your actual open obligations and confirm the correct period.
             </p>
           </div>
 
           {/* Empty submission history */}
           <div className="mt-8">
-            <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Submission history</p>
+            <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#2E4A63]">Submission history</p>
             <div className="rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] px-6 py-8 text-center">
-              <p className="text-sm text-[#3B5A78]">No submissions yet. Create an account and connect to HMRC to submit your first quarterly update.</p>
+              <p className="text-sm text-[#2E4A63]">No submissions yet. Create an account and connect to HMRC to submit your first quarterly update.</p>
             </div>
           </div>
 
           {/* Year-end note */}
           <div className="mt-8 rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] px-6 py-5">
             <p className="text-sm font-medium text-[#0F1C2E]">Final Declaration (year-end)</p>
-            <p className="mt-1 text-xs leading-5 text-[#3B5A78]">
+            <p className="mt-1 text-xs leading-5 text-[#2E4A63]">
               Flonancial handles quarterly updates only. For the year-end Final Declaration, use{" "}
               <a href="https://www.gov.uk/personal-tax-account" target="_blank" rel="noopener noreferrer" className="text-[#2E88D0] underline hover:no-underline">
                 HMRC&apos;s online service
@@ -295,7 +295,7 @@ export default function PreviewPage() {
           {/* Bottom CTA */}
           <div className="mt-8 rounded-2xl border border-[#2E88D0]/30 bg-[#2E88D0]/10 px-8 py-8 text-center">
             <h2 className="text-lg font-semibold text-[#0F1C2E]">Ready to submit?</h2>
-            <p className="mx-auto mt-2 max-w-[440px] text-sm leading-6 text-[#3B5A78]">
+            <p className="mx-auto mt-2 max-w-[440px] text-sm leading-6 text-[#2E4A63]">
               Create your free account, connect to HMRC, and submit your quarterly update in under 2 minutes.
             </p>
             <button
@@ -305,7 +305,7 @@ export default function PreviewPage() {
             >
               Create your free account
             </button>
-            <p className="mt-3 text-xs leading-5 text-[#3B5A78]">Free · No card required</p>
+            <p className="mt-3 text-xs leading-5 text-[#2E4A63]">Free · No card required</p>
           </div>
 
         </section>

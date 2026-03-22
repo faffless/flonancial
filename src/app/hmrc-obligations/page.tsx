@@ -106,7 +106,7 @@ export default function HmrcObligationsPage() {
             </div>
 
             <Link
-              href="/account"
+              href="/dashboard"
               className="text-sm text-white/70 underline underline-offset-4 transition hover:text-white"
             >
               Back to account

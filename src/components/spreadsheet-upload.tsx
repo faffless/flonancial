@@ -187,7 +187,7 @@ export function SpreadsheetUpload({
     return (
       <div className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-6">
         <p className="text-sm font-medium text-[#0F1C2E]">Upload & submit — {quarterLabel}</p>
-        <p className="mt-1 text-xs text-[#3B5A78]">
+        <p className="mt-1 text-xs text-[#2E4A63]">
           Upload your spreadsheet and choose the relevant cells. If it has a <strong className="text-[#0F1C2E]">Flo</strong> tab, your figures will be read automatically.
         </p>
 
@@ -199,12 +199,12 @@ export function SpreadsheetUpload({
             dragOver ? "border-[#2E88D0] bg-white/50" : "border-[#B8D0EB] bg-white/30"
           }`}
         >
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-[#3B5A78]">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-[#2E4A63]">
             <path d="M4 14V18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             <path d="M12 15V4M12 4L8 8M12 4L16 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <p className="mt-3 text-sm text-[#3B5A78]">Drag and drop your spreadsheet here</p>
-          <p className="mt-1 text-xs text-[#3B5A78]">.xlsx, .xls, .csv, or .ods</p>
+          <p className="mt-3 text-sm text-[#2E4A63]">Drag and drop your spreadsheet here</p>
+          <p className="mt-1 text-xs text-[#2E4A63]">.xlsx, .xls, .csv, or .ods</p>
           <label
             htmlFor="spreadsheet-upload"
             className="mt-4 cursor-pointer rounded-xl bg-[#2E88D0] px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90"
@@ -249,9 +249,9 @@ export function SpreadsheetUpload({
             {pickTarget === "turnover" ? "Step 1: Click the cell containing your total turnover (income)" : "Step 2: Click the cell containing your total expenses"}
           </p>
           {selectedTurnoverCell ? (
-            <p className="mt-1 text-xs text-[#3B5A78]">
+            <p className="mt-1 text-xs text-[#2E4A63]">
               Turnover: <span className="font-medium text-[#0F1C2E]">{formatCurrency(figures.turnover)}</span>
-              <span className="ml-1 text-[#3B5A78]">({selectedTurnoverCell})</span>
+              <span className="ml-1 text-[#2E4A63]">({selectedTurnoverCell})</span>
             </p>
           ) : null}
         </div>
@@ -264,7 +264,7 @@ export function SpreadsheetUpload({
                 key={s.name}
                 onClick={() => setActiveSheet(i)}
                 className={`shrink-0 rounded-t-lg px-3 py-1.5 text-xs font-medium transition ${
-                  i === activeSheet ? "bg-white text-[#0F1C2E] border border-b-0 border-[#B8D0EB]" : "bg-[#DEE9F8] text-[#3B5A78] hover:bg-white/50"
+                  i === activeSheet ? "bg-white text-[#0F1C2E] border border-b-0 border-[#B8D0EB]" : "bg-[#DEE9F8] text-[#2E4A63] hover:bg-white/50"
                 } ${s.name.toLowerCase() === "flo" ? "text-[#2E88D0] font-semibold" : ""}`}
               >
                 {s.name}
@@ -279,9 +279,9 @@ export function SpreadsheetUpload({
             <table className="w-full border-collapse text-xs">
               <thead className="sticky top-0 z-10">
                 <tr className="bg-[#DEE9F8]">
-                  <th className="border-r border-b border-[#B8D0EB] px-2 py-1.5 text-center text-[10px] font-medium text-[#3B5A78] w-8" />
+                  <th className="border-r border-b border-[#B8D0EB] px-2 py-1.5 text-center text-[10px] font-medium text-[#2E4A63] w-8" />
                   {Array.from({ length: maxCols }, (_, c) => (
-                    <th key={c} className="border-r border-b border-[#B8D0EB] px-2 py-1.5 text-center text-[10px] font-medium text-[#3B5A78] min-w-[80px]">
+                    <th key={c} className="border-r border-b border-[#B8D0EB] px-2 py-1.5 text-center text-[10px] font-medium text-[#2E4A63] min-w-[80px]">
                       {XLSX.utils.encode_col(c)}
                     </th>
                   ))}
@@ -290,7 +290,7 @@ export function SpreadsheetUpload({
               <tbody>
                 {sheet.rows.slice(0, maxRows).map((row, rIdx) => (
                   <tr key={rIdx} className="hover:bg-blue-50/30">
-                    <td className="border-r border-b border-[#B8D0EB] bg-[#DEE9F8] px-2 py-1 text-center text-[10px] font-medium text-[#3B5A78]">
+                    <td className="border-r border-b border-[#B8D0EB] bg-[#DEE9F8] px-2 py-1 text-center text-[10px] font-medium text-[#2E4A63]">
                       {rIdx + 1}
                     </td>
                     {Array.from({ length: maxCols }, (_, cIdx) => {
@@ -308,7 +308,7 @@ export function SpreadsheetUpload({
                             isSelectedTurnover ? "bg-blue-100 ring-2 ring-inset ring-[#2E88D0]" :
                             isSelectedExpenses ? "bg-emerald-100 ring-2 ring-inset ring-emerald-500" :
                             isNumeric ? "hover:bg-blue-50" : "hover:bg-gray-50"
-                          } ${isNumeric ? "text-[#0F1C2E] font-medium" : "text-[#3B5A78]"}`}
+                          } ${isNumeric ? "text-[#0F1C2E] font-medium" : "text-[#2E4A63]"}`}
                         >
                           {val != null ? String(val) : ""}
                         </td>
@@ -319,7 +319,7 @@ export function SpreadsheetUpload({
               </tbody>
             </table>
           ) : (
-            <p className="p-6 text-center text-sm text-[#3B5A78]">This sheet is empty.</p>
+            <p className="p-6 text-center text-sm text-[#2E4A63]">This sheet is empty.</p>
           )}
         </div>
 
@@ -331,7 +331,7 @@ export function SpreadsheetUpload({
               Start over
             </button>
           ) : null}
-          <button type="button" onClick={resetAll} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-2 text-sm text-[#3B5A78] transition hover:bg-[#B8D0EB]">
+          <button type="button" onClick={resetAll} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-2 text-sm text-[#2E4A63] transition hover:bg-[#B8D0EB]">
             Cancel — choose a different file
           </button>
         </div>
@@ -344,7 +344,7 @@ export function SpreadsheetUpload({
   return (
     <div className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-6">
       <p className="text-sm font-medium text-[#0F1C2E]">Confirm your figures — {quarterLabel}</p>
-      <p className="mt-1 text-xs text-[#3B5A78]">
+      <p className="mt-1 text-xs text-[#2E4A63]">
         {filename} {selectedTurnoverCell ? `(manually selected)` : `(read from Flo tab)`}
       </p>
 
@@ -352,8 +352,8 @@ export function SpreadsheetUpload({
         {/* Turnover */}
         <div className="flex items-center justify-between rounded-xl border border-[#B8D0EB] bg-white px-5 py-4">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Turnover</p>
-            <p className="text-xs text-[#3B5A78]">Your total business income year-to-date</p>
+            <p className="text-xs font-medium uppercase tracking-wide text-[#2E4A63]">Turnover</p>
+            <p className="text-xs text-[#2E4A63]">Your total business income year-to-date</p>
           </div>
           <p className="text-xl font-semibold text-[#0F1C2E]">{formatCurrency(figures.turnover)}</p>
         </div>
@@ -361,8 +361,8 @@ export function SpreadsheetUpload({
         {/* Expenses */}
         <div className="flex items-center justify-between rounded-xl border border-[#B8D0EB] bg-white px-5 py-4">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Expenses</p>
-            <p className="text-xs text-[#3B5A78]">Your total allowable expenses year-to-date</p>
+            <p className="text-xs font-medium uppercase tracking-wide text-[#2E4A63]">Expenses</p>
+            <p className="text-xs text-[#2E4A63]">Your total allowable expenses year-to-date</p>
           </div>
           <p className="text-xl font-semibold text-[#0F1C2E]">{formatCurrency(figures.expenses)}</p>
         </div>
@@ -370,12 +370,12 @@ export function SpreadsheetUpload({
         {/* Other business income */}
         <div className="flex items-center justify-between rounded-xl border border-[#B8D0EB] bg-white px-5 py-4">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Other business income</p>
-            <p className="text-xs text-[#3B5A78] flex items-center gap-1.5">
+            <p className="text-xs font-medium uppercase tracking-wide text-[#2E4A63]">Other business income</p>
+            <p className="text-xs text-[#2E4A63] flex items-center gap-1.5">
               Grants, insurance payouts etc. — most sole traders and landlords leave this as £0. 
               <span className="group relative">
-                <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#B8D0EB] text-[9px] font-bold text-[#3B5A78] cursor-help">?</span>
-                <span className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-56 -translate-x-1/2 rounded-lg border border-[#B8D0EB] bg-white px-3 py-2 text-[11px] leading-4 text-[#3B5A78] opacity-0 shadow-lg transition group-hover:opacity-100">
+                <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#B8D0EB] text-[9px] font-bold text-[#2E4A63] cursor-help">?</span>
+                <span className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-56 -translate-x-1/2 rounded-lg border border-[#B8D0EB] bg-white px-3 py-2 text-[11px] leading-4 text-[#2E4A63] opacity-0 shadow-lg transition group-hover:opacity-100">
                   This covers things like business grants, insurance payouts for business losses, or government support payments. Please consult an accountant if you're unsure whether this applies to you.Presently, Flonancial doesn't allow this £0 to be edited - if you do need a different value declared within other business income, please email us at hello@flonancial.co.uk and we&apos;ll help.
                 </span>
               </span>
@@ -387,7 +387,7 @@ export function SpreadsheetUpload({
 
       {/* Summary */}
       <div className="mt-4 rounded-xl border border-emerald-600/20 bg-emerald-50 px-5 py-3">
-        <p className="text-xs text-[#3B5A78]">
+        <p className="text-xs text-[#2E4A63]">
           These cumulative year-to-date figures will be submitted to HMRC. This submission replaces any previous update for this tax year.
         </p>
       </div>
@@ -425,7 +425,7 @@ export function SpreadsheetUpload({
           type="button"
           onClick={() => { resetAll(); onCancel(); }}
           disabled={submitting}
-          className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-2.5 text-sm text-[#3B5A78] transition hover:bg-[#B8D0EB] disabled:opacity-60"
+          className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-2.5 text-sm text-[#2E4A63] transition hover:bg-[#B8D0EB] disabled:opacity-60"
         >
           Cancel
         </button>

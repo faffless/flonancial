@@ -21,7 +21,7 @@ export function DeleteUpdateButton({ updateId }: { updateId: number }) {
       .eq("id", updateId).eq("user_id", user.id).eq("status", "draft");
 
     setWorking(false);
-    if (error) { window.alert(error.message); return; }
+    if (error) { window.alert("Failed to delete — please try again."); return; }
     router.refresh();
   }
 

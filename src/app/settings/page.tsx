@@ -230,7 +230,7 @@ export default function SettingsPage() {
     return (
       <SiteShell>
         <section className="mx-auto w-full max-w-[640px] px-6 py-10 sm:px-8">
-          <p className="text-sm text-[#3B5A78]">Loading...</p>
+          <p className="text-sm text-[#2E4A63]">Loading...</p>
         </section>
       </SiteShell>
     );
@@ -252,7 +252,7 @@ export default function SettingsPage() {
             <div className="rounded-xl border border-[#B8D0EB] bg-white px-4 py-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-[#3B5A78]">Email</p>
+                  <p className="text-xs text-[#2E4A63]">Email</p>
                   <p className="mt-0.5 text-sm text-[#0F1C2E]">{email}</p>
                 </div>
                 {!editingEmail ? (
@@ -261,7 +261,9 @@ export default function SettingsPage() {
               </div>
               {editingEmail ? (
                 <div className="mt-3 space-y-2">
+                  <label htmlFor="new-email" className="sr-only">New email address</label>
                   <input
+                    id="new-email"
                     type="email"
                     placeholder="New email address"
                     value={newEmail}
@@ -272,18 +274,18 @@ export default function SettingsPage() {
                     <button type="button" onClick={handleChangeEmail} disabled={emailWorking} className="rounded-lg bg-[#2E88D0] px-3 py-1.5 text-xs text-white hover:opacity-90 disabled:opacity-60">
                       {emailWorking ? "Sending..." : "Update email"}
                     </button>
-                    <button type="button" onClick={() => { setEditingEmail(false); setNewEmail(""); setEmailMessage(""); }} className="rounded-lg border border-[#B8D0EB] px-3 py-1.5 text-xs text-[#3B5A78] hover:bg-[#DEE9F8]">Cancel</button>
+                    <button type="button" onClick={() => { setEditingEmail(false); setNewEmail(""); setEmailMessage(""); }} className="rounded-lg border border-[#B8D0EB] px-3 py-1.5 text-xs text-[#2E4A63] hover:bg-[#DEE9F8]">Cancel</button>
                   </div>
                 </div>
               ) : null}
-              {emailMessage ? <p className="mt-2 text-xs text-[#3B5A78]">{emailMessage}</p> : null}
+              {emailMessage ? <p className="mt-2 text-xs text-[#2E4A63]">{emailMessage}</p> : null}
             </div>
 
             {/* Password */}
             <div className="rounded-xl border border-[#B8D0EB] bg-white px-4 py-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-[#3B5A78]">Password</p>
+                  <p className="text-xs text-[#2E4A63]">Password</p>
                   <p className="mt-0.5 text-sm text-[#0F1C2E]">••••••••</p>
                 </div>
                 {!editingPassword ? (
@@ -292,14 +294,18 @@ export default function SettingsPage() {
               </div>
               {editingPassword ? (
                 <div className="mt-3 space-y-2">
+                  <label htmlFor="new-password" className="sr-only">New password</label>
                   <input
+                    id="new-password"
                     type="password"
                     placeholder="New password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     className="w-full rounded-lg border border-[#B8D0EB] px-3 py-2 text-sm text-[#0F1C2E] outline-none focus:border-[#2E88D0]"
                   />
+                  <label htmlFor="confirm-password" className="sr-only">Confirm new password</label>
                   <input
+                    id="confirm-password"
                     type="password"
                     placeholder="Confirm new password"
                     value={confirmPassword}
@@ -310,18 +316,18 @@ export default function SettingsPage() {
                     <button type="button" onClick={handleChangePassword} disabled={passwordWorking} className="rounded-lg bg-[#2E88D0] px-3 py-1.5 text-xs text-white hover:opacity-90 disabled:opacity-60">
                       {passwordWorking ? "Updating..." : "Update password"}
                     </button>
-                    <button type="button" onClick={() => { setEditingPassword(false); setNewPassword(""); setConfirmPassword(""); setPasswordMessage(""); }} className="rounded-lg border border-[#B8D0EB] px-3 py-1.5 text-xs text-[#3B5A78] hover:bg-[#DEE9F8]">Cancel</button>
+                    <button type="button" onClick={() => { setEditingPassword(false); setNewPassword(""); setConfirmPassword(""); setPasswordMessage(""); }} className="rounded-lg border border-[#B8D0EB] px-3 py-1.5 text-xs text-[#2E4A63] hover:bg-[#DEE9F8]">Cancel</button>
                   </div>
                 </div>
               ) : null}
-              {passwordMessage ? <p className="mt-2 text-xs text-[#3B5A78]">{passwordMessage}</p> : null}
+              {passwordMessage ? <p className="mt-2 text-xs text-[#2E4A63]">{passwordMessage}</p> : null}
             </div>
 
             {/* NINO */}
             <div className="rounded-xl border border-[#B8D0EB] bg-white px-4 py-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-[#3B5A78]">National Insurance number</p>
+                  <p className="text-xs text-[#2E4A63]">National Insurance number</p>
                   <p className="mt-0.5 text-sm font-mono text-[#0F1C2E]">{nino ? formatNinoDisplay(nino) : "Not set"}</p>
                 </div>
                 {!editingNino ? (
@@ -330,7 +336,9 @@ export default function SettingsPage() {
               </div>
               {editingNino ? (
                 <div className="mt-3 space-y-2">
+                  <label htmlFor="new-nino" className="sr-only">National Insurance number</label>
                   <input
+                    id="new-nino"
                     type="text"
                     placeholder="QQ 12 34 56 C"
                     autoComplete="off"
@@ -338,16 +346,16 @@ export default function SettingsPage() {
                     onChange={(e) => setNewNino(e.target.value)}
                     className="w-full rounded-lg border border-[#B8D0EB] px-3 py-2 text-sm text-[#0F1C2E] outline-none focus:border-[#2E88D0]"
                   />
-                  <p className="text-[11px] text-[#3B5A78]">Your NINO must match the Government Gateway account you connect to HMRC with. If you change it, you may need to reconnect to HMRC.</p>
+                  <p className="text-[11px] text-[#2E4A63]">Your NINO must match the Government Gateway account you connect to HMRC with. If you change it, you may need to reconnect to HMRC.</p>
                   <div className="flex gap-2">
                     <button type="button" onClick={handleChangeNino} disabled={ninoWorking} className="rounded-lg bg-[#2E88D0] px-3 py-1.5 text-xs text-white hover:opacity-90 disabled:opacity-60">
                       {ninoWorking ? "Saving..." : "Update NINO"}
                     </button>
-                    <button type="button" onClick={() => { setEditingNino(false); setNewNino(""); setNinoMessage(""); }} className="rounded-lg border border-[#B8D0EB] px-3 py-1.5 text-xs text-[#3B5A78] hover:bg-[#DEE9F8]">Cancel</button>
+                    <button type="button" onClick={() => { setEditingNino(false); setNewNino(""); setNinoMessage(""); }} className="rounded-lg border border-[#B8D0EB] px-3 py-1.5 text-xs text-[#2E4A63] hover:bg-[#DEE9F8]">Cancel</button>
                   </div>
                 </div>
               ) : null}
-              {ninoMessage ? <p className="mt-2 text-xs text-[#3B5A78]">{ninoMessage}</p> : null}
+              {ninoMessage ? <p className="mt-2 text-xs text-[#2E4A63]">{ninoMessage}</p> : null}
             </div>
 
           </div>
@@ -356,7 +364,7 @@ export default function SettingsPage() {
         {/* ── Download data ───────────────────────────────────────────── */}
         <div className="mt-6 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 sm:p-6">
           <h2 className="text-base font-medium text-[#0F1C2E]">Download your data</h2>
-          <p className="mt-2 text-sm text-[#3B5A78]">
+          <p className="mt-2 text-sm text-[#2E4A63]">
             Download a copy of your businesses and submission history as a JSON file. This includes all figures submitted to HMRC, dates, and correlation IDs.
           </p>
           <button
@@ -413,7 +421,7 @@ export default function SettingsPage() {
         </div>
 
         {message ? (
-          <p className="mt-4 text-sm text-[#3B5A78]">{message}</p>
+          <p className="mt-4 text-sm text-[#2E4A63]">{message}</p>
         ) : null}
 
       </section>

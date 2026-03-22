@@ -101,7 +101,7 @@ export default async function HistoryPage() {
     return (
       <SiteShell>
         <div className="mx-auto w-full max-w-[1000px] px-6 sm:px-8 lg:px-10 py-10">
-          <p className="text-[#3B5A78]">Unable to load submission history.</p>
+          <p className="text-[#2E4A63]">Unable to load submission history.</p>
         </div>
       </SiteShell>
     );
@@ -128,13 +128,13 @@ export default async function HistoryPage() {
     <SiteShell>
       <div className="mx-auto w-full max-w-[1000px] px-6 sm:px-8 lg:px-10 py-10">
         <h1 className="text-2xl font-bold text-[#0F1C2E] mb-1">Submission History</h1>
-        <p className="text-sm text-[#3B5A78] mb-8">
+        <p className="text-sm text-[#2E4A63] mb-8">
           A record of every submission and amendment sent to HMRC from this account.
         </p>
 
         {grouped.length === 0 ? (
           <div className="rounded-2xl bg-[#CCE0F5] border border-[#B8D0EB] px-6 py-10 text-center">
-            <p className="text-[#3B5A78] text-sm">
+            <p className="text-[#2E4A63] text-sm">
               No submissions yet. Once you submit a quarterly update to HMRC it will appear here.
             </p>
           </div>
@@ -144,7 +144,7 @@ export default async function HistoryPage() {
               <div key={group.business_id}>
                 <div className="flex items-center gap-3 mb-3">
                   <h2 className="text-lg font-bold text-[#0F1C2E]">{group.business_name}</h2>
-                  <span className="text-xs font-medium text-[#3B5A78] bg-[#CCE0F5] border border-[#B8D0EB] rounded-full px-3 py-0.5">
+                  <span className="text-xs font-medium text-[#2E4A63] bg-[#CCE0F5] border border-[#B8D0EB] rounded-full px-3 py-0.5">
                     {group.business_type === "sole_trader" ? "Sole trader" : "UK property"}
                   </span>
                 </div>
@@ -152,7 +152,7 @@ export default async function HistoryPage() {
                 <div className="rounded-2xl border border-[#B8D0EB] overflow-hidden">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-[#CCE0F5] text-[#3B5A78] text-xs uppercase tracking-wide">
+                      <tr className="bg-[#CCE0F5] text-[#2E4A63] text-xs uppercase tracking-wide">
                         <th className="text-left px-5 py-3 font-semibold">Period</th>
                         <th className="text-left px-5 py-3 font-semibold">Tax year</th>
                         <th className="text-right px-5 py-3 font-semibold">Turnover</th>
@@ -170,7 +170,7 @@ export default async function HistoryPage() {
                           <td className="px-5 py-3 text-[#0F1C2E]">
                             {formatPeriod(entry.quarter_start, entry.quarter_end)}
                           </td>
-                          <td className="px-5 py-3 text-[#3B5A78]">{entry.tax_year}</td>
+                          <td className="px-5 py-3 text-[#2E4A63]">{entry.tax_year}</td>
                           <td className="px-5 py-3 text-right text-[#0F1C2E] font-medium">
                             {formatCurrency(entry.turnover)}
                           </td>
@@ -186,7 +186,7 @@ export default async function HistoryPage() {
                               {entry.action === "amended" ? "Amendment sent" : "Submitted"}
                             </span>
                           </td>
-                          <td className="px-5 py-3 text-[#3B5A78] whitespace-nowrap">
+                          <td className="px-5 py-3 text-[#2E4A63] whitespace-nowrap">
                             {formatDate(entry.submitted_at)} at {formatTime(entry.submitted_at)}
                           </td>
                         </tr>

@@ -5,6 +5,8 @@ cd C:\Users\WCale\Desktop\flonancial
 and then:
 npm run dev
 
+claude
+
 and browser address is:
 http://localhost:3000
 
@@ -17,7 +19,7 @@ Update my site (GitHub + Vercel)
 3 Stage changes: git add -A
 
 git add -A
-git commit -m "big update 8"
+git commit -m "tweaks 2"
 git push
 
 4 Commit: git commit -m "what I changed"
@@ -39,3 +41,8 @@ GGway user ID:
 Companies House submission number:
 
 114-414621
+
+Application submitted
+You’ve just applied to set up a limited company and register it for Corporation Tax. Your application reference numbers are:
+114-414621 (for the application to set up the company)
+BRCT00003761141 (for the application to register for Corporation Tax)

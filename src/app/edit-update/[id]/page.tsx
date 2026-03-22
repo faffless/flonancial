@@ -157,13 +157,13 @@ export default function EditUpdatePage() {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Edit quarterly update</h1>
-              <p className="mt-3 text-sm leading-6 text-[#3B5A78]">Edit figures for this update before sending them on.</p>
+              <p className="mt-3 text-sm leading-6 text-[#2E4A63]">Edit figures for this update before sending them on.</p>
             </div>
-            <Link href="/dashboard" className="text-sm text-[#3B5A78] underline underline-offset-4 transition hover:text-[#0F1C2E]">Back to dashboard</Link>
+            <Link href="/dashboard" className="text-sm text-[#2E4A63] underline underline-offset-4 transition hover:text-[#0F1C2E]">Back to dashboard</Link>
           </div>
 
           {loading ? (
-            <p className="mt-6 text-sm text-[#3B5A78]">Loading update...</p>
+            <p className="mt-6 text-sm text-[#2E4A63]">Loading update...</p>
           ) : notFound ? (
             <div className="mt-6 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
               <p className="text-sm text-[#0F1C2E]">Update not found, or you do not have access to it.</p>
@@ -178,7 +178,7 @@ export default function EditUpdatePage() {
                   { label: "Expenses preview", value: formatCurrencyPreview(expenses) },
                 ].map(({ label, value }) => (
                   <div key={label} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#3B5A78]">{label}</p>
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#2E4A63]">{label}</p>
                     <p className="mt-2 text-sm text-[#0F1C2E]">{value}</p>
                   </div>
                 ))}
@@ -216,7 +216,7 @@ export default function EditUpdatePage() {
                   </div>
                 </div>
 
-                <p className="text-xs leading-5 text-[#3B5A78]">
+                <p className="text-xs leading-5 text-[#2E4A63]">
                   {isHmrcLinked ? "For HMRC-linked businesses, the obligation period stays locked to the HMRC period." : "Quarter end must be exactly 3 months minus 1 day after quarter start."}
                 </p>
 
@@ -225,13 +225,13 @@ export default function EditUpdatePage() {
                     <label htmlFor="turnover" className="mb-2 block text-sm text-[#0F1C2E]">Turnover</label>
                     <input id="turnover" type="number" min="0" step="0.01" placeholder="0.00" value={turnover} onChange={(e) => setTurnover(e.target.value)}
                       disabled={!canEditFields}
-                      className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0] disabled:opacity-60" />
+                      className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#2E4A63] focus:border-[#2E88D0] disabled:opacity-60" />
                   </div>
                   <div>
                     <label htmlFor="expenses" className="mb-2 block text-sm text-[#0F1C2E]">Expenses</label>
                     <input id="expenses" type="number" min="0" step="0.01" placeholder="0.00" value={expenses} onChange={(e) => setExpenses(e.target.value)}
                       disabled={!canEditFields}
-                      className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0] disabled:opacity-60" />
+                      className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#2E4A63] focus:border-[#2E88D0] disabled:opacity-60" />
                   </div>
                 </div>
 
@@ -266,7 +266,7 @@ export default function EditUpdatePage() {
                   </div>
                 ) : null}
 
-                {message ? <p className="text-sm text-[#3B5A78]">{message}</p> : null}
+                {message ? <p className="text-sm text-[#2E4A63]">{message}</p> : null}
               </form>
             </>
           )}

@@ -39,7 +39,7 @@ export default function SignupPage() {
       email: email.trim(),
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${window.location.origin}/api/auth/confirm?next=/dashboard`,
       },
     });
 
@@ -57,14 +57,14 @@ export default function SignupPage() {
             <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Sign up</h1>
             <Link
               href="/login"
-              className="text-sm text-[#3B5A78] underline underline-offset-4 transition hover:text-[#0F1C2E]"
+              className="text-sm text-[#2E4A63] underline underline-offset-4 transition hover:text-[#0F1C2E]"
             >
               Log in instead
             </Link>
           </div>
 
           {checkingSession ? (
-            <p className="mt-6 text-sm text-[#3B5A78]">Checking session...</p>
+            <p className="mt-6 text-sm text-[#2E4A63]">Checking session...</p>
           ) : (
             <>
               <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -79,7 +79,7 @@ export default function SignupPage() {
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0]"
+                    className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#2E4A63] focus:border-[#2E88D0]"
                   />
                 </div>
 
@@ -94,7 +94,7 @@ export default function SignupPage() {
                     placeholder="Choose a password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0]"
+                    className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#2E4A63] focus:border-[#2E88D0]"
                   />
                 </div>
 
@@ -108,7 +108,7 @@ export default function SignupPage() {
               </form>
 
               {message ? (
-                <p className="mt-4 text-sm text-[#3B5A78]">{message}</p>
+                <p className="mt-4 text-sm text-[#2E4A63]">{message}</p>
               ) : null}
             </>
           )}

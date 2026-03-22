@@ -54,7 +54,7 @@ export function NinoPrompt({ userId }: { userId: string }) {
   return (
     <div className="rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5 sm:p-6">
       <h2 className="text-lg font-medium text-[#0F1C2E]">Before you connect to HMRC</h2>
-      <p className="mt-2 text-sm text-[#3B5A78]">
+      <p className="mt-2 text-sm text-[#2E4A63]">
         HMRC requires your National Insurance number to link your tax account.
         You can find it on your payslip, P60, or in your{" "}
         <a
@@ -80,7 +80,7 @@ export function NinoPrompt({ userId }: { userId: string }) {
             placeholder="QQ 12 34 56 C"
             value={nino}
             onChange={(e) => setNino(e.target.value)}
-            className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0]"
+            className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#2E4A63] focus:border-[#2E88D0]"
           />
         </div>
         <button
@@ -93,7 +93,7 @@ export function NinoPrompt({ userId }: { userId: string }) {
       </form>
 
       {message ? (
-        <p className="mt-3 text-sm text-[#3B5A78]">{message}</p>
+        <p className="mt-3 text-sm text-[#2E4A63]">{message}</p>
       ) : null}
     </div>
   );

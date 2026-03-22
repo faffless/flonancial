@@ -200,37 +200,37 @@ function HmrcHeldSummary({ data, businessType }: { data: unknown; businessType: 
       expenses = exp?.consolidatedExpenses ?? null;
     }
   } catch {
-    return <p className="mt-3 text-xs text-[#3B5A78]">Unable to read the data from HMRC.</p>;
+    return <p className="mt-3 text-xs text-[#2E4A63]">Unable to read the data from HMRC.</p>;
   }
 
   if (!periodStart && !periodEnd && turnover === null && expenses === null) {
-    return <p className="mt-3 text-xs text-[#3B5A78]">No data held by HMRC for this tax year.</p>;
+    return <p className="mt-3 text-xs text-[#2E4A63]">No data held by HMRC for this tax year.</p>;
   }
 
   return (
     <div className="mt-3 space-y-2">
       {periodStart && periodEnd ? (
         <div className="flex justify-between rounded-xl border border-[#B8D0EB] bg-white px-4 py-3">
-          <p className="text-xs text-[#3B5A78]">Period</p>
+          <p className="text-xs text-[#2E4A63]">Period</p>
           <p className="text-xs font-medium text-[#0F1C2E]">{formatDate(periodStart)} – {formatDate(periodEnd)}</p>
         </div>
       ) : null}
       {turnover !== null ? (
         <div className="flex justify-between rounded-xl border border-[#B8D0EB] bg-white px-4 py-3">
-          <p className="text-xs text-[#3B5A78]">Turnover</p>
+          <p className="text-xs text-[#2E4A63]">Turnover</p>
           <p className="text-xs font-medium text-[#0F1C2E]">{formatCurrency(turnover)}</p>
         </div>
       ) : null}
       {expenses !== null ? (
         <div className="flex justify-between rounded-xl border border-[#B8D0EB] bg-white px-4 py-3">
-          <p className="text-xs text-[#3B5A78]">Expenses</p>
+          <p className="text-xs text-[#2E4A63]">Expenses</p>
           <p className="text-xs font-medium text-[#0F1C2E]">{formatCurrency(expenses)}</p>
         </div>
       ) : null}
       {submittedOn ? (
-        <p className="text-[10px] text-[#3B5A78]">Last updated: {formatDateTime(submittedOn)}</p>
+        <p className="text-[10px] text-[#2E4A63]">Last updated: {formatDateTime(submittedOn)}</p>
       ) : null}
-      <p className="text-[10px] text-[#3B5A78]">This is what HMRC holds based on your most recent cumulative submission.</p>
+      <p className="text-[10px] text-[#2E4A63]">This is what HMRC holds based on your most recent cumulative submission.</p>
     </div>
   );
 }
@@ -257,6 +257,8 @@ export default function BusinessPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [hmrcHeldData, setHmrcHeldData] = useState<unknown>(null);
   const [loadingHmrcData, setLoadingHmrcData] = useState(false);
+  const [hmrcNeedsReconnect, setHmrcNeedsReconnect] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [showHmrcData, setShowHmrcData] = useState(false);
 
   const loadData = useCallback(async () => {
@@ -305,7 +307,10 @@ export default function BusinessPage() {
           headers: { "X-Fraud-Data": encodeFraudDataHeader() },
         }
       );
-      if (!response.ok) { setObligations([]); return; }
+      if (!response.ok) {
+        if (response.status === 401) setHmrcNeedsReconnect(true);
+        setObligations([]); return;
+      }
       const data = await response.json();
       setObligations(data.obligations ?? []);
     } catch { setObligations([]); }
@@ -330,6 +335,7 @@ export default function BusinessPage() {
         const data = await response.json();
         setHmrcHeldData(data.hmrcData);
       } else {
+        if (response.status === 401) setHmrcNeedsReconnect(true);
         setHmrcHeldData(null);
       }
     } catch { setHmrcHeldData(null); }
@@ -378,6 +384,7 @@ export default function BusinessPage() {
     if (!quarter) return;
 
     setSubmitting(true);
+    setSubmitError(null);
     try {
       const response = await fetch("/api/hmrc/submit-quarterly", {
         method: "POST",
@@ -396,6 +403,7 @@ export default function BusinessPage() {
       });
 
       if (!response.ok) {
+        if (response.status === 401) { setHmrcNeedsReconnect(true); throw new Error("Your HMRC connection has expired. Please reconnect to HMRC."); }
         const err = await response.json().catch(() => ({}));
         throw new Error(err.message ?? err.error ?? "HMRC submission failed");
       }
@@ -408,7 +416,7 @@ export default function BusinessPage() {
       );
       await loadData();
     } catch (err) {
-      console.error("Submission failed:", err);
+      setSubmitError(err instanceof Error ? err.message : "Submission failed — please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -420,7 +428,7 @@ export default function BusinessPage() {
     return (
       <SiteShell>
         <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
-          <p className="text-sm text-[#3B5A78]">Loading...</p>
+          <p className="text-sm text-[#2E4A63]">Loading...</p>
         </section>
       </SiteShell>
     );
@@ -430,7 +438,7 @@ export default function BusinessPage() {
     return (
       <SiteShell>
         <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
-          <p className="text-sm text-[#3B5A78]">Business not found.</p>
+          <p className="text-sm text-[#2E4A63]">Business not found.</p>
           <Link href="/dashboard" className="mt-4 block text-sm text-[#2E88D0] hover:opacity-75">Back to dashboard</Link>
         </section>
       </SiteShell>
@@ -452,6 +460,28 @@ export default function BusinessPage() {
       <main className="min-h-screen">
         <section className="mx-auto w-full max-w-[1000px] px-6 py-6 sm:px-8 lg:px-10">
 
+          {hmrcNeedsReconnect ? (
+            <div className="mb-4 flex items-start gap-3 rounded-2xl border border-amber-600/20 bg-amber-50 px-5 py-4">
+              <span className="mt-0.5 shrink-0 text-amber-600">⚠</span>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-amber-700">Your HMRC connection has expired</p>
+                <p className="mt-0.5 text-xs text-amber-600">Please reconnect to HMRC to view obligations and submit updates.</p>
+              </div>
+              <a href="/api/hmrc/start" className="shrink-0 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-amber-700">Reconnect</a>
+            </div>
+          ) : null}
+
+          {submitError ? (
+            <div className="mb-4 flex items-start gap-3 rounded-2xl border border-red-600/20 bg-red-50 px-5 py-4">
+              <span className="mt-0.5 shrink-0 text-red-600">✗</span>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-red-700">Submission failed</p>
+                <p className="mt-0.5 text-xs text-red-600">{submitError}</p>
+              </div>
+              <button type="button" onClick={() => setSubmitError(null)} className="shrink-0 text-xs text-red-600 hover:text-red-800">Dismiss</button>
+            </div>
+          ) : null}
+
           {successMessage ? (
             <div className="mb-4 flex items-start gap-3 rounded-2xl border border-emerald-600/20 bg-emerald-50 px-5 py-4">
               <span className="mt-0.5 shrink-0 text-emerald-600">✓</span>
@@ -466,7 +496,7 @@ export default function BusinessPage() {
           {availableYears.length > 0 && selectedYear ? (
             <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] px-4 py-3">
               <div className="flex items-center gap-2">
-                <label className="text-xs text-[#3B5A78]">Tax year</label>
+                <label className="text-xs text-[#2E4A63]">Tax year</label>
                 <select
                   value={selectedYear.label}
                   onChange={(e) => { setSelectedYearLabel(e.target.value); setUploadingQuarter(null); setShowHmrcData(false); }}
@@ -476,8 +506,8 @@ export default function BusinessPage() {
                 </select>
               </div>
               <div className="h-4 w-px bg-[#B8D0EB]" />
-              <p className="text-xs text-[#3B5A78]">{formatDate(selectedYear.start)} – {formatDate(selectedYear.end)}</p>
-              {isHmrcReady && loadingObligations ? <span className="ml-auto text-xs text-[#3B5A78]">Checking HMRC...</span> : null}
+              <p className="text-xs text-[#2E4A63]">{formatDate(selectedYear.start)} – {formatDate(selectedYear.end)}</p>
+              {isHmrcReady && loadingObligations ? <span className="ml-auto text-xs text-[#2E4A63]">Checking HMRC...</span> : null}
               {!isHmrcReady ? (
                 <span className="ml-auto text-xs text-amber-700">
                   <Link href={`/edit-business/${business.id}`} className="underline hover:no-underline">Connect to HMRC</Link> to submit
@@ -505,7 +535,7 @@ export default function BusinessPage() {
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-[#3B5A78]">{q.label}</p>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[#2E4A63]">{q.label}</p>
                       {isSubmitted ? (
                         <span className="rounded-full border border-emerald-600/20 bg-emerald-100 px-2 py-0.5 text-[10px] text-emerald-700">
                           {isCovered ? "Covered" : "Submitted"}
@@ -515,21 +545,21 @@ export default function BusinessPage() {
                       )}
                     </div>
 
-                    <p className="mt-2 text-[11px] text-[#3B5A78]">{formatDate(q.quarterStart)} – {formatDate(q.quarterEnd)}</p>
-                    {getDueDate(q.quarterStart, q.quarterEnd) ? <p className="mt-0.5 text-[10px] text-[#3B5A78]">Due: {formatDate(getDueDate(q.quarterStart, q.quarterEnd)!)}</p> : null}
+                    <p className="mt-2 text-[11px] text-[#2E4A63]">{formatDate(q.quarterStart)} – {formatDate(q.quarterEnd)}</p>
+                    {getDueDate(q.quarterStart, q.quarterEnd) ? <p className="mt-0.5 text-[10px] text-[#2E4A63]">Due: {formatDate(getDueDate(q.quarterStart, q.quarterEnd)!)}</p> : null}
 
                     {isSubmitted && q.submission ? (
                       <div className="mt-3 space-y-1">
                         {isCovered ? (
-                          <p className="text-xs text-[#3B5A78]">Covered by your cumulative submission for a later quarter.</p>
+                          <p className="text-xs text-[#2E4A63]">Covered by your cumulative submission for a later quarter.</p>
                         ) : (
                           <>
-                            <p className="text-xs text-[#3B5A78]">Turnover (YTD): <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.submission.turnover)}</span></p>
-                            <p className="text-xs text-[#3B5A78]">Expenses (YTD): <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.submission.expenses)}</span></p>
+                            <p className="text-xs text-[#2E4A63]">Turnover (YTD): <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.submission.turnover)}</span></p>
+                            <p className="text-xs text-[#2E4A63]">Expenses (YTD): <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.submission.expenses)}</span></p>
                             {q.submission.other_income > 0 ? (
-                              <p className="text-xs text-[#3B5A78]">Other income (YTD): <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.submission.other_income)}</span></p>
+                              <p className="text-xs text-[#2E4A63]">Other income (YTD): <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.submission.other_income)}</span></p>
                             ) : null}
-                            <p className="mt-1 text-[10px] text-[#3B5A78]">Submitted {formatDateTime(q.submission.submitted_at!)}</p>
+                            <p className="mt-1 text-[10px] text-[#2E4A63]">Submitted {formatDateTime(q.submission.submitted_at!)}</p>
                           </>
                         )}
                       </div>
@@ -538,13 +568,13 @@ export default function BusinessPage() {
                     {!q.isFuture ? (
                       <div className="mt-3">
                         {isSubmitted && isLatestSubmitted && !isCovered ? (
-                          <button type="button" onClick={() => setUploadingQuarter(q.periodKey)} className="text-xs text-[#3B5A78] transition hover:text-[#0F1C2E]">Amend →</button>
+                          <button type="button" onClick={() => setUploadingQuarter(q.periodKey)} className="text-xs text-[#2E4A63] transition hover:text-[#0F1C2E]">Amend →</button>
                         ) : isSubmitted && !isLatestSubmitted && !isCovered ? (
-                          <p className="text-[10px] text-[#3B5A78]">To update, amend your latest submitted quarter</p>
+                          <p className="text-[10px] text-[#2E4A63]">To update, amend your latest submitted quarter</p>
                         ) : !isSubmitted && canSubmit ? (
                           <button type="button" onClick={() => { setUploadingQuarter(q.periodKey); setSuccessMessage(null); }} className="rounded-lg bg-[#2E88D0] px-3 py-1.5 text-xs font-medium text-white transition hover:opacity-90">Upload & Submit</button>
                         ) : !isHmrcReady ? (
-                          <p className="text-[10px] text-[#3B5A78]">Connect to HMRC first</p>
+                          <p className="text-[10px] text-[#2E4A63]">Connect to HMRC first</p>
                         ) : null}
                       </div>
                     ) : null}
@@ -568,19 +598,19 @@ export default function BusinessPage() {
           {isHmrcReady && selectedYear && !uploadingQuarter ? (
             <div className="mt-6">
               {!showHmrcData ? (
-                <button type="button" onClick={() => { setShowHmrcData(true); fetchHmrcHeldData(); }} className="text-xs text-[#3B5A78] transition hover:text-[#0F1C2E]">View what HMRC currently holds for this tax year →</button>
+                <button type="button" onClick={() => { setShowHmrcData(true); fetchHmrcHeldData(); }} className="text-xs text-[#2E4A63] transition hover:text-[#0F1C2E]">View what HMRC currently holds for this tax year →</button>
               ) : (
                 <div className="rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] p-5">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-medium text-[#0F1C2E]">What HMRC holds for {selectedYear.label}</p>
-                    <button type="button" onClick={() => setShowHmrcData(false)} className="text-xs text-[#3B5A78] hover:text-[#0F1C2E]">Hide</button>
+                    <button type="button" onClick={() => setShowHmrcData(false)} className="text-xs text-[#2E4A63] hover:text-[#0F1C2E]">Hide</button>
                   </div>
                   {loadingHmrcData ? (
-                    <p className="mt-3 text-xs text-[#3B5A78]">Loading from HMRC...</p>
+                    <p className="mt-3 text-xs text-[#2E4A63]">Loading from HMRC...</p>
                   ) : hmrcHeldData ? (
                     <HmrcHeldSummary data={hmrcHeldData} businessType={business.business_type} />
                   ) : (
-                    <p className="mt-3 text-xs text-[#3B5A78]">No data held by HMRC for this tax year, or unable to retrieve.</p>
+                    <p className="mt-3 text-xs text-[#2E4A63]">No data held by HMRC for this tax year, or unable to retrieve.</p>
                   )}
                 </div>
               )}
@@ -589,21 +619,21 @@ export default function BusinessPage() {
 
 {history.length === 0 ? (
             <div className="mt-8">
-              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Submission history</p>
+              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#2E4A63]">Submission history</p>
               <div className="rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] px-6 py-6 text-center">
-                <p className="text-sm text-[#3B5A78]">No submissions yet.</p>
-                <p className="mt-2 text-xs text-[#3B5A78]/60">If you uploaded a spreadsheet before signing up, those figures were for preview only and were not stored. Please upload your spreadsheet again above to submit to HMRC — this ensures your data is authenticated and securely linked to your account.</p>
+                <p className="text-sm text-[#2E4A63]">No submissions yet.</p>
+                <p className="mt-2 text-xs text-[#2E4A63]/60">If you uploaded a spreadsheet before signing up, those figures were for preview only and were not stored. Please upload your spreadsheet again above to submit to HMRC — this ensures your data is authenticated and securely linked to your account.</p>
               </div>
             </div>
           ) : null}
 
           {history.length > 0 ? (
             <div className="mt-8">
-              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Submission history</p>
+              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#2E4A63]">Submission history</p>
               <div className="overflow-hidden rounded-2xl border border-[#B8D0EB]">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-[#CCE0F5] text-[#3B5A78] text-xs uppercase tracking-wide">
+                    <tr className="bg-[#CCE0F5] text-[#2E4A63] text-xs uppercase tracking-wide">
                       <th className="px-4 py-3 text-left font-semibold">Quarter</th>
                       <th className="px-4 py-3 text-left font-semibold">Period</th>
                       <th className="px-4 py-3 text-left font-semibold">Submitted</th>
@@ -618,11 +648,11 @@ export default function BusinessPage() {
                       <tr key={s.id} className={i % 2 === 0 ? "bg-white" : "bg-[#f4f8fd]"}>
                         <td className="px-4 py-3 text-xs font-medium text-[#0F1C2E]">{getQuarterLabel(s.quarter_start, quarters)}</td>
                         <td className="px-4 py-3 text-xs text-[#0F1C2E]">{formatDate(s.quarter_start)} – {formatDate(s.quarter_end)}</td>
-                        <td className="px-4 py-3 text-xs text-[#3B5A78] whitespace-nowrap">{s.submitted_at ? formatDateTime(s.submitted_at) : "—"}</td>
+                        <td className="px-4 py-3 text-xs text-[#2E4A63] whitespace-nowrap">{s.submitted_at ? formatDateTime(s.submitted_at) : "—"}</td>
                         <td className="px-4 py-3 text-right text-xs font-medium text-[#0F1C2E]">{formatCurrency(s.turnover)}</td>
                         <td className="px-4 py-3 text-right text-xs font-medium text-[#0F1C2E]">{formatCurrency(s.expenses)}</td>
-                        <td className="px-4 py-3 text-xs text-[#3B5A78]">{s.action === "amended" ? "Amended" : s.action === "covered" ? "Covered" : "Submitted"}</td>
-                        <td className="px-4 py-3 text-xs text-[#3B5A78] font-mono">{s.hmrc_correlation_id ?? "—"}</td>
+                        <td className="px-4 py-3 text-xs text-[#2E4A63]">{s.action === "amended" ? "Amended" : s.action === "covered" ? "Covered" : "Submitted"}</td>
+                        <td className="px-4 py-3 text-xs text-[#2E4A63] font-mono">{s.hmrc_correlation_id ?? "—"}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -634,7 +664,7 @@ export default function BusinessPage() {
           {selectedYear ? (
             <div className="mt-8 rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] px-6 py-5">
               <p className="text-sm font-medium text-[#0F1C2E]">Final Declaration (year-end)</p>
-              <p className="mt-1 text-xs leading-5 text-[#3B5A78]">
+              <p className="mt-1 text-xs leading-5 text-[#2E4A63]">
                 Flonancial handles quarterly updates only. For the year-end Final Declaration, use{" "}
                 <a href="https://www.gov.uk/personal-tax-account" target="_blank" rel="noopener noreferrer" className="text-[#2E88D0] underline hover:no-underline">HMRC's online service</a>{" "}
                 or another compatible product. The deadline is 31 January following the end of the tax year.

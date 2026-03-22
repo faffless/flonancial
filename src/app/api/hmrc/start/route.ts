@@ -8,7 +8,7 @@ export async function GET() {
   if (!clientId || !redirectUri) {
     return NextResponse.redirect(
       new URL(
-        "/account?hmrc_error=missing_hmrc_env",
+        "/dashboard?hmrc_error=missing_hmrc_env",
         process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
       )
     );

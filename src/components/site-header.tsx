@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
 type SiteHeaderProps = {
@@ -45,7 +44,6 @@ function formatBusinessType(value: string) {
 export function SiteHeader({ businessEmoji, businessName, businessTagline, businessType, hmrcReady, isDemo, editBusinessHref }: SiteHeaderProps = {}) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
-  const pathname = usePathname();
 
   const daysToMtd50k = useDaysUntil("2026-04-06");
   const daysToMtd30k = useDaysUntil("2027-04-06");
@@ -67,16 +65,16 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
   }
 
   return (
-    <header className="border-b border-[#B8D0EB] bg-transparent">
+    <header className="border-b border-[#B8D0EB]/40 bg-white/70 backdrop-blur-sm">
       <div className="mx-auto w-full max-w-[1000px] px-6 sm:px-8 lg:px-10">
-        <div className="flex items-center justify-between gap-4 py-4">
+        <div className="relative flex items-center justify-between gap-4 py-4">
 
-          {/* Logo */}
-          <Link href="/" className="flex shrink-0 flex-col items-start transition hover:opacity-90">
-            <div className="w-[90px]">
-              <img src="/brand/77d.png" alt="Flonancial" className="h-full w-full object-contain" />
+          {/* Logo + brand name (horizontal) */}
+          <Link href="/" className="flex shrink-0 items-center gap-2.5 transition hover:opacity-90">
+            <div className="w-[112px]">
+              <img src="/brand/77h.png" alt="Flonancial" className="h-full w-full object-contain" />
             </div>
-            <p className="mt-0 w-full text-left text-base font-bold tracking-tight text-[#0F1C2E]">Flonancial</p>
+            <span className="text-xl font-bold tracking-tight text-[#0F1C2E]">Flonancial</span>
           </Link>
 
           {/* Centre */}
@@ -91,9 +89,9 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
                 </p>
               </div>
               <div className="flex flex-wrap items-center justify-center gap-2">
-                {businessTagline ? <span className="text-xs text-[#3B5A78]">{businessTagline}</span> : null}
+                {businessTagline ? <span className="text-xs text-[#2E4A63]">{businessTagline}</span> : null}
                 {businessType ? (
-                  <span className="rounded-full border border-[#B8D0EB] bg-[#DEE9F8] px-2 py-0.5 text-[10px] text-[#3B5A78]">
+                  <span className="rounded-full border border-[#B8D0EB] bg-[#F0F5FB] px-2 py-0.5 text-[10px] text-[#2E4A63]">
                     {formatBusinessType(businessType)}
                   </span>
                 ) : null}
@@ -103,17 +101,17 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
                   <span className="rounded-full border border-amber-600/20 bg-amber-50 px-2 py-0.5 text-[10px] text-amber-700">Not matched to HMRC</span>
                 ) : null}
                 {editBusinessHref ? (
-                  <Link href={editBusinessHref} className="rounded-full border border-[#B8D0EB] bg-[#DEE9F8] px-2 py-0.5 text-[10px] text-[#3B5A78] transition hover:bg-[#CCE0F5] hover:text-[#0F1C2E]">
+                  <Link href={editBusinessHref} className="rounded-full border border-[#B8D0EB] bg-[#F0F5FB] px-2 py-0.5 text-[10px] text-[#2E4A63] transition hover:bg-[#DEE9F8] hover:text-[#0F1C2E]">
                     Edit business
                   </Link>
                 ) : null}
               </div>
             </div>
           ) : showCountdown ? (
-            <div className="hidden flex-col items-center gap-1.5 sm:flex">
+            <div className="pointer-events-none absolute inset-x-0 hidden flex-col items-center gap-1.5 sm:flex">
               {time ? (
-                <p className="text-xs text-[#3B5A78]">
-                  {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short", year: "numeric" })} &middot; {time} GMT
+                <p className="text-xs text-[#2E4A63]">
+                  {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short", year: "numeric" })} · {time} GMT
                 </p>
               ) : null}
               <p className="text-xs font-medium text-[#0F1C2E]">
@@ -134,16 +132,16 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
           {/* Right side */}
           {loggedIn ? (
             <div className="flex shrink-0 flex-col items-end gap-1">
-              <button type="button" onClick={handleSignOut} disabled={signingOut} className="text-base font-bold tracking-tight text-[#0F1C2E] transition hover:opacity-75 disabled:opacity-50">
+              <button type="button" onClick={handleSignOut} disabled={signingOut} className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E] disabled:opacity-50">
                 {signingOut ? "Signing out..." : "Sign out"}
               </button>
-              <Link href="/settings" className="text-base font-bold tracking-tight text-[#0F1C2E] transition hover:text-[#0F1C2E]">Settings</Link>
-              <Link href="/dashboard" className="text-base font-bold tracking-tight text-[#0F1C2E] transition hover:opacity-75">Dashboard</Link>
+              <Link href="/settings" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">Settings</Link>
+              <Link href="/dashboard" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">Dashboard</Link>
             </div>
           ) : (
-            <div className="flex shrink-0 flex-col items-end gap-1">
-              <Link href="/login" className="text-base font-bold tracking-tight text-[#0F1C2E] transition hover:opacity-75">Log in</Link>
-              <Link href="/signup" className="text-base font-bold tracking-tight text-[#0F1C2E] transition hover:opacity-75">Sign up</Link>
+            <div className="flex shrink-0 items-center gap-4">
+              <Link href="/login" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">Log in</Link>
+              <Link href="/signup" className="rounded-xl bg-[#2E88D0] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-[#2E88D0]/20 transition hover:shadow-lg hover:shadow-[#2E88D0]/30">Sign Up</Link>
             </div>
           )}
         </div>

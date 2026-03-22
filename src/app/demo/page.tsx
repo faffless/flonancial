@@ -122,7 +122,7 @@ function SignUpBanner() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="text-sm font-semibold text-[#0F1C2E]">Ready to submit your own?</p>
-          <p className="mt-1 text-sm text-[#3B5A78]">Create a free account, connect to HMRC, and submit your first quarterly update.</p>
+          <p className="mt-1 text-sm text-[#2E4A63]">Create a free account, connect to HMRC, and submit your first quarterly update.</p>
         </div>
         <div className="flex flex-wrap gap-3">
           <Link href="/login" className="rounded-xl bg-[#2E88D0] px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90">Create free account →</Link>
@@ -136,7 +136,7 @@ function BusinessSwitcher({ currentId, onSwitch }: { currentId: string; onSwitch
   return (
     <div className="flex flex-wrap gap-2">
       {demoBusinesses.map((b) => (
-        <button key={b.id} type="button" onClick={() => onSwitch(b.id)} className={`rounded-xl border px-3 py-1.5 text-xs transition ${b.id === currentId ? "border-[#2E88D0] bg-[#2E88D0] text-white" : "border-[#B8D0EB] bg-[#DEE9F8] text-[#3B5A78] hover:bg-[#CCE0F5] hover:text-[#0F1C2E]"}`}>
+        <button key={b.id} type="button" onClick={() => onSwitch(b.id)} className={`rounded-xl border px-3 py-1.5 text-xs transition ${b.id === currentId ? "border-[#2E88D0] bg-[#2E88D0] text-white" : "border-[#B8D0EB] bg-[#DEE9F8] text-[#2E4A63] hover:bg-[#CCE0F5] hover:text-[#0F1C2E]"}`}>
           {b.emoji} {b.name}
         </button>
       ))}
@@ -172,19 +172,19 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
       {/* Tax year bar */}
       <div className="mt-4 flex flex-wrap items-center gap-4 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] px-4 py-3">
         <div className="flex items-center gap-2">
-          <label className="text-xs text-[#3B5A78]">Tax year</label>
+          <label className="text-xs text-[#2E4A63]">Tax year</label>
           <span className="rounded-xl border border-[#B8D0EB] bg-white px-3 py-1.5 text-sm text-[#0F1C2E]">{taxYear.label}</span>
         </div>
         <div className="h-4 w-px bg-[#B8D0EB]" />
-        <p className="text-xs text-[#3B5A78]">{formatDate(taxYear.start)} – {formatDate(taxYear.end)}</p>
+        <p className="text-xs text-[#2E4A63]">{formatDate(taxYear.start)} – {formatDate(taxYear.end)}</p>
         <div className="h-4 w-px bg-[#B8D0EB]" />
-        <p className="text-xs text-[#3B5A78]">Annual income: <span className="font-medium text-[#0F1C2E]">{formatCurrency(annualTotals.income)}</span></p>
-        <p className="text-xs text-[#3B5A78]">Annual expenses: <span className="font-medium text-[#0F1C2E]">{formatCurrency(annualTotals.expenses)}</span></p>
+        <p className="text-xs text-[#2E4A63]">Annual income: <span className="font-medium text-[#0F1C2E]">{formatCurrency(annualTotals.income)}</span></p>
+        <p className="text-xs text-[#2E4A63]">Annual expenses: <span className="font-medium text-[#0F1C2E]">{formatCurrency(annualTotals.expenses)}</span></p>
       </div>
 
       {/* Time progression */}
       <div className="mt-4">
-        <p className="text-xs font-medium text-[#3B5A78]">See what your dashboard looks like:</p>
+        <p className="text-xs font-medium text-[#2E4A63]">See what your dashboard looks like:</p>
         <div className="mt-2 flex flex-wrap gap-2">
           {[
             { count: 1, label: "Q1 submitted" },
@@ -199,7 +199,7 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
               className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition ${
                 submittedCount === count
                   ? "border-[#2E88D0] bg-[#2E88D0] text-white"
-                  : "border-[#B8D0EB] bg-[#DEE9F8] text-[#3B5A78] hover:bg-[#CCE0F5] hover:text-[#0F1C2E]"
+                  : "border-[#B8D0EB] bg-[#DEE9F8] text-[#2E4A63] hover:bg-[#CCE0F5] hover:text-[#0F1C2E]"
               }`}
             >
               {label}
@@ -230,7 +230,7 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
             >
               {/* Header */}
               <div className="flex items-center justify-between">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[#3B5A78]">Q{qIndex}{isNext ? " · next" : ""}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-[#2E4A63]">Q{qIndex}{isNext ? " · next" : ""}</p>
                 {isSubmitted ? (
                   <span className="rounded-full border border-emerald-600/20 bg-emerald-100 px-2 py-0.5 text-[10px] text-emerald-700">
                     {isCoveredByLater ? "Covered" : "Submitted"}
@@ -241,20 +241,20 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
               </div>
 
               {/* Dates & deadline */}
-              <p className="mt-2 text-[11px] text-[#3B5A78]">{formatDate(q.quarterStart)} – {formatDate(q.quarterEnd)}</p>
-              <p className="mt-0.5 text-[10px] text-[#3B5A78]">Due: {DEADLINES[i]}</p>
+              <p className="mt-2 text-[11px] text-[#2E4A63]">{formatDate(q.quarterStart)} – {formatDate(q.quarterEnd)}</p>
+              <p className="mt-0.5 text-[10px] text-[#2E4A63]">Due: {DEADLINES[i]}</p>
 
               {/* Figures */}
               {isSubmitted ? (
                 <div className="mt-3 space-y-1">
-                  <p className="text-xs text-[#3B5A78]">Turnover: <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.cumulativeTurnover)}</span></p>
-                  <p className="text-xs text-[#3B5A78]">Expenses: <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.cumulativeExpenses)}</span></p>
-                  <p className="mt-1 text-[10px] text-[#3B5A78] italic">Cumulative year-to-date</p>
+                  <p className="text-xs text-[#2E4A63]">Turnover: <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.cumulativeTurnover)}</span></p>
+                  <p className="text-xs text-[#2E4A63]">Expenses: <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.cumulativeExpenses)}</span></p>
+                  <p className="mt-1 text-[10px] text-[#2E4A63] italic">Cumulative year-to-date</p>
                 </div>
               ) : isNext ? (
                 <div className="mt-3 space-y-1">
-                  <p className="text-xs text-[#3B5A78]">Turnover: <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.cumulativeTurnover)}</span></p>
-                  <p className="text-xs text-[#3B5A78]">Expenses: <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.cumulativeExpenses)}</span></p>
+                  <p className="text-xs text-[#2E4A63]">Turnover: <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.cumulativeTurnover)}</span></p>
+                  <p className="text-xs text-[#2E4A63]">Expenses: <span className="font-medium text-[#0F1C2E]">{formatCurrency(q.cumulativeExpenses)}</span></p>
                 </div>
               ) : null}
 
@@ -263,7 +263,7 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
                 {isSubmitted && !isCoveredByLater ? (
                   <p className="text-[10px] text-emerald-600">✓ Sent to HMRC</p>
                 ) : isSubmitted && isCoveredByLater ? (
-                  <p className="text-[10px] text-[#3B5A78]">Covered by later submission</p>
+                  <p className="text-[10px] text-[#2E4A63]">Covered by later submission</p>
                 ) : isNext ? (
                   <Link href="/login" className="rounded-lg bg-[#2E88D0] px-3 py-1.5 text-xs font-medium text-white transition hover:opacity-90">
                     Upload & Submit →
@@ -278,11 +278,11 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
       {/* Submission history (visible when at least 1 submitted) */}
       {submittedCount >= 1 ? (
         <div className="mt-6">
-          <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Submission history</p>
+          <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#2E4A63]">Submission history</p>
           <div className="overflow-hidden rounded-2xl border border-[#B8D0EB]">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#CCE0F5] text-[#3B5A78] text-xs uppercase tracking-wide">
+                <tr className="bg-[#CCE0F5] text-[#2E4A63] text-xs uppercase tracking-wide">
                   <th className="px-4 py-3 text-left font-semibold">Period</th>
                   <th className="px-4 py-3 text-right font-semibold">Turnover</th>
                   <th className="px-4 py-3 text-right font-semibold">Expenses</th>
@@ -296,7 +296,7 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
                     <td className="px-4 py-3 text-xs text-[#0F1C2E]">{formatDate(q.quarterStart)} – {formatDate(q.quarterEnd)}</td>
                     <td className="px-4 py-3 text-right text-xs font-medium text-[#0F1C2E]">{formatCurrency(q.cumulativeTurnover)}</td>
                     <td className="px-4 py-3 text-right text-xs font-medium text-[#0F1C2E]">{formatCurrency(q.cumulativeExpenses)}</td>
-                    <td className="px-4 py-3 text-right text-xs text-[#3B5A78]">£0.00</td>
+                    <td className="px-4 py-3 text-right text-xs text-[#2E4A63]">£0.00</td>
                     <td className="px-4 py-3 text-xs text-emerald-600">Submitted</td>
                   </tr>
                 ))}
@@ -309,7 +309,7 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
       {/* Year-end note */}
       <div className="mt-6 rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] px-6 py-5">
         <p className="text-sm font-medium text-[#0F1C2E]">Final Declaration (year-end)</p>
-        <p className="mt-1 text-xs leading-5 text-[#3B5A78]">
+        <p className="mt-1 text-xs leading-5 text-[#2E4A63]">
           Flonancial handles quarterly updates only. For the year-end Final Declaration, use{" "}
           <a href="https://www.gov.uk/personal-tax-account" target="_blank" rel="noopener noreferrer" className="text-[#2E88D0] underline hover:no-underline">
             HMRC&apos;s online service
@@ -323,7 +323,7 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
 
       {/* Business switcher */}
       <div className="mt-6 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5">
-        <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#3B5A78]">Try another example business</p>
+        <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#2E4A63]">Try another example business</p>
         <BusinessSwitcher currentId={business.id} onSwitch={onSwitch} />
       </div>
     </div>
@@ -359,7 +359,7 @@ export default function DemoPage() {
     <Suspense fallback={
       <SiteShell>
         <section className="mx-auto w-full max-w-[1000px] px-6 py-10 sm:px-8 lg:px-10">
-          <p className="text-sm text-[#3B5A78]">Loading...</p>
+          <p className="text-sm text-[#2E4A63]">Loading...</p>
         </section>
       </SiteShell>
     }>

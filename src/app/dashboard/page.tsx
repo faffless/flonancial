@@ -128,6 +128,18 @@ export default async function DashboardPage({
   const rawNotifications = params.hmrc_notifications as string | undefined;
   const notifications = parseNotifications(rawNotifications);
   const businessAdded = params.business_added === "1";
+  const hmrcError = params.hmrc_error as string | undefined;
+
+  let hmrcErrorMessage = "";
+  if (hmrcError === "access_denied") {
+    hmrcErrorMessage = "You chose not to grant Flonancial access to your HMRC account. You can try again whenever you're ready.";
+  } else if (hmrcError === "missing_code") {
+    hmrcErrorMessage = "HMRC did not return an authorisation code. Please try connecting again.";
+  } else if (hmrcError === "invalid_state") {
+    hmrcErrorMessage = "The connection request expired or was invalid. Please try connecting again.";
+  } else if (hmrcError) {
+    hmrcErrorMessage = `Something went wrong connecting to HMRC (${hmrcError}). Please try again.`;
+  }
 
   return (
     <SiteShell>
@@ -136,12 +148,19 @@ export default async function DashboardPage({
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Dashboard</h1>
-            <p className="mt-1 text-sm text-[#3B5A78]">{user.email}</p>
+            <p className="mt-1 text-sm text-[#2E4A63]">{user.email}</p>
           </div>
-          <Link href="/history" className="text-sm font-medium text-[#3B5A78] transition hover:text-[#0F1C2E]">
+          <Link href="/history" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">
             Submission history
           </Link>
         </div>
+
+        {hmrcErrorMessage ? (
+          <div className="mt-4 flex items-start gap-2 rounded-xl border border-red-300 bg-red-50 px-4 py-3">
+            <span className="mt-0.5 inline-block h-2 w-2 shrink-0 rounded-full bg-red-400" />
+            <p className="text-sm text-red-700">{hmrcErrorMessage}</p>
+          </div>
+        ) : null}
 
         {!hasNino ? (
           <div className="mt-6">
@@ -203,7 +222,7 @@ export default async function DashboardPage({
             {businesses.length === 0 ? (
               <div className="mt-8 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-8 text-center">
                 <p className="text-base font-medium text-[#0F1C2E]">No businesses yet</p>
-                <p className="mt-2 text-sm text-[#3B5A78]">
+                <p className="mt-2 text-sm text-[#2E4A63]">
                   Connect your HMRC account to import your businesses automatically.
                 </p>
                 <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -242,11 +261,11 @@ export default async function DashboardPage({
                         <div className="flex flex-wrap items-center justify-between gap-4">
                           <div className="flex flex-wrap items-center gap-3">
                             <h2 className="text-lg font-medium text-[#0F1C2E]">{business.name}</h2>
-                            {businessType ? <span className="text-sm text-[#3B5A78]">{businessType}</span> : null}
+                            {businessType ? <span className="text-sm text-[#2E4A63]">{businessType}</span> : null}
                             {badge}
                           </div>
                           <div className="flex items-center gap-4">
-                            <Link href={`/edit-business/${business.id}`} className="text-sm text-[#3B5A78] transition hover:text-[#0F1C2E]">
+                            <Link href={`/edit-business/${business.id}`} className="text-sm text-[#2E4A63] transition hover:text-[#0F1C2E]">
                               Edit
                             </Link>
                             <Link href={`/business/${business.id}`} className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-3 py-1.5 text-sm text-[#0F1C2E] transition hover:bg-[#B8D0EB]">
@@ -257,7 +276,7 @@ export default async function DashboardPage({
 
                         {lastSub ? (
                           <div className="mt-4 border-t border-[#B8D0EB] pt-4">
-                            <p className="text-xs text-[#3B5A78]">
+                            <p className="text-xs text-[#2E4A63]">
                               Last submission —{" "}
                               <span className="text-[#0F1C2E]">{formatDate(lastSub.quarter_start)} to {formatDate(lastSub.quarter_end)}</span>
                               {" · "}Turnover: <span className="text-[#0F1C2E]">{formatCurrency(Number(lastSub.turnover))}</span>
@@ -267,7 +286,7 @@ export default async function DashboardPage({
                           </div>
                         ) : (
                           <div className="mt-4 border-t border-[#B8D0EB] pt-4">
-                            <p className="text-xs text-[#3B5A78]">No submissions yet.</p>
+                            <p className="text-xs text-[#2E4A63]">No submissions yet.</p>
                           </div>
                         )}
                       </div>

@@ -47,14 +47,14 @@ export default function LoginPage() {
             <h1 className="text-2xl font-normal tracking-tight text-[#0F1C2E]">Log in</h1>
             <Link
               href="/"
-              className="text-sm text-[#3B5A78] underline underline-offset-4 transition hover:text-[#0F1C2E]"
+              className="text-sm text-[#2E4A63] underline underline-offset-4 transition hover:text-[#0F1C2E]"
             >
               Home
             </Link>
           </div>
 
           {checkingSession ? (
-            <p className="mt-6 text-sm text-[#3B5A78]">Checking session...</p>
+            <p className="mt-6 text-sm text-[#2E4A63]">Checking session...</p>
           ) : (
             <>
               <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -69,7 +69,7 @@ export default function LoginPage() {
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0]"
+                    className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#2E4A63] focus:border-[#2E88D0]"
                   />
                 </div>
 
@@ -84,7 +84,7 @@ export default function LoginPage() {
                     placeholder="Enter password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#3B5A78] focus:border-[#2E88D0]"
+                    className="w-full rounded-xl border border-[#B8D0EB] bg-white px-4 py-3 text-[#0F1C2E] outline-none transition placeholder:text-[#2E4A63] focus:border-[#2E88D0]"
                   />
                 </div>
 
@@ -98,7 +98,7 @@ export default function LoginPage() {
               </form>
 
               {message ? (
-                <p className="mt-4 text-sm text-[#3B5A78]">{message}</p>
+                <p className="mt-4 text-sm text-[#2E4A63]">{message}</p>
               ) : null}
             </>
           )}

@@ -48,6 +48,7 @@ export async function sendSubmissionConfirmation(params: SubmissionConfirmationP
     year: "numeric",
   });
 
+  try {
   await resend.emails.send({
     from: "Flonancial <hello@flonancial.co.uk>",
     to: toEmail,
@@ -92,4 +93,7 @@ export async function sendSubmissionConfirmation(params: SubmissionConfirmationP
       </div>
     `,
   });
+  } catch (err) {
+    // Silently fail — email is non-critical
+  }
 }
