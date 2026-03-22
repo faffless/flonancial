@@ -16,9 +16,8 @@ export default function AboutPage() {
                 Flonancial is a simple, modern Making Tax Digital service primarily built for
                 self-employed people and landlords but eventually it will be for businesses of every size. We created it to make MTD easier, more accessible, and
                 genuinely affordable, because the real cost of building and running a digital service like this can be
-                kept low. That is why we are able to offer our core service for free, while we continue developing
-                optional extras and premium features for the future. Our goal is straightforward: earn trust by delivering
-                a reliable service first, then give customers the choice to upgrade only if they want more.
+                kept low. That is why Flonancial is free. Our goal is straightforward: earn trust by delivering
+                a reliable service that people actually want to use.
                 It lets you connect directly to HMRC, log your quarterly income and expenses, and submit
                 your MTD updates without needing an accountant or expensive software. The name comes from the idea of finances that just flow — simple, friction-free, and
                 straightforward. That's what we're building.
@@ -48,8 +47,7 @@ export default function AboutPage() {
                 to HMRC. We are actively working toward full HMRC recognition and production API access.
               </p>
               <p className="mt-3">
-                Flonancial is completely free to use. We plan to introduce simple,
-                low-cost upgrades and optional additional services in future.
+                Flonancial is completely free to use.
               </p>
             </div>
 

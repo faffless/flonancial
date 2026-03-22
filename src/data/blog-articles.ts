@@ -51,7 +51,7 @@ export const blogArticles: BlogArticle[] = [
       <p>Each quarterly submission sends three numbers: your turnover, your expenses, and any other business income (usually zero). That's it. HMRC never sees your individual transactions — the record-keeping obligation sits with you.</p>
 
       <h2>Getting started</h2>
-      <p>Flonancial is free for individuals and always will be. Create an account, connect to HMRC once, and you're ready to submit your first quarterly update using your existing spreadsheet.</p>
+      <p>Flonancial is completely free. Create an account, connect to HMRC once, and you're ready to submit your first quarterly update using your existing spreadsheet.</p>
     `,
   },
   {
@@ -74,7 +74,7 @@ export const blogArticles: BlogArticle[] = [
       </ul>
 
       <h2>Why is Flonancial free?</h2>
-      <p>Flonancial is free for individual sole traders and landlords, and always will be. Our future revenue model is paid plans for accountants managing multiple clients. If you're filing your own returns, you'll never pay.</p>
+      <p>Flonancial is free for everyone — sole traders, landlords, and accountants. No card required, no trial period, no catch.</p>
 
       <h2>How it works</h2>
       <ol>
@@ -299,7 +299,7 @@ export const blogArticles: BlogArticle[] = [
       <p>If you work from home, you can also claim a proportion of household costs or use HMRC's simplified expenses flat rate.</p>
 
       <h2>Getting started with Flonancial</h2>
-      <p>Flonancial is free for sole traders and always will be. Upload your spreadsheet, pick your totals, and submit to HMRC. No accounting software needed, no monthly fees, no learning curve.</p>
+      <p>Flonancial is completely free. Upload your spreadsheet, pick your totals, and submit to HMRC. No accounting software needed, no monthly fees, no learning curve.</p>
     `,
   },
   {
@@ -537,7 +537,7 @@ export const blogArticles: BlogArticle[] = [
       <h2>How to get started</h2>
       <ol>
         <li>Sign up for MTD on gov.uk (allow up to 72 hours for processing)</li>
-        <li>Choose compatible software (Flonancial is free for individuals)</li>
+        <li>Choose compatible software (Flonancial is free)</li>
         <li>Connect to HMRC through the software</li>
         <li>Submit your first quarterly update after 5 July 2026</li>
       </ol>
@@ -608,7 +608,7 @@ export const blogArticles: BlogArticle[] = [
 
       <h3>Flonancial</h3>
       <ul>
-        <li><strong>Cost:</strong> Free for individuals, forever</li>
+        <li><strong>Cost:</strong> Free</li>
         <li><strong>Type:</strong> Bridging software</li>
         <li><strong>How it works:</strong> Upload your spreadsheet, pick your figures, submit to HMRC</li>
         <li><strong>Best for:</strong> Sole traders and landlords who already use spreadsheets</li>
