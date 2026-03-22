@@ -18,72 +18,117 @@ export default function AboutPage() {
           <div className="mt-8 space-y-8 text-sm leading-7 text-[#2E4A63]">
 
             <div>
-              <h2 className="text-base font-medium text-[#0F1C2E]">What Flonancial is</h2>
+              <h2 className="text-base font-medium text-[#0F1C2E]">Why I built this</h2>
               <p className="mt-3">
-                Flonancial is a simple, modern Making Tax Digital service primarily built for
-                self-employed people and landlords but eventually it will be for businesses of every size. We created it to make MTD easier, more accessible, and
-                genuinely affordable, because the real cost of building and running a digital service like this can be
-                kept low. That is why Flonancial is free. Our goal is straightforward: earn trust by delivering
-                a reliable service that people actually want to use.
-                It lets you connect directly to HMRC, log your quarterly income and expenses, and submit
-                your MTD updates without needing an accountant or expensive software. The name comes from the idea of finances that just flow — simple, friction-free, and
-                straightforward. That's what we're building.
+                I work as a finance officer. I spend my days inside the kind of software that
+                Making Tax Digital is about to push millions of people toward — large, expensive
+                platforms built by companies that have been bolting on features for years without
+                stopping to ask whether any of it actually works properly.
+              </p>
+              <p className="mt-3">
+                When something goes wrong with these products, you raise a ticket. A support
+                agent in another country relays your message to a development team who seem
+                unfamiliar with their own system. They suggest things. You wait. Weeks pass.
+                The problem gets solved eventually, but the experience leaves you wondering
+                why you&apos;re paying for this.
+              </p>
+              <p className="mt-3">
+                When I heard that sole traders and landlords would soon be required to submit
+                quarterly updates to HMRC digitally, I thought about all the people who would
+                be forced into that same world — not because they need accounting software,
+                but because the law now says they need compatible software to send three
+                numbers to HMRC four times a year.
+              </p>
+              <p className="mt-3">
+                The mechanics of a quarterly update are simple. You&apos;re sending your
+                turnover, your expenses, and any other income. That&apos;s it. There is no
+                good reason to charge people a monthly subscription for that.
               </p>
             </div>
 
             <div>
-              <h2 className="text-base font-medium text-[#0F1C2E]">Why we built it</h2>
+              <h2 className="text-base font-medium text-[#0F1C2E]">What Flonancial does</h2>
               <p className="mt-3">
-                Making Tax Digital for Income Tax is coming for millions of self-employed people in the UK.
-                From April 2026, sole traders earning over £50,000 are legally required to submit quarterly
-                updates to HMRC digitally. More will follow in 2027 and 2028.
+                Flonancial is free bridging software for Making Tax Digital. It connects your
+                existing spreadsheet to HMRC so you can submit your quarterly updates directly,
+                without switching to accounting software or paying a monthly fee.
               </p>
               <p className="mt-3">
-                Most existing MTD software is added on to old systems, built for accountants or businesses with complex needs.
-                It's expensive, complicated, and overkill for a freelancer, sole trader, landlord or business with straightforward
-                income. We think that's wrong. Flonancial is built specifically for people who just want to
-                meet their obligations simply, quickly, and without paying through the nose.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="text-base font-medium text-[#0F1C2E]">Where we are now</h2>
-              <p className="mt-3">
-                Flonancial is currently in beta. The core MTD submission flow is built and working —
-                you can connect your HMRC account, log quarterly figures, and submit updates directly
-                to HMRC. We are actively working toward full HMRC recognition and production API access.
+                Upload your spreadsheet, pick the cells containing your turnover and expenses,
+                review your figures, and submit. That&apos;s the whole process. Your spreadsheet
+                is parsed entirely in your browser — the file never touches our servers.
               </p>
               <p className="mt-3">
-                Flonancial is completely free to use.
+                I connect to HMRC using their official OAuth system, so I never see or store
+                your Government Gateway password. The only data I keep is the summary figures
+                you submit and the HMRC confirmation reference.
+              </p>
+              <p className="mt-3">
+                The name comes from the idea of finances that just flow — simple,
+                friction-free, and straightforward.
               </p>
             </div>
 
             <div>
-              <h2 className="text-base font-medium text-[#0F1C2E]">What makes us different</h2>
+              <h2 className="text-base font-medium text-[#0F1C2E]">Who this is for</h2>
               <p className="mt-3">
-                We are not trying to replace your accountant or become a full accounting suite.
-                Flonancial currently does one thing — MTD quarterly submissions.
-                No bloat, no faff, no confusing dashboards. Just connect, log your figures, submit.
+                From April 2026, sole traders and landlords earning over £50,000 must submit
+                quarterly updates to HMRC digitally. The threshold drops to £30,000 in 2027
+                and £20,000 in 2028. Millions of people will need compatible software.
               </p>
               <p className="mt-3">
-                We use HMRC's official OAuth system so we never see or store your HMRC login details.
-                Your data is yours.
+                If you already keep decent records in a spreadsheet and just need a way to
+                get your figures to HMRC, Flonancial is built for you. If your affairs are
+                more complex and you need invoicing, payroll, or bank feeds, a full accounting
+                platform is probably the right choice — but you shouldn&apos;t have to pay
+                for all of that just to submit a quarterly update.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-base font-medium text-[#0F1C2E]">Where things stand</h2>
+              <p className="mt-3">
+                Flonancial has completed HMRC sandbox testing and is awaiting production
+                approval. Once approved, you&apos;ll be able to connect your HMRC account
+                and start submitting real quarterly updates.
+              </p>
+              <p className="mt-3">
+                In the meantime, you can create an account, explore the interface, and try
+                the <a href="/demo" className="text-[#2E88D0] hover:opacity-75">demo</a> to
+                see how it works.
               </p>
             </div>
 
             <div>
               <h2 className="text-base font-medium text-[#0F1C2E]">The company</h2>
               <p className="mt-3">
-                Flonancial is operated by Flonancial Ltd, a company registered in England and Wales.
-                Company number: 17090724. Registered office: 104 Finborough Road, London, SW10 9ED.
+                Flonancial is built and operated by me — Will. It&apos;s a side
+                project born out of genuine frustration with how the software industry treats
+                its users. I registered Flonancial Ltd to do this properly.
               </p>
               <p className="mt-3">
-                We are a small, independent team. No venture capital, no corporate agenda. Just a
-                straightforward product built to solve a real problem for real people.
+                Flonancial Ltd is registered in England and Wales. Company number: 17090724.
+                Registered office: 104 Finborough Road, London, SW10 9ED.
               </p>
               <p className="mt-3">
-                Get in touch at hello@flonancial.co.uk — we read every email.
+                No venture capital, no investors, no corporate backing. Just a straightforward
+                product that does what it says, built by someone who thinks you shouldn&apos;t
+                have to pay through the nose to meet a legal obligation.
               </p>
+              <p className="mt-3">
+                If you have questions, feedback, or something&apos;s not working, email me
+                directly at <a href="mailto:hello@flonancial.co.uk" className="text-[#2E88D0] hover:opacity-75">hello@flonancial.co.uk</a>.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-5 text-center">
+              <p className="text-base font-medium text-[#0F1C2E]">Ready to try it?</p>
+              <p className="mt-2 text-sm text-[#2E4A63]">
+                Create a free account and see how simple MTD submissions can be.
+              </p>
+              <a href="/signup" className="mt-4 inline-block rounded-xl bg-[#2E88D0] px-6 py-2.5 text-sm font-medium text-white transition hover:opacity-90">
+                Create my free account
+              </a>
             </div>
 
           </div>
