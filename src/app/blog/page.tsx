@@ -33,7 +33,7 @@ export default function BlogIndexPage() {
         </p>
 
         <div className="mt-8 space-y-4">
-          {blogArticles.map((article) => (
+          {[...blogArticles].reverse().map((article) => (
             <Link
               key={article.slug}
               href={`/blog/${article.slug}`}

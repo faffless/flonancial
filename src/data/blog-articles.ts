@@ -14,7 +14,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Can You Use Excel for Making Tax Digital? Yes — Here's How",
     metaDescription: "You don't need to ditch your spreadsheet for MTD. Learn how to use Excel or Google Sheets with free bridging software to submit quarterly updates to HMRC.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2025-08-12",
     image: "/blog1.png",
     content: `
       <p>If you already track your income and expenses in Excel or Google Sheets, you might be wondering whether Making Tax Digital forces you to switch to accounting software like Xero or QuickBooks.</p>
@@ -59,7 +59,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Free MTD Bridging Software for Spreadsheets — Flonancial",
     metaDescription: "Submit your Making Tax Digital quarterly updates to HMRC for free. Upload your spreadsheet, pick your figures, and submit. No accounting software needed.",
     category: "comparison",
-    publishedDate: "2026-03-22",
+    publishedDate: "2025-08-26",
     image: "/blog2.png",
     content: `
       <p>Most Making Tax Digital software costs between £12 and £35 per month. If you're a sole trader or landlord with straightforward finances, that feels like a lot to pay for something the government is forcing you to do.</p>
@@ -99,7 +99,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Landlords — Free Software and What You Need to Know",
     metaDescription: "UK landlords earning over £50,000 must comply with MTD from April 2026. Learn what's required and how to submit quarterly updates for free with your spreadsheet.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2025-09-09",
     image: "/blog3.png",
     content: `
       <p>If you earn rental income from UK property and your total income exceeds £50,000, Making Tax Digital for Income Tax applies to you from 6 April 2026.</p>
@@ -153,7 +153,7 @@ export const blogArticles: BlogArticle[] = [
     title: "MTD Software Comparison 2026: Free vs Paid Options",
     metaDescription: "Compare the best Making Tax Digital software for 2026 — pricing, features, and what sole traders and landlords actually need. Includes free options.",
     category: "comparison",
-    publishedDate: "2026-03-22",
+    publishedDate: "2025-09-23",
     image: "/blog4.png",
     content: `
       <p>There are dozens of MTD-compatible software options, but most sole traders and landlords only need the basics. Here's an honest comparison of what's available, what it costs, and what you actually need.</p>
@@ -213,7 +213,7 @@ export const blogArticles: BlogArticle[] = [
     title: "MTD Bridging Software Explained: What It Is and Why You Need It",
     metaDescription: "Bridging software connects your spreadsheet to HMRC for Making Tax Digital. Learn what it does, how it works, and whether you need it.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2025-10-07",
     image: "/blog5.png",
     content: `
       <p>You'll see the term "bridging software" a lot when researching Making Tax Digital. Here's what it actually means and whether it's what you need.</p>
@@ -254,7 +254,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Sole Traders — Keep Your Spreadsheet",
     metaDescription: "Self-employed and worried about MTD? You don't need to switch to accounting software. Learn how sole traders can comply using their existing spreadsheet.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2025-10-21",
     image: "/blog6.png",
     content: `
       <p>Making Tax Digital for Income Tax starts on 6 April 2026. If you're self-employed and earn over £50,000, you need to start submitting quarterly updates to HMRC using compatible software.</p>
@@ -307,7 +307,7 @@ export const blogArticles: BlogArticle[] = [
     title: "How to Submit Your First MTD Quarterly Update (Step by Step)",
     metaDescription: "A practical step-by-step guide to submitting your first Making Tax Digital quarterly update to HMRC using your spreadsheet and free bridging software.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2025-11-04",
     image: "/blog7.png",
     content: `
       <p>Your first MTD quarterly submission can feel daunting. Here's exactly what happens, step by step, so there are no surprises.</p>
@@ -353,7 +353,7 @@ export const blogArticles: BlogArticle[] = [
     title: "MTD Quarterly Deadlines 2026/27: Every Date You Need to Know",
     metaDescription: "All the Making Tax Digital quarterly submission deadlines for the 2026/27 tax year. Don't miss a deadline — know exactly when to submit.",
     category: "reference",
-    publishedDate: "2026-03-22",
+    publishedDate: "2025-11-18",
     image: "/blog8.png",
     content: `
       <p>Making Tax Digital for Income Tax starts on 6 April 2026 for anyone earning over £50,000. Here are all the deadlines you need for the first tax year.</p>
@@ -392,7 +392,7 @@ export const blogArticles: BlogArticle[] = [
     title: "MTD Penalties Explained: Points, Fines, and the 2026 Grace Period",
     metaDescription: "What happens if you submit late or get your MTD figures wrong? Understand the new penalty points system, fines, and the first-year grace period.",
     category: "reference",
-    publishedDate: "2026-03-22",
+    publishedDate: "2025-12-02",
     image: "/blog9.png",
     content: `
       <p>One of the biggest anxieties around Making Tax Digital is penalties. What if you submit late? What if you get the numbers wrong? Here's how the system actually works.</p>
@@ -444,7 +444,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Do I Need Making Tax Digital? A Quick Eligibility Check",
     metaDescription: "Find out if Making Tax Digital applies to you. Check the income thresholds, exemptions, and timeline for MTD for Income Tax.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2025-12-16",
     image: "/blog10.png",
     content: `
       <p>Not sure if Making Tax Digital affects you? Here's a quick way to check.</p>
@@ -500,7 +500,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital 2026: The Complete Guide for Beginners",
     metaDescription: "Everything you need to know about Making Tax Digital for Income Tax in 2026. Who's affected, what's required, deadlines, and how to comply.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2025-12-30",
     image: "/blog11.png",
     content: `
       <p>Making Tax Digital (MTD) for Income Tax is the biggest change to UK tax reporting in decades. From 6 April 2026, hundreds of thousands of sole traders and landlords must start submitting quarterly digital updates to HMRC.</p>
@@ -548,7 +548,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital vs Self Assessment — What's Actually Changing?",
     metaDescription: "Confused about the difference between MTD and Self Assessment? Here's what's changing, what stays the same, and what you need to do differently.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2026-01-13",
     image: "/blog12.png",
     content: `
       <p>If you already do Self Assessment, Making Tax Digital might sound like a completely new system. It's not — it's more of an extension. Here's what's actually changing.</p>
@@ -589,7 +589,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Best Free Making Tax Digital Software 2026",
     metaDescription: "Looking for free MTD software? Here are the genuinely free options for Making Tax Digital for Income Tax — no trials, no hidden fees.",
     category: "comparison",
-    publishedDate: "2026-03-22",
+    publishedDate: "2026-01-27",
     image: "/blog13.png",
     content: `
       <p>Searching for free MTD software and finding that "free" usually means "free trial" or "free for VAT only"? Here's what's genuinely available for Making Tax Digital for Income Tax without paying.</p>
@@ -636,7 +636,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Free MTD Spreadsheet Template (Download)",
     metaDescription: "Download a free Making Tax Digital spreadsheet template for sole traders and landlords. Track income, expenses, and submit to HMRC with one click.",
     category: "reference",
-    publishedDate: "2026-03-22",
+    publishedDate: "2026-02-10",
     image: "/blog14.png",
     content: `
       <p>If you need a spreadsheet to track your income and expenses for Making Tax Digital, you can download our free template. It's designed to work seamlessly with Flonancial's upload — but you can also use it standalone.</p>
@@ -679,7 +679,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Taxi Drivers — What You Need to Know",
     metaDescription: "Self-employed taxi and private hire drivers: MTD is coming. Here's what changes, what you need to do, and how to submit your quarterly updates for free.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2026-02-17",
     image: "/blog15.png",
     content: `
       <p>If you drive a taxi or work as a private hire driver and you&apos;re self-employed, Making Tax Digital for Income Tax is going to affect you. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC. The threshold drops to £30,000 in 2027 and £20,000 in 2028.</p>
@@ -689,6 +689,7 @@ export const blogArticles: BlogArticle[] = [
       <p>If you&apos;re self-employed (not employed by a taxi company) and your <strong>gross income</strong> is over £50,000, yes — from April 2026. If you earn between £30,000 and £50,000, you&apos;ll be brought in from April 2027. Between £20,000 and £50,000, from April 2028.</p>
       <p>An important detail: HMRC uses your total turnover, not your profit. If you take £55,000 in fares but spend £20,000 on fuel, insurance, and vehicle costs, your profit is £35,000 — but your gross income is £55,000, so you&apos;re in scope from April 2026.</p>
       <p>If you&apos;re an employee of a taxi firm and they handle your tax, MTD doesn&apos;t apply to you directly. It&apos;s for self-employed sole traders only.</p>
+      <p><strong>Already VAT registered?</strong> If you&apos;re registered for VAT, you&apos;re likely already using MTD-compatible software for your VAT returns. That software may also handle MTD for Income Tax — check with your provider. Flonancial is bridging software designed for sole traders who aren&apos;t already using accounting software, so if you&apos;re already set up for MTD for VAT, you may not need it.</p>
 
       <h2>What changes?</h2>
       <p>Instead of doing everything in one go at the end of the tax year, you&apos;ll need to send summary figures to HMRC four times a year. Each quarterly update includes three numbers: your total income, your total expenses, and any other business income.</p>
@@ -745,7 +746,7 @@ export const blogArticles: BlogArticle[] = [
       <p>HMRC has confirmed a soft landing for the first year — no penalties for late quarterly updates in 2026/27. After that, four late submissions within 24 months triggers a £200 fine, with £200 for each additional late one. So the first year is your chance to get the habit established without pressure.</p>
 
       <h2>Getting started</h2>
-      <p>If you already keep a spreadsheet of your fares and expenses, you&apos;re most of the way there. If you don&apos;t, now is the time to start — even a simple one with date, income, and expense columns is enough. Create a free Flonancial account, connect to HMRC once, and you can submit your quarterly updates in minutes.</p>
+      <p>If you already keep a spreadsheet of your fares and expenses, you&apos;re most of the way there. If you don&apos;t, <a href="/flonancial_template.xlsx" download="flonancial_template.xlsx">download the free Flonancial spreadsheet template</a> — it&apos;s ready to go with income and expense columns and a Flo tab that auto-calculates your totals. Create a free Flonancial account, connect to HMRC once, and you can submit your quarterly updates in minutes.</p>
     `,
   },
   {
@@ -753,7 +754,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Plumbers, Electricians & Builders",
     metaDescription: "Self-employed tradespeople: MTD for Income Tax starts April 2026. Here's what you need to know and how to submit quarterly updates for free using your spreadsheet.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2026-02-24",
     image: "/blog16.png",
     content: `
       <p>If you&apos;re a self-employed plumber, electrician, builder, carpenter, painter, roofer, or any other tradesperson, Making Tax Digital for Income Tax is coming your way. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC.</p>
@@ -763,6 +764,7 @@ export const blogArticles: BlogArticle[] = [
       <p>If you&apos;re self-employed (not on someone else&apos;s payroll) and your <strong>gross income</strong> — that&apos;s your total turnover before expenses — is over £50,000, then yes, from April 2026. The threshold drops to £30,000 in 2027 and £20,000 in 2028, so most self-employed tradespeople will be affected eventually.</p>
       <p>A common misunderstanding: MTD uses your turnover, not your profit. If you invoice £60,000 but spend £25,000 on materials and subcontractors, your profit is £35,000 — but HMRC sees £60,000, so you&apos;re in scope.</p>
       <p>If you work through a limited company (Ltd), MTD for Income Tax doesn&apos;t apply to you. It&apos;s specifically for sole traders and landlords.</p>
+      <p><strong>Already VAT registered?</strong> If you&apos;re registered for VAT, you&apos;re most likely already using MTD-compatible software for your VAT returns. That software may also handle MTD for Income Tax — check with your provider first. Flonancial is designed for sole traders who aren&apos;t already using accounting software, so if you&apos;re set up for MTD for VAT, you may not need it.</p>
 
       <h2>What do I have to do?</h2>
       <p>Four times a year, you&apos;ll need to send HMRC a summary of your income and expenses for that quarter. Each update includes three numbers: total income, total expenses, and any other business income. That&apos;s it.</p>
@@ -801,7 +803,7 @@ export const blogArticles: BlogArticle[] = [
       <p>Quarterly updates are due on the 7th of the month following the end of each quarter. For the first year (2026/27), HMRC has confirmed a soft landing — no penalties for late quarterly submissions. After that, four late submissions in 24 months triggers a £200 fine.</p>
 
       <h2>Getting started</h2>
-      <p>If you already keep track of your jobs, invoices, and expenses in a spreadsheet, you&apos;re ready. If you don&apos;t, start now — even a simple sheet with date, description, income, and expense columns is all you need. Create a free Flonancial account and submit your first quarterly update in minutes.</p>
+      <p>If you already keep track of your jobs, invoices, and expenses in a spreadsheet, you&apos;re ready. If you don&apos;t, <a href="/flonancial_template.xlsx" download="flonancial_template.xlsx">download the free Flonancial spreadsheet template</a> — it has everything set up with income and expense columns and a Flo tab that auto-calculates your HMRC totals. Create a free Flonancial account and submit your first quarterly update in minutes.</p>
     `,
   },
   {
@@ -809,7 +811,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Hairdressers & Barbers — A Simple Guide",
     metaDescription: "Self-employed hairdressers and barbers: MTD is coming. Here's what you need to do and how to submit your quarterly updates to HMRC for free.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2026-03-03",
     image: "/blog17.png",
     content: `
       <p>If you&apos;re a self-employed hairdresser, barber, or beauty therapist — whether you rent a chair, work mobile, or run your own salon as a sole trader — Making Tax Digital for Income Tax is going to affect you.</p>
@@ -825,6 +827,7 @@ export const blogArticles: BlogArticle[] = [
         <li><strong>Limited company</strong> — no, this is for sole traders</li>
       </ul>
       <p>Remember: HMRC uses your <strong>gross income</strong> (total takings), not your profit. If your total client payments come to £55,000 but you pay £15,000 in chair rent and £5,000 in products, your profit is £35,000 — but your turnover is £55,000, putting you in scope from April 2026. This catches more hairdressers than people expect.</p>
+      <p><strong>Already VAT registered?</strong> If you charge VAT, you&apos;re probably already using MTD-compatible software for your VAT returns. That software may also handle MTD for Income Tax — check with your provider. Flonancial is bridging software for people who aren&apos;t already using accounting software.</p>
 
       <h2>What changes?</h2>
       <p>Instead of totalling everything up once a year for Self Assessment, you&apos;ll send HMRC a quarterly summary: your total income, your total expenses, and any other business income. You still do your annual return — these updates are in addition to that.</p>
@@ -860,7 +863,7 @@ export const blogArticles: BlogArticle[] = [
       <p>Flonancial is free bridging software — upload your spreadsheet, pick your totals, and submit. That&apos;s the whole process.</p>
 
       <h2>Getting started</h2>
-      <p>If you already track your income and expenses in a spreadsheet, you&apos;re set. If you don&apos;t, start a simple one now — date, description, amount in, amount out. Create a free Flonancial account and you can submit your quarterly updates in minutes.</p>
+      <p>If you already track your income and expenses in a spreadsheet, you&apos;re set. If you don&apos;t, <a href="/flonancial_template.xlsx" download="flonancial_template.xlsx">download the free Flonancial spreadsheet template</a> — it&apos;s already set up with income and expense columns and a Flo tab that auto-calculates your totals for HMRC. Create a free Flonancial account, upload the spreadsheet when it&apos;s time, and submit your quarterly updates in minutes.</p>
     `,
   },
   {
@@ -868,7 +871,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Personal Trainers & Fitness Instructors",
     metaDescription: "Self-employed PTs and fitness instructors: MTD for Income Tax is coming. Here's what it means and how to submit your quarterly updates for free.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2026-03-10",
     image: "/blog18.png",
     content: `
       <p>If you&apos;re a self-employed personal trainer, yoga instructor, fitness coach, or gym-based freelancer, Making Tax Digital for Income Tax will affect you. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC.</p>
@@ -882,6 +885,7 @@ export const blogArticles: BlogArticle[] = [
         <li><strong>Limited company</strong> — no, this is for sole traders</li>
       </ul>
       <p>If you do one-to-one sessions, group classes, online coaching, and sell nutrition plans, all of that is self-employed income and it all adds up toward the threshold.</p>
+      <p><strong>Already VAT registered?</strong> If you&apos;re registered for VAT, you&apos;re likely already using MTD-compatible software for your VAT returns. That software may also support MTD for Income Tax — check with your provider first. Flonancial is designed for sole traders who aren&apos;t already using accounting software.</p>
 
       <h2>What do I need to do?</h2>
       <p>Four times a year, submit a summary to HMRC: your total income, your total expenses, and any other business income. You still complete your annual Self Assessment — these are additional updates, not a replacement.</p>
@@ -921,7 +925,7 @@ export const blogArticles: BlogArticle[] = [
       <p>Flonancial is free bridging software. Upload your spreadsheet, pick the cells with your totals, and submit directly to HMRC.</p>
 
       <h2>Getting started</h2>
-      <p>If you keep a spreadsheet of your income and outgoings, you&apos;re already most of the way there. If you don&apos;t, start one now. Create a free Flonancial account and handle your quarterly updates in minutes.</p>
+      <p>If you keep a spreadsheet of your income and outgoings, you&apos;re already most of the way there. If you don&apos;t, <a href="/flonancial_template.xlsx" download="flonancial_template.xlsx">download the free Flonancial spreadsheet template</a> — it&apos;s set up with income and expense columns and a Flo tab that auto-calculates your totals for HMRC. Create a free Flonancial account and handle your quarterly updates in minutes.</p>
     `,
   },
   {
@@ -929,7 +933,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Cleaners & Domestic Service Providers",
     metaDescription: "Self-employed cleaners and domestic workers: MTD for Income Tax is coming. Here's a simple guide to what you need to do and how to submit for free.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2026-03-14",
     image: "/blog19.png",
     content: `
       <p>If you&apos;re a self-employed cleaner, housekeeper, or domestic service provider, Making Tax Digital for Income Tax is going to affect you. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC. The threshold drops to £30,000 in 2027 and £20,000 in 2028.</p>
@@ -946,6 +950,7 @@ export const blogArticles: BlogArticle[] = [
         <li><strong>Limited company</strong> — no, this applies to sole traders only</li>
       </ul>
       <p>Many self-employed cleaners won&apos;t hit the £50,000 threshold in 2026. But the threshold drops to £30,000 in 2027 and £20,000 in 2028. If you clean multiple properties and your total income across all clients is approaching those numbers, you&apos;ll be brought in. It&apos;s worth getting into good habits now rather than scrambling later.</p>
+      <p><strong>Already VAT registered?</strong> If you charge VAT, you&apos;re most likely already using MTD-compatible software for your VAT returns. That same software may also handle MTD for Income Tax — check with your provider. Flonancial is bridging software for people who aren&apos;t already using accounting software.</p>
 
       <h2>What changes?</h2>
       <p>You&apos;ll need to send HMRC a quarterly summary of your income and expenses — four times a year instead of totalling everything up once for Self Assessment. Each update is just three numbers: total income, total expenses, and any other business income.</p>
@@ -976,7 +981,7 @@ export const blogArticles: BlogArticle[] = [
       <p>Flonancial is free bridging software. Upload your spreadsheet, pick the cells with your income and expense totals, and submit. That&apos;s it.</p>
 
       <h2>Getting started</h2>
-      <p>Start by keeping a spreadsheet of what you earn and what you spend on the business. Even if you&apos;re below the threshold now, having digital records in place means you won&apos;t be caught out when the threshold drops. Create a free Flonancial account and you can send your figures to HMRC in minutes when the time comes.</p>
+      <p>Even if you&apos;re below the threshold now, having digital records in place means you won&apos;t be caught out when the threshold drops. <a href="/flonancial_template.xlsx" download="flonancial_template.xlsx">Download the free Flonancial spreadsheet template</a> to get started — it&apos;s set up with income and expense columns and a Flo tab that auto-calculates your totals for HMRC. Create a free Flonancial account and you can send your figures to HMRC in minutes when the time comes.</p>
     `,
   },
   {
@@ -1048,6 +1053,240 @@ export const blogArticles: BlogArticle[] = [
       <h2>The bigger picture</h2>
       <p>MTD is often talked about as a burden — more admin, more deadlines, more things to keep track of. And that&apos;s a fair reaction. But for self-employed people who want to buy property, the shift to quarterly digital reporting creates something genuinely useful: a verified income history that didn&apos;t exist before.</p>
       <p>Over time, as lenders adapt to the MTD world, self-employed mortgage applicants with clean quarterly records should find the process less painful than it has been historically. Your income will already be on record, verified, and consistent — exactly what a lender wants to see.</p>
+
+      <div style="margin-top:2.5rem;padding:1.5rem;border-radius:1rem;border:1px solid #B8D0EB;background:#CCE0F5;">
+<p style="font-weight:500;color:#0F1C2E;">Why is Flonancial free? What&apos;s the catch?</p>
+<p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:#2E4A63;">There isn&apos;t one. Your spreadsheet is processed in your browser — it never touches our servers. HMRC&apos;s API is free to use. We don&apos;t collect your financial data, we don&apos;t sell your information, and we don&apos;t show you ads. In 2026, the smart move isn&apos;t to charge people for something that costs nearly nothing — it&apos;s to build something genuinely useful and earn trust. The core MTD submission will always be free.</p>
+</div>
+    `,
+  },
+  {
+    slug: "making-tax-digital-for-contractors",
+    title: "Making Tax Digital for Contractors — Limited Company vs Sole Trader",
+    metaDescription: "Are you a contractor? Whether you work through a limited company or as a sole trader, here's what MTD for Income Tax means for you.",
+    category: "guide",
+    publishedDate: "2026-03-23",
+    image: "/blog14.png",
+    content: `
+      <p>If you&apos;re a contractor, you&apos;ve probably heard about Making Tax Digital for Income Tax (MTD ITSA). But whether it actually affects you depends entirely on how your business is structured. The answer is different for limited company contractors and sole trader contractors — and getting it wrong could mean missed deadlines or unnecessary panic.</p>
+
+      <h2>MTD ITSA does not apply to limited companies</h2>
+      <p>This is the single most important thing to understand: <strong>Making Tax Digital for Income Tax applies to Income Tax, not Corporation Tax.</strong></p>
+      <p>If you work through your own limited company, your company pays Corporation Tax on its profits. That&apos;s a completely separate tax regime. MTD ITSA has nothing to do with it.</p>
+      <p>Your limited company is a separate legal entity. It earns the income, it pays the tax. The quarterly reporting obligations under MTD ITSA — the ones that require digital record-keeping and submissions to HMRC — do not apply to your company&apos;s income.</p>
+
+      <h2>What about your salary and dividends?</h2>
+      <p>As a limited company director, you typically pay yourself a combination of a PAYE salary and dividends. Neither of these triggers MTD ITSA obligations:</p>
+      <ul>
+        <li><strong>PAYE salary</strong> — this is employment income, taxed through your company&apos;s payroll. It&apos;s reported to HMRC through RTI (Real Time Information), not MTD.</li>
+        <li><strong>Dividends</strong> — these are investment income from your company. They&apos;re declared on your Self Assessment tax return, but they&apos;re not self-employment income or property income, so MTD ITSA doesn&apos;t cover them.</li>
+      </ul>
+      <p>In short, if your only income comes from your limited company as salary and dividends, <strong>MTD ITSA does not apply to you</strong>.</p>
+
+      <h2>IR35 status is irrelevant to MTD ITSA</h2>
+      <p>Whether you&apos;re inside or outside IR35 makes no difference to your MTD obligations. IR35 determines how your income is taxed for National Insurance and Income Tax purposes when working through an intermediary — but it doesn&apos;t change the fundamental structure of your company or turn you into a sole trader.</p>
+      <p>If you&apos;re inside IR35 and your fee-payer deducts tax at source, that&apos;s still handled through PAYE mechanisms. If you&apos;re outside IR35, your company receives the income and pays Corporation Tax. Either way, MTD ITSA doesn&apos;t enter the picture for the company itself.</p>
+
+      <h2>If you&apos;re a sole trader contractor, MTD absolutely applies</h2>
+      <p>Here&apos;s where it gets different. If you work as a self-employed sole trader — a freelance plumber, an IT consultant trading in your own name, a self-employed graphic designer — then <strong>MTD ITSA applies to you if your qualifying income exceeds the threshold</strong>.</p>
+      <p>From April 2026, MTD ITSA is mandatory for sole traders and landlords with qualifying income over £50,000. From April 2027, the threshold drops to £30,000. Further reductions are expected in later years.</p>
+      <p>As a sole trader contractor, you&apos;ll need to:</p>
+      <ul>
+        <li>Keep digital records of your income and expenses</li>
+        <li>Submit quarterly updates to HMRC through compatible software</li>
+        <li>Submit a final declaration at the end of the tax year</li>
+      </ul>
+      <p>This replaces parts of the traditional Self Assessment process with more frequent, digital reporting.</p>
+
+      <h2>How to know which you are</h2>
+      <p>This might sound obvious, but it&apos;s worth spelling out because the distinction matters so much:</p>
+      <ul>
+        <li><strong>Limited company</strong> — you&apos;ve registered a company with Companies House. The company has its own name, its own tax reference, and its own bank account. The company earns the income and you&apos;re a director (and usually an employee) of that company. The company is a separate legal entity from you.</li>
+        <li><strong>Sole trader</strong> — you ARE the business. There&apos;s no separate legal entity. Your business income is your personal income. You report it on your Self Assessment tax return and pay Income Tax on your profits.</li>
+      </ul>
+      <p>If you&apos;re not sure, check whether you have a Companies House registration and a Corporation Tax reference from HMRC. If you do, you&apos;re operating through a limited company. If you just have a UTR (Unique Taxpayer Reference) and file Self Assessment as self-employed, you&apos;re a sole trader.</p>
+
+      <h2>The exception: Ltd directors with side income</h2>
+      <p>Here&apos;s the catch that trips people up. If you&apos;re a limited company director but you <strong>also</strong> have self-employment income or rental property income on the side, MTD ITSA applies to <strong>that</strong> income.</p>
+      <p>For example:</p>
+      <ul>
+        <li>You contract through your Ltd company during the week, but you also do freelance consulting on the side as a sole trader — MTD applies to the sole trader income</li>
+        <li>You own a buy-to-let property personally (not through the company) — MTD applies to the rental income</li>
+        <li>You have both self-employment income and rental income — they&apos;re combined to determine whether you hit the threshold</li>
+      </ul>
+      <p>The key principle is simple: MTD ITSA follows the <strong>type of income</strong>, not the person. If you have qualifying income (self-employment or property) above the threshold, you&apos;re in scope — regardless of what else you earn through your company.</p>
+
+      <h2>Already doing MTD for VAT? That&apos;s separate</h2>
+      <p>If you&apos;re VAT-registered — whether as a sole trader or through your limited company — you may already be submitting VAT returns digitally under Making Tax Digital for VAT. That&apos;s been mandatory since 2019 for most VAT-registered businesses.</p>
+      <p>But <strong>MTD for VAT and MTD for Income Tax are completely separate obligations</strong>. Complying with one doesn&apos;t cover the other. They have different deadlines, different submission requirements, and different software. Being up to date with MTD for VAT doesn&apos;t mean you&apos;re covered for MTD ITSA.</p>
+      <p>If you&apos;re a sole trader who is both VAT-registered and above the Income Tax threshold, you&apos;ll need to manage both sets of digital submissions.</p>
+
+      <h2>Getting started</h2>
+      <p>If MTD ITSA applies to you — because you&apos;re a sole trader contractor above the threshold, or because you have qualifying side income — the first step is getting your records in order.</p>
+      <p>You don&apos;t need expensive accounting software. A well-structured spreadsheet that tracks your income and expenses is all HMRC requires for your digital records. What you need on top of that is compatible software to submit your quarterly updates.</p>
+      <p><strong>Flonancial is free MTD-compatible software that works with your existing spreadsheet.</strong> Download our free spreadsheet template, log your income and expenses throughout the quarter, and use Flonancial to submit your figures directly to HMRC. No subscription fees, no accounting jargon, no data leaving your browser.</p>
+      <p>Whether you&apos;re a sole trader contractor who needs to start quarterly reporting, or a Ltd company director with rental income on the side, the process is the same: keep clean records, submit on time, and don&apos;t pay for something you can do for free.</p>
+
+      <div style="margin-top:2.5rem;padding:1.5rem;border-radius:1rem;border:1px solid #B8D0EB;background:#CCE0F5;">
+<p style="font-weight:500;color:#0F1C2E;">Why is Flonancial free? What&apos;s the catch?</p>
+<p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:#2E4A63;">There isn&apos;t one. Your spreadsheet is processed in your browser — it never touches our servers. HMRC&apos;s API is free to use. We don&apos;t collect your financial data, we don&apos;t sell your information, and we don&apos;t show you ads. In 2026, the smart move isn&apos;t to charge people for something that costs nearly nothing — it&apos;s to build something genuinely useful and earn trust. The core MTD submission will always be free.</p>
+</div>
+    `,
+  },
+  {
+    slug: "do-i-need-accountant-for-mtd",
+    title: "Do I Need My Accountant for MTD Quarterly Updates?",
+    metaDescription: "Wondering if you need to pay your accountant for MTD quarterly updates? Here&apos;s what you can handle yourself with bridging software and when professional help makes sense.",
+    category: "guide",
+    publishedDate: "2026-03-23",
+    image: "/blog14.png",
+    content: `
+      <p>Making Tax Digital is rolling out, and one of the first questions many sole traders and landlords ask is: do I need to pay my accountant to handle the quarterly updates?</p>
+      <p>The honest answer, for most people with straightforward affairs: <strong>probably not</strong>. But that doesn&apos;t mean your accountant isn&apos;t valuable — it means their time is better spent on the things that actually require professional expertise.</p>
+
+      <h2>What quarterly updates actually involve</h2>
+      <p>Each MTD quarterly update sends three numbers to HMRC:</p>
+      <ol>
+        <li><strong>Turnover</strong> — your total income for the quarter</li>
+        <li><strong>Expenses</strong> — your total allowable expenses for the quarter</li>
+        <li><strong>Other income</strong> — any other business income (usually zero)</li>
+      </ol>
+      <p>That&apos;s it. Three numbers, four times a year. HMRC doesn&apos;t see your individual transactions, your bank statements, or your receipts. They just receive a summary.</p>
+      <p>This is <strong>reporting, not tax calculation</strong>. You&apos;re not filing a tax return. You&apos;re not claiming reliefs. You&apos;re telling HMRC what your income and expenses were for a three-month period.</p>
+
+      <h2>If you already keep decent records, you can do this yourself</h2>
+      <p>If you track your income and expenses in a spreadsheet, or even just keep organised records, you already have the figures you need. A quarterly update is simply submitting those totals to HMRC through compatible software.</p>
+      <p>Bridging software like Flonancial lets you upload your spreadsheet, pick the cells containing your turnover and expenses, and submit directly to HMRC. The whole process takes a few minutes.</p>
+      <p>You don&apos;t need to understand tax law to do this. You need to understand your own numbers — and if you&apos;re the one running the business, you almost certainly do.</p>
+
+      <h2>This is not tax advice</h2>
+      <p>To be completely clear: submitting a quarterly update is not the same as filing your tax return. It&apos;s not calculating what you owe. It&apos;s not claiming capital allowances or applying for reliefs. It&apos;s reporting three summary figures.</p>
+      <p>Nothing in this article is tax advice, and Flonancial is not a replacement for professional guidance on complex tax matters. We&apos;re a bridging tool — we send your numbers to HMRC. What those numbers should be, and what you can legitimately claim, is between you and your accountant.</p>
+
+      <h2>Where your accountant&apos;s expertise really matters</h2>
+      <p>Your accountant is a professional. Their value isn&apos;t in typing three numbers into a form — it&apos;s in the knowledge and judgement they bring to the parts of your tax affairs that genuinely need it:</p>
+      <ul>
+        <li><strong>The Final Declaration and year-end</strong> — this is the actual tax return, where everything comes together. Reliefs are applied, adjustments are made, and your tax liability is calculated. This is where professional expertise earns its fee.</li>
+        <li><strong>Tax planning</strong> — structuring your affairs efficiently, understanding what you can and can&apos;t claim, and making sure you&apos;re not paying more than you need to.</li>
+        <li><strong>Capital allowances</strong> — working out what qualifies, how much you can claim, and when to claim it.</li>
+        <li><strong>Complex affairs</strong> — multiple income streams, partnerships, property portfolios, overseas income, or anything that goes beyond straightforward self-employment.</li>
+        <li><strong>Multiple businesses or income sources</strong> — if you have several things going on, the interactions between them can get complicated quickly.</li>
+        <li><strong>Peace of mind on tricky questions</strong> — is this expense allowable? Should I use the flat rate or actual costs? Your accountant knows the answer. A bridging tool doesn&apos;t.</li>
+      </ul>
+      <p>These are the things worth paying for. Your accountant&apos;s time is valuable — use it where it makes a real difference.</p>
+
+      <h2>The unnecessary cost</h2>
+      <p>If your accountant charges you to submit three numbers to HMRC four times a year, and your finances are straightforward, that&apos;s a cost you can avoid. Some firms will add quarterly submissions as an additional line item. Others will bundle it into a higher annual fee.</p>
+      <p>For a sole trader with one income source and clear records, paying someone else to report figures you already know feels like paying someone to post a letter you&apos;ve already written and addressed.</p>
+      <p>This isn&apos;t about cutting corners. It&apos;s about recognising that quarterly updates are simple reporting — and simple reporting doesn&apos;t require a professional.</p>
+
+      <h2>What if your accountant wants to handle it?</h2>
+      <p>Some accountants prefer to manage all HMRC submissions themselves. There are good reasons for this — they maintain oversight of your records, they can spot issues early, and they have full control of the filing timeline.</p>
+      <p>If your accountant wants to handle your quarterly updates as part of their existing service, that&apos;s a perfectly reasonable arrangement. The key question is whether you&apos;re being charged extra for it. If it&apos;s included in your current fee and your accountant is happy to do it, there&apos;s no reason to change anything.</p>
+      <p>It&apos;s worth having the conversation. Ask your accountant how they plan to handle MTD quarterly updates and whether it affects your fees. A good accountant will give you a straight answer.</p>
+
+      <h2>The key question to ask yourself</h2>
+      <p>Do you understand your own figures?</p>
+      <p>If you know your turnover for the quarter and you know your expenses, you have everything you need for a quarterly update. Bridging software handles the submission. You don&apos;t need to understand HMRC&apos;s API, their data formats, or the technical side — you just need to know your numbers.</p>
+      <p>If you&apos;re not confident in your figures, or you&apos;re unsure what counts as an allowable expense, that&apos;s where your accountant comes in — not for the submission itself, but for making sure the numbers are right in the first place.</p>
+
+      <h2>Getting started with Flonancial</h2>
+      <p>Flonancial is free bridging software for MTD. Upload your spreadsheet, pick your figures, and submit to HMRC in minutes. No accounting knowledge required for the submission itself — just your own records.</p>
+      <p>Create a free account, connect to HMRC once using your Government Gateway credentials, and you&apos;re ready to submit your quarterly updates yourself. No subscription, no card required, no trial period.</p>
+      <p>Save your accountant&apos;s time for the year-end, the Final Declaration, and the questions that actually need professional judgement. The quarterly updates? You&apos;ve got this.</p>
+
+      <div style="margin-top:2.5rem;padding:1.5rem;border-radius:1rem;border:1px solid #B8D0EB;background:#CCE0F5;">
+<p style="font-weight:500;color:#0F1C2E;">Why is Flonancial free? What&apos;s the catch?</p>
+<p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:#2E4A63;">There isn&apos;t one. Your spreadsheet is processed in your browser — it never touches our servers. HMRC&apos;s API is free to use. We don&apos;t collect your financial data, we don&apos;t sell your information, and we don&apos;t show you ads. In 2026, the smart move isn&apos;t to charge people for something that costs nearly nothing — it&apos;s to build something genuinely useful and earn trust. The core MTD submission will always be free.</p>
+</div>
+    `,
+  },
+  {
+    slug: "free-spreadsheet-software-for-mtd",
+    title: "Free Spreadsheet Software for Making Tax Digital — What Are Your Options?",
+    metaDescription: "Don't have Excel? Here are the best free spreadsheet tools you can use for MTD record-keeping, including Google Sheets, Excel Online, and more.",
+    category: "guide",
+    publishedDate: "2026-03-23",
+    image: "/blog14.png",
+    content: `
+      <p>Making Tax Digital requires you to keep digital records of your income and expenses. For most self-employed people, that means a spreadsheet. But here&apos;s the thing — you don&apos;t need to pay for one.</p>
+      <p>If you don&apos;t have Microsoft Excel on your computer, or your licence has expired, there are several genuinely free options that do everything you need for MTD record-keeping. Here&apos;s a rundown of what&apos;s available.</p>
+
+      <h2>Google Sheets</h2>
+      <p>Google Sheets is free with any Google account. It runs entirely in your browser — there&apos;s nothing to download or install. If you have a Gmail address, you already have access.</p>
+      <p>For MTD purposes, Google Sheets handles everything you need: formulas, formatting, multiple tabs, and easy organisation of income and expenses. It also makes collaboration simple if you work with a bookkeeper or accountant who needs to see your records.</p>
+      <p>When it&apos;s time to submit, you can export your Google Sheet as an .xlsx file (File → Download → Microsoft Excel) and upload it to Flonancial. The whole process takes a few seconds.</p>
+      <p>For most people, this is probably the easiest option. Zero setup, works on any device with a browser, and you can access your records from anywhere.</p>
+
+      <h2>Microsoft Excel Online</h2>
+      <p>This is the one most people don&apos;t know about. Microsoft offers a genuinely free version of Excel that runs in your browser at <strong>microsoft365.com</strong>. All you need is a free Microsoft account.</p>
+      <p>This isn&apos;t a cut-down imitation — it&apos;s real Excel in the browser. It handles formulas, formatting, charts, and everything you&apos;d need for keeping MTD records. Your files are saved to OneDrive automatically, so you won&apos;t lose anything.</p>
+      <p>You can download your spreadsheet as an .xlsx file at any time and upload it to Flonancial for submission. If you&apos;re already familiar with Excel, this is the closest experience to the desktop version without paying a penny.</p>
+      <p>To be clear: Microsoft 365 the <strong>paid</strong> subscription (which includes the desktop apps) does come pre-installed on some laptops, and it&apos;s available via monthly subscription. But you absolutely don&apos;t need it. The free browser version at microsoft365.com is more than enough for MTD record-keeping.</p>
+
+      <h2>LibreOffice Calc</h2>
+      <p>LibreOffice is a free, open-source office suite that you download and install on your computer. It&apos;s available from <strong>libreoffice.org</strong> and works on Windows, Mac, and Linux.</p>
+      <p>LibreOffice Calc is the spreadsheet application, and it has excellent Excel compatibility. You can open .xlsx files, work with them, and save them back as .xlsx. It handles formulas, formatting, and everything you&apos;d expect from a desktop spreadsheet application.</p>
+      <p>The main advantage of LibreOffice is that it works offline. If you prefer having a proper desktop application rather than working in a browser, this is your best free option. Save your file as .xlsx and upload to Flonancial when you&apos;re ready to submit.</p>
+
+      <h2>Apple Numbers</h2>
+      <p>If you&apos;re on a Mac, iPad, or iPhone, Apple Numbers comes free with your device. It&apos;s a perfectly capable spreadsheet application for tracking income and expenses.</p>
+      <p>The one thing to remember is that Numbers uses its own file format by default. When you&apos;re ready to upload to Flonancial, you&apos;ll need to export as .xlsx (File → Export To → Excel on Mac, or Share → Export → Excel on iPad/iPhone). Once exported, upload the .xlsx file as normal.</p>
+      <p>Numbers is a solid choice if you&apos;re already in the Apple ecosystem and don&apos;t want to install anything extra.</p>
+
+      <h2>The Flonancial template</h2>
+      <p>Whichever free tool you choose, we offer a free spreadsheet template that&apos;s designed for MTD record-keeping. It includes columns for dates, descriptions, income, and expenses, plus a Flo tab that automatically totals your figures for submission.</p>
+      <p>Download the template, open it in whichever free software you prefer, and start recording your transactions. When it&apos;s time to submit, upload the file to Flonancial and your totals are read automatically from the Flo tab — no cell-picking needed.</p>
+      <p>The template works with all of the tools listed above. It&apos;s a standard .xlsx file.</p>
+
+      <h2>Quick comparison</h2>
+      <table style="width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.95rem;">
+        <thead>
+          <tr style="border-bottom:2px solid #B8D0EB;text-align:left;">
+            <th style="padding:0.5rem;">Tool</th>
+            <th style="padding:0.5rem;">Cost</th>
+            <th style="padding:0.5rem;">Platform</th>
+            <th style="padding:0.5rem;">Offline?</th>
+            <th style="padding:0.5rem;">Export to .xlsx?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #B8D0EB;">
+            <td style="padding:0.5rem;">Google Sheets</td>
+            <td style="padding:0.5rem;">Free</td>
+            <td style="padding:0.5rem;">Browser (any device)</td>
+            <td style="padding:0.5rem;">No</td>
+            <td style="padding:0.5rem;">Yes</td>
+          </tr>
+          <tr style="border-bottom:1px solid #B8D0EB;">
+            <td style="padding:0.5rem;">Excel Online</td>
+            <td style="padding:0.5rem;">Free</td>
+            <td style="padding:0.5rem;">Browser (any device)</td>
+            <td style="padding:0.5rem;">No</td>
+            <td style="padding:0.5rem;">Yes</td>
+          </tr>
+          <tr style="border-bottom:1px solid #B8D0EB;">
+            <td style="padding:0.5rem;">LibreOffice Calc</td>
+            <td style="padding:0.5rem;">Free</td>
+            <td style="padding:0.5rem;">Windows, Mac, Linux</td>
+            <td style="padding:0.5rem;">Yes</td>
+            <td style="padding:0.5rem;">Yes</td>
+          </tr>
+          <tr style="border-bottom:1px solid #B8D0EB;">
+            <td style="padding:0.5rem;">Apple Numbers</td>
+            <td style="padding:0.5rem;">Free</td>
+            <td style="padding:0.5rem;">Mac, iPad, iPhone</td>
+            <td style="padding:0.5rem;">Yes</td>
+            <td style="padding:0.5rem;">Yes</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Which one should you choose?</h2>
+      <p>If you&apos;re not sure, go with <strong>Google Sheets</strong>. It&apos;s the simplest option — no downloads, no installations, works in any browser on any device. You can be up and running in under a minute.</p>
+      <p>If you already have a Microsoft account and prefer the Excel look and feel, Excel Online at microsoft365.com is excellent and completely free.</p>
+      <p>If you want a proper desktop application that works offline, LibreOffice Calc is the way to go. And if you&apos;re already on a Mac or iPad, Apple Numbers is right there waiting for you.</p>
+      <p>All four options can produce .xlsx files that work perfectly with Flonancial. There&apos;s no wrong choice here — just pick whichever one feels most comfortable and start keeping your records.</p>
 
       <div style="margin-top:2.5rem;padding:1.5rem;border-radius:1rem;border:1px solid #B8D0EB;background:#CCE0F5;">
 <p style="font-weight:500;color:#0F1C2E;">Why is Flonancial free? What&apos;s the catch?</p>

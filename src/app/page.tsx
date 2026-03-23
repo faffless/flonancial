@@ -21,7 +21,7 @@ const faqs = [
   { q: "What is the Flo tab?", a: "If you download our free template, it includes a Flo tab with two cells — Turnover and Expenses — already linked to formulas. When you upload, Flonancial reads these automatically so you skip the cell-picking step. You don't need a Flo tab if you use your own spreadsheet — it just makes things faster." },
   { q: "What about the Final Declaration?", a: "Flonancial handles quarterly updates only. For the year-end Final Declaration, you can use HMRC's own online service or another compatible product. This is a common approach — several HMRC-recognised bridging tools work the same way." },
   { q: "Is Flonancial free? What's the catch?", a: "There isn't one. Running Flonancial costs us almost nothing — your spreadsheet is processed in your browser, not on our servers, and HMRC's API is free to use. We don't store your financial data, we don't sell your information, and we don't show you ads. In 2026, a smart business doesn't charge people for something that should be free — it earns trust first. If Flonancial becomes the tool that hundreds of thousands of sole traders rely on, that's worth far more than a monthly subscription. The core MTD submission will always be free." },
-  { q: "Is my data safe?", a: "Yes. Your spreadsheet is parsed entirely in your browser — the file never touches our servers. We only store the summary figures you submit to HMRC (turnover, expenses, and any other business income). We don't collect, sell, or share your personal data. We use HMRC's official OAuth process to connect to your tax account, so we never see or store your HMRC password. We use essential cookies only — no tracking, no advertising, no analytics — which is why you won't see a cookie banner." },
+  { q: "Is my data safe?", a: "Yes. Your spreadsheet is parsed entirely in your browser — the file never touches our servers. We only store the summary figures you submit to HMRC (turnover, expenses, and any other business income). We don't collect, sell, or share your personal data. We use HMRC's official OAuth process to connect to your tax account, so we never see or store your HMRC password. We use privacy-friendly, cookie-free analytics to understand how the site is used — no tracking cookies, no advertising, no personal data collection — which is why you won't see a cookie banner." },
   { q: "Do I need an accountant?", a: "Not necessarily. Flonancial is designed for straightforward sole trader and landlord cases where you already keep decent records. If your affairs are more complex, it's still sensible to get advice from a qualified accountant." },
   { q: "What if the £50,000 threshold drops?", a: "HMRC has confirmed the threshold will drop to £30,000 from April 2027 and to £20,000 from April 2028. Flonancial is being built to support those future thresholds too." },
   { q: "What does HMRC actually receive?", a: "Three numbers per quarterly update: your turnover, your expenses, and any other business income (usually zero). HMRC never sees individual transactions. The record-keeping obligation — keeping the detail of every transaction — sits with you, the taxpayer, not the software." },
@@ -216,7 +216,7 @@ export default function HomePage() {
               Free & Simple MTD for Income Tax
             </h1>
             <p className="mx-auto mt-5 max-w-[800px] text-base leading-7 text-[#2E4A63]">
-              Trusted bridging software for Making Tax Digital. Securely upload your spreadsheet, review your figures, and submit quarterly updates directly to HMRC. Built for sole traders and UK landlords.
+              Trusted bridging software for Making Tax Digital. Securely upload your spreadsheet, review your figures, and submit quarterly updates directly to HMRC — purely in your browser. No plug-ins, no cookies, no fuss.
             </p>
 
           </div>
@@ -238,7 +238,7 @@ export default function HomePage() {
 
             {/* ── IDLE: Three columns ────── */}
             {uploadStep === "idle" ? (
-              <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
+              <div className="mt-8 grid grid-cols-1 gap-0 sm:grid-cols-3 sm:gap-6">
                 {/* Column 1 — Upload */}
                 <div className="text-center sm:px-6">
                   <h3 className="text-base font-semibold text-[#0F1C2E]">Already have a spreadsheet?</h3>
@@ -277,6 +277,13 @@ export default function HomePage() {
                   {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
                 </div>
 
+                {/* Mobile divider */}
+                <div className="flex items-center gap-3 py-4 sm:hidden">
+                  <div className="h-px flex-1 bg-[#B8D0EB]/60" />
+                  <span className="text-xs font-medium text-[#2E4A63]">Or</span>
+                  <div className="h-px flex-1 bg-[#B8D0EB]/60" />
+                </div>
+
                 {/* Column 2 — Template */}
                 <div className="text-center sm:border-x sm:border-[#B8D0EB]/40 sm:px-6">
                   <h3 className="text-base font-semibold text-[#0F1C2E]">Don&apos;t use a spreadsheet yet?</h3>
@@ -293,11 +300,18 @@ export default function HomePage() {
                   <p className="mt-3 text-xs font-medium text-[#2E88D0]">Then come back and upload</p>
                 </div>
 
+                {/* Mobile divider */}
+                <div className="flex items-center gap-3 py-4 sm:hidden">
+                  <div className="h-px flex-1 bg-[#B8D0EB]/60" />
+                  <span className="text-xs font-medium text-[#2E4A63]">Or</span>
+                  <div className="h-px flex-1 bg-[#B8D0EB]/60" />
+                </div>
+
                 {/* Column 3 — Other tools (Google Sheets etc.) */}
                 <div className="text-center sm:px-6">
-                  <h3 className="text-base font-semibold text-[#0F1C2E]">Using something else like Google Sheets?</h3>
+                  <h3 className="text-base font-semibold text-[#0F1C2E]">Using Google Sheets, Excel Online, or something else?</h3>
                   <p className="mt-2 text-sm leading-6 text-[#2E4A63]">
-                    Export or download as .xlsx, then come back and upload.
+                    Export or download as .xlsx, then come back and upload. Works with Google Sheets, Microsoft 365 (free online version of Excel), LibreOffice, and more.
                   </p>
                   <div className="mt-6 flex flex-col items-center gap-3">
                     <img src="/swap.png" alt="Export and re-upload" width={144} height={144} className="opacity-100" />
@@ -489,7 +503,7 @@ export default function HomePage() {
             <h2 className="text-2xl font-bold tracking-tight text-[#0F1C2E]">See how it looks</h2>
             <p className="mt-2 text-sm text-[#2E4A63]">Choose an example business to see how Flonancial works:</p>
           </div>
-          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="mx-auto mt-5 grid max-w-[800px] grid-cols-1 gap-3 sm:grid-cols-3">
             {demoBusinesses.map((b) => {
               const bTurnover = getBusinessTurnover(b);
               return (
@@ -520,14 +534,15 @@ export default function HomePage() {
 
         {/* ── Built for sole traders ───────────────────────────────── */}
         <div className="mt-8 rounded-3xl border border-[#B8D0EB]/60 bg-white px-8 py-8 shadow-sm">
-          <h2 className="text-xl font-bold text-[#0F1C2E]">Built for sole traders and UK landlords</h2>
+          <h2 className="text-center text-xl font-bold text-[#0F1C2E]">Built for sole traders and UK landlords</h2>
           <ul className="mt-5 space-y-3">
             {[
               "Pure bridging software — we read your turnover and expenses and submit them to HMRC",
-              "Your spreadsheet is parsed in your browser. The file never touches our servers.",
+              "Purely browser-based and secure — your spreadsheet never leaves your device. No plug-ins needed.",
+              "We don't collect, sell, or share your data. No tracking cookies, no ads. Privacy-friendly, cookie-free analytics only.",
               "We only store the summary figures you submit — no transactions, no spreadsheet data",
               "Keep your records in your spreadsheet exactly as you do now",
-              "Designed for sole traders and UK property landlords earning under £90,000",
+              "Free — and not just for the first year. MTD bridging with Flonancial will always be free.",
               "Secure HMRC connection via official OAuth — we never see your HMRC password",
               "Operated by Flonancial Ltd (Company No. 17090724)",
             ].map((item) => (
@@ -549,9 +564,9 @@ export default function HomePage() {
 
         {/* ── CTA ──────────────────────────────────────────────────── */}
         <div className="mt-8 overflow-hidden rounded-3xl bg-gradient-to-r from-[#2E88D0] to-[#1a6db5] px-8 py-12 text-center shadow-lg">
-          <h2 className="text-2xl font-bold text-white">Ready to submit?</h2>
+          <h2 className="text-2xl font-bold text-white">Ready to start?</h2>
           <p className="mx-auto mt-3 max-w-[440px] text-sm leading-6 text-white/80">
-            Create your free account, connect to HMRC to find your business, and submit your first quarterly update.
+            Create your free account, connect to HMRC, and submit your first quarterly update. Free — and not just for the first year. MTD bridging with Flonancial will always be free.
           </p>
           <Link href="/signup" className="mt-6 inline-block rounded-xl bg-white px-7 py-3 text-sm font-semibold text-[#2E88D0] shadow-md transition hover:shadow-lg">Create your free account</Link>
           <p className="mt-3 text-xs text-white/60">Free · No card required</p>

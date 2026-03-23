@@ -20,17 +20,10 @@ export default function AboutPage() {
             <div>
               <h2 className="text-base font-medium text-[#0F1C2E]">Why I built this</h2>
               <p className="mt-3">
-                I work as a finance officer. I spend my days inside the kind of software that
-                Making Tax Digital is about to push millions of people toward — large, expensive
-                platforms built by companies that have been bolting on features for years without
-                stopping to ask whether any of it actually works properly.
-              </p>
-              <p className="mt-3">
-                When something goes wrong with these products, you raise a ticket. A support
-                agent in another country relays your message to a development team who seem
-                unfamiliar with their own system. They suggest things. You wait. Weeks pass.
-                The problem gets solved eventually, but the experience leaves you wondering
-                why you&apos;re paying for this.
+                I&apos;ve worked in small company finance for twenty years. I spend my days
+                inside the kind of software that Making Tax Digital is about to push millions
+                of people toward — large, expensive platforms that have been bolting on features
+                for years without stopping to ask whether any of it actually works properly.
               </p>
               <p className="mt-3">
                 When I heard that sole traders and landlords would soon be required to submit
@@ -102,9 +95,9 @@ export default function AboutPage() {
             <div>
               <h2 className="text-base font-medium text-[#0F1C2E]">The company</h2>
               <p className="mt-3">
-                Flonancial is built and operated by me — Will. It&apos;s a side
-                project born out of genuine frustration with how the software industry treats
-                its users. I registered Flonancial Ltd to do this properly.
+                Flonancial is built and operated by me — Will. I pursue this enthusiastically
+                because I genuinely believe the software industry overcharges for simple things,
+                and I registered Flonancial Ltd to do this properly.
               </p>
               <p className="mt-3">
                 Flonancial Ltd is registered in England and Wales. Company number: 17090724.
@@ -112,8 +105,8 @@ export default function AboutPage() {
               </p>
               <p className="mt-3">
                 No venture capital, no investors, no corporate backing. Just a straightforward
-                product that does what it says, built by someone who thinks you shouldn&apos;t
-                have to pay through the nose to meet a legal obligation.
+                product that does what it says — because meeting a legal obligation shouldn&apos;t
+                cost you a monthly subscription.
               </p>
               <p className="mt-3">
                 If you have questions, feedback, or something&apos;s not working, email me
