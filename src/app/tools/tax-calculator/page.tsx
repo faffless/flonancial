@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { SiteShell } from "@/components/site-shell";
 import {
   calculateFullTax,
   type EmploymentType,
@@ -74,16 +75,7 @@ export default function TaxCalculatorPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F0F5FB]">
-      <header className="border-b border-[#B8D0EB] bg-white">
-        <div className="mx-auto flex max-w-[960px] items-center justify-between px-6 py-2.5">
-          <Link href="/" className="text-base font-semibold text-[#0F1C2E]">Flonancial</Link>
-          <Link href="/signup" className="rounded-lg bg-[#2E88D0] px-3 py-1.5 text-xs font-medium text-white transition hover:opacity-90">
-            Create free account
-          </Link>
-        </div>
-      </header>
-
+    <SiteShell>
       <section className="mx-auto w-full max-w-[960px] px-6 py-5">
         <h1 className="text-xl font-semibold tracking-tight text-[#0F1C2E]">UK Tax Calculator 2025–26</h1>
         <p className="mt-1 text-xs text-[#2E4A63]">
@@ -371,6 +363,6 @@ export default function TaxCalculatorPage() {
           <p>From April 2026, self-employed sole traders and landlords with qualifying income over £50,000 must keep digital records and submit quarterly updates to HMRC. Flonancial is free MTD bridging software — upload your spreadsheet and submit in minutes.</p>
         </div>
       </section>
-    </main>
+    </SiteShell>
   );
 }
