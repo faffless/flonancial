@@ -503,8 +503,8 @@ export default function HomePage() {
             <h2 className="text-2xl font-bold tracking-tight text-[#0F1C2E]">See how it looks</h2>
             <p className="mt-2 text-sm text-[#2E4A63]">Choose an example business to see how Flonancial works:</p>
           </div>
-          <div className="mx-auto mt-5 grid max-w-[800px] grid-cols-1 gap-3 sm:grid-cols-3">
-            {demoBusinesses.map((b) => {
+          <div className="mx-auto mt-5 grid max-w-[800px] grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {demoBusinesses.slice(0, 4).map((b) => {
               const bTurnover = getBusinessTurnover(b);
               return (
                 <button

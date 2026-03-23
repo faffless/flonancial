@@ -1396,7 +1396,7 @@ export const blogArticles: BlogArticle[] = [
       <ul>
         <li><strong>Plan 1</strong> (started before September 2012) — 9% on income over £26,065</li>
         <li><strong>Plan 2</strong> (started September 2012 onwards) — 9% on income over £28,470</li>
-        <li><strong>Plan 4</strong> (Scottish students) — 9% on income over £32,745</li>
+        <li><strong>Plan 4</strong> (Scottish students) — 9% on income over £31,395</li>
         <li><strong>Plan 5</strong> (started September 2023 onwards) — 9% on income over £25,000</li>
         <li><strong>Postgraduate loan</strong> — 6% on income over £21,000</li>
       </ul>

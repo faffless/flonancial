@@ -107,27 +107,51 @@ export function calculateFullTax(inputs: TaxInputs): TaxResult {
 
   // Income Tax bands 2025-26
   const cleaned = taxCode.trim().toUpperCase();
+  const isScottish = cleaned.startsWith("S");
   let incomeTax = 0;
 
-  if (cleaned === "NT") {
+  if (cleaned === "NT" || cleaned === "SNT") {
     incomeTax = 0;
-  } else if (cleaned === "BR") {
+  } else if (cleaned === "BR" || cleaned === "SBR") {
     incomeTax = incomeAfterPension * 0.2;
-  } else if (cleaned === "D0") {
-    incomeTax = incomeAfterPension * 0.4;
-  } else if (cleaned === "D1") {
-    incomeTax = incomeAfterPension * 0.45;
+  } else if (cleaned === "D0" || cleaned === "SD0") {
+    incomeTax = incomeAfterPension * (isScottish ? 0.21 : 0.4);
+  } else if (cleaned === "D1" || cleaned === "SD1") {
+    incomeTax = incomeAfterPension * (isScottish ? 0.42 : 0.45);
+  } else if (cleaned === "SD2") {
+    incomeTax = incomeAfterPension * 0.48;
   } else {
     const taxable = Math.max(0, incomeAfterPension - personalAllowance);
-    const basicLimit = 37_700;
-    const higherLimit = 87_440;
 
-    if (taxable <= basicLimit) {
-      incomeTax = taxable * 0.2;
-    } else if (taxable <= basicLimit + higherLimit) {
-      incomeTax = basicLimit * 0.2 + (taxable - basicLimit) * 0.4;
+    if (isScottish) {
+      // Scottish 6-band system 2025-26
+      const bands = [
+        { limit: 2_306, rate: 0.19 },   // Starter: £12,571–£14,876
+        { limit: 11_685, rate: 0.20 },   // Basic: £14,877–£26,561
+        { limit: 17_101, rate: 0.21 },   // Intermediate: £26,562–£43,662
+        { limit: 31_338, rate: 0.42 },   // Higher: £43,663–£75,000
+        { limit: 50_140, rate: 0.45 },   // Advanced: £75,001–£125,140
+        { limit: Infinity, rate: 0.48 }, // Top: over £125,140
+      ];
+      let remaining = taxable;
+      for (const band of bands) {
+        if (remaining <= 0) break;
+        const inBand = Math.min(remaining, band.limit);
+        incomeTax += inBand * band.rate;
+        remaining -= inBand;
+      }
     } else {
-      incomeTax = basicLimit * 0.2 + higherLimit * 0.4 + (taxable - basicLimit - higherLimit) * 0.45;
+      // rUK 3-band system 2025-26
+      const basicLimit = 37_700;
+      const higherLimit = 87_440;
+
+      if (taxable <= basicLimit) {
+        incomeTax = taxable * 0.2;
+      } else if (taxable <= basicLimit + higherLimit) {
+        incomeTax = basicLimit * 0.2 + (taxable - basicLimit) * 0.4;
+      } else {
+        incomeTax = basicLimit * 0.2 + higherLimit * 0.4 + (taxable - basicLimit - higherLimit) * 0.45;
+      }
     }
   }
 
@@ -158,7 +182,7 @@ export function calculateFullTax(inputs: TaxInputs): TaxResult {
   const slThresholds: Record<StudentLoanPlan, { threshold: number; rate: number }> = {
     plan1: { threshold: 26_065, rate: 0.09 },
     plan2: { threshold: 28_470, rate: 0.09 },
-    plan4: { threshold: 32_745, rate: 0.09 },
+    plan4: { threshold: 31_395, rate: 0.09 },
     plan5: { threshold: 25_000, rate: 0.09 },
     postgrad: { threshold: 21_000, rate: 0.06 },
   };

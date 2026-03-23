@@ -23,22 +23,6 @@ const categoryLabels: Record<string, string> = {
   reference: "Reference",
 };
 
-const sidebarLinks = [
-  { label: "Tax Calculator", href: "/tools/tax-calculator", highlight: true },
-  { label: "Can You Use Excel for MTD?", href: "/blog/can-you-use-excel-for-making-tax-digital" },
-  { label: "Free MTD Bridging Software", href: "/blog/free-mtd-bridging-software" },
-  { label: "MTD for Landlords", href: "/blog/making-tax-digital-for-landlords" },
-  { label: "MTD Software Comparison", href: "/blog/mtd-software-comparison-2026" },
-  { label: "How to Submit Your First Update", href: "/blog/how-to-submit-first-mtd-quarterly-update" },
-  { label: "Best Free MTD Software", href: "/blog/best-free-making-tax-digital-software-2026" },
-  { label: "Free MTD Spreadsheet Template", href: "/blog/free-mtd-spreadsheet-template" },
-  { label: "Do I Need an Accountant?", href: "/blog/do-i-need-accountant-for-mtd" },
-  { label: "MTD for Contractors", href: "/blog/making-tax-digital-for-contractors" },
-  { label: "Self-Employed Tax Calculator", href: "/blog/self-employed-tax-calculator-2025-26" },
-  { label: "Free Spreadsheet Software", href: "/blog/free-spreadsheet-software-for-mtd" },
-  { label: "MTD & Mortgages", href: "/blog/making-tax-digital-mortgage-self-employed" },
-];
-
 export default function BlogIndexPage() {
   return (
     <SiteShell>
@@ -46,19 +30,19 @@ export default function BlogIndexPage() {
         {/* ── Sidebar (desktop only) ─────────────────────────────── */}
         <aside className="hidden w-[220px] shrink-0 lg:block">
           <div className="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto">
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#5A7A9B]">Tools &amp; Guides</p>
-            <nav className="mt-3 flex flex-col gap-1">
-              {sidebarLinks.map((link) => (
+            <Link href="/tools/tax-calculator" className="block rounded-lg px-2.5 py-1.5 text-xs font-semibold leading-5 text-[#2E88D0] transition hover:bg-[#2E88D0]/10">
+              → Tax Calculator
+            </Link>
+
+            <p className="mt-3 text-[10px] font-semibold uppercase tracking-widest text-[#5A7A9B]">All Guides</p>
+            <nav className="mt-2 flex flex-col gap-0.5">
+              {[...blogArticles].reverse().map((a) => (
                 <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`rounded-lg px-2.5 py-1.5 text-xs leading-5 transition ${
-                    link.highlight
-                      ? "font-semibold text-[#2E88D0] hover:bg-[#2E88D0]/10"
-                      : "text-[#2E4A63] hover:bg-[#F0F5FB] hover:text-[#0F1C2E]"
-                  }`}
+                  key={a.slug}
+                  href={`/blog/${a.slug}`}
+                  className="rounded-lg px-2.5 py-1.5 text-xs leading-5 text-[#2E4A63] transition hover:bg-[#F0F5FB] hover:text-[#0F1C2E]"
                 >
-                  {link.highlight && "→ "}{link.label}
+                  {a.title}
                 </Link>
               ))}
             </nav>

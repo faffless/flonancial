@@ -52,10 +52,11 @@ export default function TaxCalculatorPage() {
   const pensionNum = parseFloat(pensionPercent) || 0;
 
   const profit = employmentType === "self-employed" ? incomeNum - expensesNum : incomeNum;
-  const hasResult = profit > 0;
+  const hasInput = incomeNum > 0;
+  const isLoss = employmentType === "self-employed" && expensesNum > 0 && profit <= 0;
 
   let result: TaxResult | null = null;
-  if (hasResult) {
+  if (hasInput && profit > 0) {
     result = calculateFullTax({
       income: incomeNum,
       expenses: expensesNum,
@@ -279,6 +280,14 @@ export default function TaxCalculatorPage() {
                   Estimate — 2025–26 England/Wales/NI rates. Does not include Scottish rates or other reliefs. Your actual liability may differ.
                 </p>
               </div>
+            ) : isLoss ? (
+              <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-center">
+                <p className="text-sm font-medium text-amber-800">Your expenses exceed your income</p>
+                <p className="mt-2 text-xs text-amber-700">
+                  Your business made a loss of £{fmtShort(Math.abs(profit))} this year. You won&apos;t owe any income tax or NICs on this business.
+                  You may be able to carry the loss forward to offset against future profits — speak to an accountant or check HMRC&apos;s guidance on trading losses.
+                </p>
+              </div>
             ) : (
               <div className="rounded-xl border border-[#B8D0EB] bg-white p-6 text-center">
                 <p className="text-xs text-[#2E4A63]">Enter your income to see your estimated tax breakdown.</p>
@@ -332,7 +341,7 @@ export default function TaxCalculatorPage() {
               <tbody className="text-[#0F1C2E]">
                 <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 1</td><td className="py-1.5 text-right">9% over £26,065</td></tr>
                 <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 2</td><td className="py-1.5 text-right">9% over £28,470</td></tr>
-                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 4</td><td className="py-1.5 text-right">9% over £32,745</td></tr>
+                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 4</td><td className="py-1.5 text-right">9% over £31,395</td></tr>
                 <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 5</td><td className="py-1.5 text-right">9% over £25,000</td></tr>
                 <tr><td className="py-1.5">Postgraduate</td><td className="py-1.5 text-right">6% over £21,000</td></tr>
               </tbody>
