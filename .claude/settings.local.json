@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:www.gov.uk)",
+      "Bash(grep -r \"sendEmail\\\\|send.*email\" /c/Users/WCale/Desktop/flonancial/src --include=*.ts --include=*.tsx)"
     ]
   }
 }

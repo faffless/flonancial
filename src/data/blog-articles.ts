@@ -680,7 +680,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Self-employed taxi and private hire drivers: MTD is coming. Here's what changes, what you need to do, and how to submit your quarterly updates for free.",
     category: "guide",
     publishedDate: "2026-03-22",
-    image: "/blog14.png",
+    image: "/blog15.png",
     content: `
       <p>If you drive a taxi or work as a private hire driver and you&apos;re self-employed, Making Tax Digital for Income Tax is going to affect you. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC. The threshold drops to £30,000 in 2027 and £20,000 in 2028.</p>
       <p>Here&apos;s what it means in practice and how to handle it without spending money on software you don&apos;t need.</p>
@@ -754,7 +754,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Self-employed tradespeople: MTD for Income Tax starts April 2026. Here's what you need to know and how to submit quarterly updates for free using your spreadsheet.",
     category: "guide",
     publishedDate: "2026-03-22",
-    image: "/blog14.png",
+    image: "/blog16.png",
     content: `
       <p>If you&apos;re a self-employed plumber, electrician, builder, carpenter, painter, roofer, or any other tradesperson, Making Tax Digital for Income Tax is coming your way. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC.</p>
       <p>Here&apos;s a practical guide to what&apos;s changing, what you actually need to do, and how to keep it simple.</p>
@@ -810,7 +810,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Self-employed hairdressers and barbers: MTD is coming. Here's what you need to do and how to submit your quarterly updates to HMRC for free.",
     category: "guide",
     publishedDate: "2026-03-22",
-    image: "/blog14.png",
+    image: "/blog17.png",
     content: `
       <p>If you&apos;re a self-employed hairdresser, barber, or beauty therapist — whether you rent a chair, work mobile, or run your own salon as a sole trader — Making Tax Digital for Income Tax is going to affect you.</p>
       <p>From April 2026, sole traders earning over £50,000 must submit quarterly updates to HMRC digitally. The threshold drops to £30,000 in 2027 and £20,000 in 2028.</p>
@@ -869,7 +869,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Self-employed PTs and fitness instructors: MTD for Income Tax is coming. Here's what it means and how to submit your quarterly updates for free.",
     category: "guide",
     publishedDate: "2026-03-22",
-    image: "/blog14.png",
+    image: "/blog18.png",
     content: `
       <p>If you&apos;re a self-employed personal trainer, yoga instructor, fitness coach, or gym-based freelancer, Making Tax Digital for Income Tax will affect you. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC.</p>
       <p>The threshold drops to £30,000 in 2027 and £20,000 in 2028 — so even if you&apos;re not caught this year, you likely will be soon.</p>
@@ -930,7 +930,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Self-employed cleaners and domestic workers: MTD for Income Tax is coming. Here's a simple guide to what you need to do and how to submit for free.",
     category: "guide",
     publishedDate: "2026-03-22",
-    image: "/blog14.png",
+    image: "/blog19.png",
     content: `
       <p>If you&apos;re a self-employed cleaner, housekeeper, or domestic service provider, Making Tax Digital for Income Tax is going to affect you. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC. The threshold drops to £30,000 in 2027 and £20,000 in 2028.</p>
 

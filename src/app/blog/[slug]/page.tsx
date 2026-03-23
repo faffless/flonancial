@@ -83,12 +83,14 @@ export default async function BlogArticlePage({
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
 
-        <div className="mt-10 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-6 text-center">
-          <p className="text-base font-medium text-[#0F1C2E]">Ready to submit your quarterly updates?</p>
-          <p className="mt-2 text-sm text-[#2E4A63]">Flonancial is free bridging software for sole traders and landlords. Upload your spreadsheet and submit to HMRC in minutes.</p>
-          <Link href="/signup" className="mt-4 inline-block rounded-xl bg-[#2E88D0] px-6 py-2.5 text-sm font-medium text-white transition hover:opacity-90">
-            Create your free account
-          </Link>
+        <div className="mt-10 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-6">
+          <p className="text-base font-medium text-[#0F1C2E]">Why is Flonancial free? What's the catch?</p>
+          <p className="mt-2 text-sm leading-6 text-[#2E4A63]">There isn't one. Your spreadsheet is processed in your browser — it never touches our servers. HMRC's API is free to use. We don't collect your financial data, we don't sell your information, and we don't show you ads. In 2026, the smart move isn't to charge people for something that costs nearly nothing — it's to build something genuinely useful and earn trust. The core MTD submission will always be free.</p>
+          <div className="mt-4 text-center">
+            <Link href="/signup" className="inline-block rounded-xl bg-[#2E88D0] px-6 py-2.5 text-sm font-medium text-white transition hover:opacity-90">
+              Create your free account
+            </Link>
+          </div>
         </div>
       </article>
     </SiteShell>
