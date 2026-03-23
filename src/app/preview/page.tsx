@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
+import TaxEstimate from "@/components/tax-estimate";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -264,6 +265,13 @@ export default function PreviewPage() {
               );
             })}
           </div>
+
+          {/* Tax estimate */}
+          {hasFigures && (
+            <div className="mt-4">
+              <TaxEstimate turnover={turnover!} expenses={expenses!} isQuarterly />
+            </div>
+          )}
 
           {/* Quarter assumption disclaimer */}
           <div className="mt-4 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] px-4 py-3">

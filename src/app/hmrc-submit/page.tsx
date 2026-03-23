@@ -5,6 +5,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { SiteShell } from "@/components/site-shell";
 import { collectFraudData } from "@/utils/hmrc/collect-fraud-data";
+import TaxEstimate from "@/components/tax-estimate";
 
 type PreviewResponse = {
   ok?: boolean;
@@ -310,6 +311,18 @@ function HmrcSubmitContent() {
                 </div>
               ) : null}
             </div>
+
+            {/* Tax estimate — show right before submit */}
+            {preview.totals && (
+              <div className="mt-4">
+                <TaxEstimate
+                  turnover={preview.totals.turnover}
+                  expenses={preview.totals.expenses}
+                  isQuarterly
+                  compact
+                />
+              </div>
+            )}
 
             {isAmend && !figuresChanged ? (
               <div className="mt-4 rounded-xl border border-[#B8D0EB] bg-[#DEE9F8] p-4">

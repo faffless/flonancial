@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { SiteShell } from "@/components/site-shell";
 import { demoBusinesses, getDemoBusiness, type DemoBusiness } from "@/data/demo-businesses";
+import TaxEstimate from "@/components/tax-estimate";
 
 type TaxYear = { label: string; start: string; end: string };
 
@@ -340,6 +341,11 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
           </div>
         </div>
       ) : null}
+
+      {/* Tax estimate */}
+      <div className="mt-6">
+        <TaxEstimate turnover={annualTotals.income} expenses={annualTotals.expenses} />
+      </div>
 
       {/* Year-end note */}
       <div className="mt-6 rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] px-6 py-5">
