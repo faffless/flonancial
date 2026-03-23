@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, Suspense } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { SiteShell } from "@/components/site-shell";
@@ -136,10 +136,30 @@ function BusinessSwitcher({ currentId, onSwitch }: { currentId: string; onSwitch
   return (
     <div className="flex flex-wrap gap-2">
       {demoBusinesses.map((b) => (
-        <button key={b.id} type="button" onClick={() => onSwitch(b.id)} className={`rounded-xl border px-3 py-1.5 text-xs transition ${b.id === currentId ? "border-[#2E88D0] bg-[#2E88D0] text-white" : "border-[#B8D0EB] bg-[#DEE9F8] text-[#2E4A63] hover:bg-[#CCE0F5] hover:text-[#0F1C2E]"}`}>
+        <button key={b.id} type="button" onClick={() => onSwitch(b.id)} className={`rounded-xl border px-4 py-2 text-sm transition ${b.id === currentId ? "border-[#2E88D0] bg-[#2E88D0] text-white" : "border-[#B8D0EB] bg-white text-[#2E4A63] hover:bg-[#CCE0F5] hover:text-[#0F1C2E]"}`}>
           {b.emoji} {b.name}
         </button>
       ))}
+    </div>
+  );
+}
+
+function QuarterHint() {
+  const [visible, setVisible] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (dismissed || !visible) return null;
+
+  return (
+    <div className="flex items-center gap-2 rounded-xl border border-[#2E88D0]/30 bg-[#2E88D0]/10 px-4 py-2.5 text-sm text-[#2E88D0] transition-opacity duration-500">
+      <span>↓</span>
+      <span>Click the different quarters below to see how the dashboard changes as you submit throughout the year</span>
+      <button type="button" onClick={() => setDismissed(true)} className="ml-auto shrink-0 text-[#2E88D0]/60 hover:text-[#2E88D0]">✕</button>
     </div>
   );
 }
@@ -162,11 +182,21 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
 
   return (
     <div>
-      {/* Demo banner */}
-      <div className="rounded-2xl border border-amber-600/20 bg-amber-50 px-5 py-3">
-        <p className="text-sm text-amber-700">
-          This is a demo with sample data for <strong>{business.name}</strong> ({business.tagline}). Sign up to submit your own figures to HMRC.
-        </p>
+      {/* Business switcher at top */}
+      <div className="rounded-2xl border border-[#B8D0EB] bg-white p-4">
+        <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#2E4A63]">Choose an example business</p>
+        <BusinessSwitcher currentId={business.id} onSwitch={onSwitch} />
+      </div>
+
+      {/* Blurb */}
+      <div className="mt-4 rounded-2xl border border-[#B8D0EB] bg-white px-5 py-4">
+        <div className="flex items-start gap-3">
+          <span className="text-2xl">{business.emoji}</span>
+          <div>
+            <p className="text-sm font-medium text-[#0F1C2E]">{business.name} — {business.tagline}</p>
+            <p className="mt-1 text-sm leading-6 text-[#2E4A63]">{business.blurb}</p>
+          </div>
+        </div>
       </div>
 
       {/* Tax year bar */}
@@ -182,9 +212,14 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
         <p className="text-xs text-[#2E4A63]">Annual expenses: <span className="font-medium text-[#0F1C2E]">{formatCurrency(annualTotals.expenses)}</span></p>
       </div>
 
+      {/* Quarter hint */}
+      <div className="mt-4">
+        <QuarterHint />
+      </div>
+
       {/* Time progression */}
       <div className="mt-4">
-        <p className="text-xs font-medium text-[#2E4A63]">See what your dashboard looks like:</p>
+        <p className="text-xs font-medium text-[#2E4A63]">See what the dashboard looks like as you submit each quarter:</p>
         <div className="mt-2 flex flex-wrap gap-2">
           {[
             { count: 1, label: "Q1 submitted" },
@@ -320,12 +355,6 @@ function BusinessView({ business, onSwitch }: { business: DemoBusiness; onSwitch
 
       {/* Sign up CTA */}
       <div className="mt-6"><SignUpBanner /></div>
-
-      {/* Business switcher */}
-      <div className="mt-6 rounded-2xl border border-[#B8D0EB] bg-[#CCE0F5] p-5">
-        <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[#2E4A63]">Try another example business</p>
-        <BusinessSwitcher currentId={business.id} onSwitch={onSwitch} />
-      </div>
     </div>
   );
 }

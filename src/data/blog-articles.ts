@@ -979,4 +979,80 @@ export const blogArticles: BlogArticle[] = [
       <p>Start by keeping a spreadsheet of what you earn and what you spend on the business. Even if you&apos;re below the threshold now, having digital records in place means you won&apos;t be caught out when the threshold drops. Create a free Flonancial account and you can send your figures to HMRC in minutes when the time comes.</p>
     `,
   },
+  {
+    slug: "making-tax-digital-mortgage-self-employed",
+    title: "How Making Tax Digital Could Help Your Mortgage Application",
+    metaDescription: "MTD means self-employed sole traders now have verified, quarterly digital income records with HMRC. Here's why that could make your mortgage application smoother.",
+    category: "guide",
+    publishedDate: "2026-03-23",
+    image: "/blog14.png",
+    content: `
+      <p>If you&apos;re self-employed and thinking about getting a mortgage, you already know the process is harder than it is for someone on PAYE. Lenders want proof of consistent income, and historically, self-employed applicants have had to jump through more hoops to provide it.</p>
+      <p>Making Tax Digital for Income Tax changes the picture. From April 2026, sole traders are required to submit quarterly income and expense summaries to HMRC through compatible software. That means your income is now digitally recorded, verified, and submitted four times a year — not just once at the end of the tax year.</p>
+      <p>This article explains why that shift could genuinely work in your favour when you apply for a mortgage.</p>
+
+      <h2>How self-employed mortgage applications have traditionally worked</h2>
+      <p>When an employed person applies for a mortgage, the lender checks their payslips and P60. The numbers are clear, regular, and verified by the employer.</p>
+      <p>For self-employed applicants, it&apos;s been more complicated. Lenders typically ask for:</p>
+      <ul>
+        <li><strong>SA302 tax calculations</strong> — your Self Assessment summary from HMRC, usually for the last two or three years</li>
+        <li><strong>Tax year overviews</strong> — confirmation that your Self Assessment was filed and matches what HMRC holds</li>
+        <li><strong>Accountant references or certified accounts</strong> — a letter from your accountant confirming your income</li>
+        <li><strong>Bank statements</strong> — to verify that the income figures match real money coming in</li>
+      </ul>
+      <p>The problem with this approach is that all of this evidence is annual. A lender sees your total income for the year, but they don&apos;t see how it arrived. Was it steady throughout the year? Did most of it come in one quarter? Was there a long dry spell? The annual figures don&apos;t tell that story.</p>
+
+      <h2>What MTD changes</h2>
+      <p>Under Making Tax Digital, you submit a summary of your income and expenses to HMRC every quarter. These submissions go through HMRC&apos;s API — they&apos;re digitally signed and recorded. Over the course of a year, HMRC holds four data points showing your income pattern, not just one annual total.</p>
+      <p>This means:</p>
+      <ul>
+        <li>Your income is recorded quarterly, showing consistency (or growth) throughout the year</li>
+        <li>The records are submitted digitally through HMRC&apos;s official systems — they&apos;re not self-reported on paper</li>
+        <li>Each submission is timestamped and tied to your Government Gateway account</li>
+        <li>The data exists independently of any accountant or third party</li>
+      </ul>
+      <p>In short, there&apos;s now a verifiable, quarterly trail of your business income held by HMRC.</p>
+
+      <h2>Why this matters for mortgage lenders</h2>
+      <p>Mortgage lenders assess risk. Their core question is: can this person reliably make repayments for the next 25 years? For employed applicants, monthly payslips answer that question. For self-employed applicants, the answer has always been harder to pin down.</p>
+      <p>Quarterly MTD records give lenders something they haven&apos;t had before — a granular, verified view of self-employed income over time. Instead of looking at one number per year and trying to extrapolate, they can see four quarters of reported income, each submitted through a government system.</p>
+      <p>This doesn&apos;t replace existing checks, but it adds another layer of evidence. And for borderline applications — where a lender is on the fence — having clean, consistent quarterly records could tip the balance.</p>
+
+      <h2>Some lenders are already paying attention</h2>
+      <p>The mortgage industry moves slowly, but it does move. Some lenders are starting to accept MTD records as supporting documentation alongside SA302s and tax year overviews. As MTD becomes the norm and more self-employed people build up a history of quarterly submissions, it&apos;s reasonable to expect this to become more widespread.</p>
+      <p>It&apos;s worth asking your mortgage broker or lender whether they accept MTD quarterly submissions as part of your application. Even if they don&apos;t formally require them yet, providing them proactively shows that your income is properly tracked and verified.</p>
+
+      <h2>What good MTD records look like</h2>
+      <p>If you&apos;re planning to apply for a mortgage in the next year or two, the quality of your quarterly submissions matters. Here&apos;s what works in your favour:</p>
+      <ul>
+        <li><strong>Consistent submissions</strong> — file every quarter on time, even if a quarter is quiet. Gaps or late submissions don&apos;t look good.</li>
+        <li><strong>Accurate figures</strong> — make sure your submitted income and expenses match your bank statements and records. Discrepancies raise questions.</li>
+        <li><strong>Steady or growing income</strong> — lenders like to see stability. If your income is seasonal, quarterly records actually help explain the pattern rather than hiding it in an annual total.</li>
+        <li><strong>Clean records</strong> — keep your spreadsheet or accounting records tidy. If a lender asks to see the underlying data, you want it to be clear and organised.</li>
+      </ul>
+
+      <h2>Keeping accurate records is always in your interest</h2>
+      <p>Whether you&apos;re applying for a mortgage, a business loan, or just want to understand your own finances, accurate record-keeping works in your favour. MTD formalises what good financial practice already looks like — tracking your income and expenses regularly and having the numbers to back it up.</p>
+      <p>For any financial application, the person with clear, verifiable records is always in a stronger position than the person who has to reconstruct their figures from memory and bank statements.</p>
+
+      <h2>What you can do now</h2>
+      <p>If a mortgage is on your horizon, here&apos;s a practical checklist:</p>
+      <ol>
+        <li><strong>Start submitting quarterly</strong> — even if you&apos;re not yet required to, building a history of MTD submissions gives you more data to show a lender</li>
+        <li><strong>Keep your spreadsheet up to date</strong> — log income and expenses regularly, not in a rush at the end of each quarter</li>
+        <li><strong>Save your submission confirmations</strong> — keep a record of each quarterly submission you make to HMRC</li>
+        <li><strong>Talk to your broker</strong> — ask whether they accept MTD records and how best to present them alongside your SA302</li>
+        <li><strong>Don&apos;t skip quarters</strong> — a complete, unbroken record is far more useful than a patchy one</li>
+      </ol>
+
+      <h2>The bigger picture</h2>
+      <p>MTD is often talked about as a burden — more admin, more deadlines, more things to keep track of. And that&apos;s a fair reaction. But for self-employed people who want to buy property, the shift to quarterly digital reporting creates something genuinely useful: a verified income history that didn&apos;t exist before.</p>
+      <p>Over time, as lenders adapt to the MTD world, self-employed mortgage applicants with clean quarterly records should find the process less painful than it has been historically. Your income will already be on record, verified, and consistent — exactly what a lender wants to see.</p>
+
+      <div style="margin-top:2.5rem;padding:1.5rem;border-radius:1rem;border:1px solid #B8D0EB;background:#CCE0F5;">
+<p style="font-weight:500;color:#0F1C2E;">Why is Flonancial free? What&apos;s the catch?</p>
+<p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:#2E4A63;">There isn&apos;t one. Your spreadsheet is processed in your browser — it never touches our servers. HMRC&apos;s API is free to use. We don&apos;t collect your financial data, we don&apos;t sell your information, and we don&apos;t show you ads. In 2026, the smart move isn&apos;t to charge people for something that costs nearly nothing — it&apos;s to build something genuinely useful and earn trust. The core MTD submission will always be free.</p>
+</div>
+    `,
+  },
 ];
