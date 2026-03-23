@@ -45,7 +45,7 @@ export default function BlogIndexPage() {
       <div className="mx-auto flex w-full max-w-[1100px] gap-8 px-6 py-10 sm:px-8">
         {/* ── Sidebar (desktop only) ─────────────────────────────── */}
         <aside className="hidden w-[220px] shrink-0 lg:block">
-          <div className="sticky top-8">
+          <div className="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-[#5A7A9B]">Tools &amp; Guides</p>
             <nav className="mt-3 flex flex-col gap-1">
               {sidebarLinks.map((link) => (
