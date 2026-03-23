@@ -8,6 +8,7 @@ import { SiteShell } from "@/components/site-shell";
 import { SpreadsheetUpload, ExtractedFigures } from "@/components/spreadsheet-upload";
 import { createClient } from "@/utils/supabase/client";
 import { collectFraudData } from "@/utils/hmrc/collect-fraud-data";
+import TaxEstimate from "@/components/tax-estimate";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -620,6 +621,24 @@ export default function BusinessPage() {
               )}
             </div>
           ) : null}
+
+          {/* Tax estimate based on latest cumulative submission */}
+          {(() => {
+            const latestSubmitted = quarters
+              .filter((q) => q.submission?.status === "submitted" && q.submission.turnover > 0)
+              .sort((a, b) => b.quarterEnd.localeCompare(a.quarterEnd))[0];
+            if (!latestSubmitted?.submission) return null;
+            const submittedCount = quarters.filter((q) => q.submission?.status === "submitted").length;
+            return (
+              <div className="mt-6">
+                <TaxEstimate
+                  turnover={latestSubmitted.submission.turnover}
+                  expenses={latestSubmitted.submission.expenses}
+                  isQuarterly={submittedCount === 1}
+                />
+              </div>
+            );
+          })()}
 
 {history.length === 0 ? (
             <div className="mt-8">
