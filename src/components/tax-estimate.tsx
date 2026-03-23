@@ -9,14 +9,17 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type EmploymentType = "self-employed" | "employed";
-export type StudentLoanPlan = "none" | "plan1" | "plan2" | "plan4" | "plan5" | "postgrad";
+export type StudentLoanPlan = "plan1" | "plan2" | "plan4" | "plan5" | "postgrad";
 
 export interface TaxInputs {
   income: number;
   expenses: number;
   employmentType: EmploymentType;
-  studentLoan: StudentLoanPlan;
-  pensionPercent: number; // 0-100
+  studentLoans: StudentLoanPlan[]; // multiple loans
+  pensionPercent: number;
+  taxCode: string; // e.g. "1257L", "BR", "0T", "K475", custom PA
+  marriageAllowance: boolean; // receiving marriage allowance transfer
+  blindPersonsAllowance: boolean;
 }
 
 export interface TaxResult {
@@ -29,64 +32,120 @@ export interface TaxResult {
   employeeNIC: number;
   class4NIC: number;
   class2NIC: number;
-  studentLoanRepayment: number;
+  studentLoanRepayments: { plan: StudentLoanPlan; amount: number }[];
+  totalStudentLoan: number;
   totalDeductions: number;
   takeHome: number;
   effectiveRate: number;
 }
 
+// ─── Tax code parser ──────────────────────────────────────────────────────────
+
+export function parseTaxCode(code: string): number | null {
+  const cleaned = code.trim().toUpperCase();
+  if (!cleaned) return null; // no code entered, use default
+
+  // Special codes
+  if (cleaned === "BR") return 0; // all basic rate
+  if (cleaned === "D0") return 0; // all higher rate (handled separately)
+  if (cleaned === "D1") return 0; // all additional rate
+  if (cleaned === "0T" || cleaned === "OT") return 0;
+  if (cleaned === "NT") return -1; // no tax (special marker)
+
+  // K codes — negative allowance (adds to taxable income)
+  const kMatch = cleaned.match(/^K(\d+)$/);
+  if (kMatch) return -(parseInt(kMatch[1]) * 10);
+
+  // Standard codes like 1257L, 1100L, S1257L, C1257L
+  const stdMatch = cleaned.match(/^[SC]?(\d+)[LTMNY]$/);
+  if (stdMatch) return parseInt(stdMatch[1]) * 10;
+
+  return null; // unrecognised
+}
+
 // ─── Calculation engine ───────────────────────────────────────────────────────
 
 export function calculateFullTax(inputs: TaxInputs): TaxResult {
-  const { income, expenses, employmentType, studentLoan, pensionPercent } = inputs;
+  const { income, expenses, employmentType, studentLoans, pensionPercent, taxCode, marriageAllowance, blindPersonsAllowance } = inputs;
   const grossIncome = income;
   const profit = employmentType === "self-employed" ? income - expenses : income;
 
-  // Pension deduction (salary sacrifice / relief at source — reduces taxable income)
-  // For employed: pension on qualifying earnings (£6,240–£50,270)
-  // Simplified: apply percentage to gross
+  // Pension deduction
   const pensionDeduction = profit > 0 ? Math.round(profit * (pensionPercent / 100) * 100) / 100 : 0;
   const incomeAfterPension = Math.max(0, profit - pensionDeduction);
 
-  // Personal Allowance (tapers £1 for every £2 over £100,000)
+  // Personal Allowance from tax code or default
   const basePA = 12_570;
-  let personalAllowance = basePA;
-  if (incomeAfterPension > 100_000) {
-    personalAllowance = Math.max(0, basePA - Math.floor((incomeAfterPension - 100_000) / 2));
+  const parsedPA = parseTaxCode(taxCode);
+  let personalAllowance: number;
+
+  if (parsedPA === null) {
+    // No tax code or unrecognised — use default with taper
+    personalAllowance = basePA;
+    if (incomeAfterPension > 100_000) {
+      personalAllowance = Math.max(0, basePA - Math.floor((incomeAfterPension - 100_000) / 2));
+    }
+  } else if (parsedPA === -1) {
+    // NT code — no tax
+    personalAllowance = incomeAfterPension;
+  } else if (parsedPA < 0) {
+    // K code — negative allowance
+    personalAllowance = parsedPA;
+  } else {
+    personalAllowance = parsedPA;
+  }
+
+  // Marriage allowance — receiving partner gets extra £1,260
+  if (marriageAllowance && personalAllowance >= 0) {
+    personalAllowance += 1_260;
+  }
+
+  // Blind person's allowance — extra £3,070 for 2025-26
+  if (blindPersonsAllowance && personalAllowance >= 0) {
+    personalAllowance += 3_070;
   }
 
   // Income Tax bands 2025-26
-  const taxable = Math.max(0, incomeAfterPension - personalAllowance);
-  const basicLimit = 37_700;
-  const higherLimit = 87_440;
-
+  const cleaned = taxCode.trim().toUpperCase();
   let incomeTax = 0;
-  if (taxable <= basicLimit) {
-    incomeTax = taxable * 0.2;
-  } else if (taxable <= basicLimit + higherLimit) {
-    incomeTax = basicLimit * 0.2 + (taxable - basicLimit) * 0.4;
+
+  if (cleaned === "NT") {
+    incomeTax = 0;
+  } else if (cleaned === "BR") {
+    incomeTax = incomeAfterPension * 0.2;
+  } else if (cleaned === "D0") {
+    incomeTax = incomeAfterPension * 0.4;
+  } else if (cleaned === "D1") {
+    incomeTax = incomeAfterPension * 0.45;
   } else {
-    incomeTax = basicLimit * 0.2 + higherLimit * 0.4 + (taxable - basicLimit - higherLimit) * 0.45;
+    const taxable = Math.max(0, incomeAfterPension - personalAllowance);
+    const basicLimit = 37_700;
+    const higherLimit = 87_440;
+
+    if (taxable <= basicLimit) {
+      incomeTax = taxable * 0.2;
+    } else if (taxable <= basicLimit + higherLimit) {
+      incomeTax = basicLimit * 0.2 + (taxable - basicLimit) * 0.4;
+    } else {
+      incomeTax = basicLimit * 0.2 + higherLimit * 0.4 + (taxable - basicLimit - higherLimit) * 0.45;
+    }
   }
 
   // National Insurance
   let employeeNIC = 0;
   let class4NIC = 0;
-  const class2NIC = 0; // voluntary since April 2024
+  const class2NIC = 0;
 
   if (employmentType === "employed") {
-    // Class 1 Employee NIC: 8% on £12,570–£50,270, 2% above
     const nicLower = 12_570;
     const nicUpper = 50_270;
     if (income > nicLower) {
-      employeeNIC = Math.min(income, nicUpper) - nicLower;
-      employeeNIC *= 0.08;
+      employeeNIC = (Math.min(income, nicUpper) - nicLower) * 0.08;
       if (income > nicUpper) {
         employeeNIC += (income - nicUpper) * 0.02;
       }
     }
   } else {
-    // Class 4 NIC: 6% on £12,570–£50,270, 2% above
     if (profit > 12_570) {
       class4NIC = (Math.min(profit, 50_270) - 12_570) * 0.06;
       if (profit > 50_270) {
@@ -95,24 +154,26 @@ export function calculateFullTax(inputs: TaxInputs): TaxResult {
     }
   }
 
-  // Student loan repayments
+  // Student loan repayments — multiple simultaneous
   const slThresholds: Record<StudentLoanPlan, { threshold: number; rate: number }> = {
-    none: { threshold: 0, rate: 0 },
     plan1: { threshold: 26_065, rate: 0.09 },
     plan2: { threshold: 28_470, rate: 0.09 },
     plan4: { threshold: 32_745, rate: 0.09 },
     plan5: { threshold: 25_000, rate: 0.09 },
     postgrad: { threshold: 21_000, rate: 0.06 },
   };
-  const sl = slThresholds[studentLoan];
-  const studentLoanRepayment = studentLoan !== "none" && incomeAfterPension > sl.threshold
-    ? (incomeAfterPension - sl.threshold) * sl.rate
-    : 0;
+
+  const studentLoanRepayments = studentLoans.map((plan) => {
+    const sl = slThresholds[plan];
+    const amount = incomeAfterPension > sl.threshold ? (incomeAfterPension - sl.threshold) * sl.rate : 0;
+    return { plan, amount };
+  });
+  const totalStudentLoan = studentLoanRepayments.reduce((sum, r) => sum + r.amount, 0);
 
   const nic = employeeNIC + class4NIC;
-  const totalDeductions = incomeTax + nic + studentLoanRepayment + pensionDeduction;
-  const takeHome = profit - incomeTax - nic - studentLoanRepayment - pensionDeduction;
-  const effectiveRate = profit > 0 ? ((incomeTax + nic + studentLoanRepayment) / profit) * 100 : 0;
+  const totalDeductions = incomeTax + nic + totalStudentLoan + pensionDeduction;
+  const takeHome = profit - incomeTax - nic - totalStudentLoan - pensionDeduction;
+  const effectiveRate = profit > 0 ? ((incomeTax + nic + totalStudentLoan) / profit) * 100 : 0;
 
   return {
     grossIncome,
@@ -124,7 +185,8 @@ export function calculateFullTax(inputs: TaxInputs): TaxResult {
     employeeNIC,
     class4NIC,
     class2NIC,
-    studentLoanRepayment,
+    studentLoanRepayments,
+    totalStudentLoan,
     totalDeductions,
     takeHome,
     effectiveRate,
@@ -156,8 +218,11 @@ export default function TaxEstimate({ turnover, expenses, isQuarterly, compact }
     income: isQuarterly ? turnover * 4 : turnover,
     expenses: isQuarterly ? expenses * 4 : expenses,
     employmentType: "self-employed",
-    studentLoan: "none",
+    studentLoans: [],
     pensionPercent: 0,
+    taxCode: "",
+    marriageAllowance: false,
+    blindPersonsAllowance: false,
   });
 
   if (compact) {
@@ -203,7 +268,7 @@ export default function TaxEstimate({ turnover, expenses, isQuarterly, compact }
         <span className="text-sm font-semibold text-[#0F1C2E]">{t.effectiveRate.toFixed(1)}%</span>
       </div>
 
-      {t.class2NIC === 0 && annualProfit > 6_845 && (
+      {annualProfit > 6_845 && (
         <p className="mt-2 text-[11px] text-[#5A7A9B]">
           Class 2 NICs (£182.00/year) are voluntary since April 2024 and not included above.
         </p>
