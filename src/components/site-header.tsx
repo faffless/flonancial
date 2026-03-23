@@ -149,7 +149,7 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
                 <Link href="/dashboard" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">Dashboard</Link>
               </div>
             ) : (
-              <div className="flex shrink-0 flex-col items-end gap-1">
+              <div className="flex shrink-0 flex-col items-center gap-1">
                 <Link href="/signup" className="rounded-xl bg-[#2E88D0] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-[#2E88D0]/20 transition hover:shadow-lg hover:shadow-[#2E88D0]/30">Sign Up</Link>
                 <Link href="/login" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">Log in</Link>
               </div>
