@@ -511,21 +511,16 @@ export default function HomePage() {
                   key={b.id}
                   type="button"
                   onClick={() => router.push(`/demo?business=${b.id}`)}
-                  className="group rounded-2xl border border-[#B8D0EB]/60 bg-white p-4 text-left shadow-sm transition hover:border-[#2E88D0] hover:shadow-md"
+                  className="group rounded-2xl border border-[#B8D0EB]/60 bg-white p-4 text-center shadow-sm transition hover:border-[#2E88D0] hover:shadow-md"
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-[#0F1C2E]">{b.emoji} {b.name}</p>
-                      <p className="mt-0.5 text-xs text-[#2E4A63]">{b.tagline}</p>
-                      <span className="mt-2 inline-block rounded-full border border-[#B8D0EB]/60 bg-[#F0F5FB] px-2 py-0.5 text-[10px] text-[#2E4A63]">
-                        {formatBusinessType(b.business_type)}
-                      </span>
-                      <p className="mt-3 text-xs text-[#2E4A63]">
-                        <span className="font-semibold text-[#0F1C2E]">{formatCurrencyShort(bTurnover)}</span> annual turnover
-                      </p>
-                    </div>
-                    <span className="shrink-0 text-sm text-[#B8D0EB] transition group-hover:text-[#2E88D0]">→</span>
-                  </div>
+                  <p className="text-sm font-medium text-[#0F1C2E]">{b.emoji} {b.name}</p>
+                  <p className="mt-0.5 text-xs text-[#2E4A63]">{b.tagline}</p>
+                  <span className="mt-2 inline-block rounded-full border border-[#B8D0EB]/60 bg-[#F0F5FB] px-2 py-0.5 text-[10px] text-[#2E4A63]">
+                    {formatBusinessType(b.business_type)}
+                  </span>
+                  <p className="mt-3 text-xs text-[#2E4A63]">
+                    <span className="font-semibold text-[#0F1C2E]">{formatCurrencyShort(bTurnover)}</span> annual turnover
+                  </p>
                 </button>
               );
             })}

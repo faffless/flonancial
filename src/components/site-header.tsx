@@ -130,21 +130,32 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
             </div>
           ) : null}
 
-          {/* Right side */}
-          {loggedIn ? (
-            <div className="flex shrink-0 flex-col items-end gap-1">
-              <button type="button" onClick={handleSignOut} disabled={signingOut} className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E] disabled:opacity-50">
-                {signingOut ? "Signing out..." : "Sign out"}
-              </button>
-              <Link href="/settings" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">Settings</Link>
-              <Link href="/dashboard" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">Dashboard</Link>
-            </div>
-          ) : (
-            <div className="flex shrink-0 items-center gap-4">
-              <Link href="/login" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">Log in</Link>
-              <Link href="/signup" className="rounded-xl bg-[#2E88D0] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-[#2E88D0]/20 transition hover:shadow-lg hover:shadow-[#2E88D0]/30">Sign Up</Link>
-            </div>
-          )}
+          {/* Right side — nav links + auth */}
+          <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+            {/* Nav links */}
+            <nav className="flex items-center gap-1 sm:gap-3">
+              <Link href="/blog" className="rounded-lg px-2 py-1.5 text-xs font-medium text-[#2E4A63] transition hover:bg-[#F0F5FB] hover:text-[#0F1C2E] sm:text-sm">Guides</Link>
+              <Link href="/tools/tax-calculator" className="rounded-lg px-2 py-1.5 text-xs font-medium text-[#2E4A63] transition hover:bg-[#F0F5FB] hover:text-[#0F1C2E] sm:text-sm">Calculator</Link>
+              <Link href="/demo" className="hidden rounded-lg px-2 py-1.5 text-xs font-medium text-[#2E4A63] transition hover:bg-[#F0F5FB] hover:text-[#0F1C2E] sm:block sm:text-sm">Demo</Link>
+            </nav>
+
+            <div className="h-5 w-px bg-[#B8D0EB]" />
+
+            {/* Auth buttons */}
+            {loggedIn ? (
+              <div className="flex items-center gap-3">
+                <Link href="/dashboard" className="text-xs font-medium text-[#2E4A63] transition hover:text-[#0F1C2E] sm:text-sm">Dashboard</Link>
+                <button type="button" onClick={handleSignOut} disabled={signingOut} className="text-xs font-medium text-[#2E4A63] transition hover:text-[#0F1C2E] disabled:opacity-50 sm:text-sm">
+                  {signingOut ? "..." : "Sign out"}
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 sm:gap-4">
+                <Link href="/login" className="text-xs font-medium text-[#2E4A63] transition hover:text-[#0F1C2E] sm:text-sm">Log in</Link>
+                <Link href="/signup" className="rounded-xl bg-[#2E88D0] px-3 py-2 text-xs font-semibold text-white shadow-md shadow-[#2E88D0]/20 transition hover:shadow-lg hover:shadow-[#2E88D0]/30 sm:px-5 sm:py-2.5 sm:text-sm">Sign Up</Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>
