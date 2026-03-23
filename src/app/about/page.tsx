@@ -20,7 +20,7 @@ export default function AboutPage() {
             <div>
               <h2 className="text-base font-medium text-[#0F1C2E]">Why I built this</h2>
               <p className="mt-3">
-                I&apos;ve worked in small company finance for twenty years. I spend my days
+                I&apos;ve worked in finance for twenty years. I spend my days
                 inside the kind of software that Making Tax Digital is about to push millions
                 of people toward — large, expensive platforms that have been bolting on features
                 for years without stopping to ask whether any of it actually works properly.
@@ -95,9 +95,9 @@ export default function AboutPage() {
             <div>
               <h2 className="text-base font-medium text-[#0F1C2E]">The company</h2>
               <p className="mt-3">
-                Flonancial is built and operated by me — Will. I pursue this enthusiastically
-                because I genuinely believe the software industry overcharges for simple things,
-                and I registered Flonancial Ltd to do this properly.
+                Flonancial is built and operated by me — Will. I&apos;ve worked in finance
+                for 20 years and I genuinely believe the software industry overcharges for
+                simple things. I registered Flonancial Ltd to do this properly.
               </p>
               <p className="mt-3">
                 Flonancial Ltd is registered in England and Wales. Company number: 17090724.

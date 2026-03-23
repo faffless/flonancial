@@ -1275,4 +1275,171 @@ export const blogArticles: BlogArticle[] = [
       <p>All four options can produce .xlsx files that work perfectly with Flonancial. There&apos;s no wrong choice here — just pick whichever one feels most comfortable and start keeping your records.</p>
     `,
   },
+  {
+    slug: "self-employed-tax-calculator-2025-26",
+    title: "Self-Employed Tax Calculator 2025–26: How Much Will You Owe?",
+    metaDescription: "Use our free self-employed tax calculator for 2025–26. Understand income tax bands, Class 4 NICs, Personal Allowance, and what Making Tax Digital means for your bill.",
+    category: "guide",
+    publishedDate: "2026-03-30",
+    image: "/blog24.png",
+    content: `
+      <p>One of the biggest questions every self-employed person has is: how much tax am I actually going to owe? Whether you&apos;re a sole trader, a freelancer, or a landlord, understanding your estimated tax bill helps you plan ahead, set money aside, and avoid surprises when January rolls around.</p>
+      <p>We&apos;ve built a <a href="/tools/tax-calculator" style="color:#2E88D0;text-decoration:underline;">free self-employed tax calculator</a> that gives you an instant estimate based on the 2025–26 tax year rates. Enter your annual income and expenses, and it calculates your income tax, Class 4 National Insurance, and effective tax rate — all in your browser, nothing stored.</p>
+
+      <h2>How self-employed tax works in the UK</h2>
+      <p>If you&apos;re self-employed, you pay tax on your <strong>profit</strong> — that&apos;s your total income (turnover) minus your allowable business expenses. You don&apos;t pay tax on your turnover itself, only on what&apos;s left after expenses.</p>
+      <p>There are two main taxes you&apos;ll pay:</p>
+      <ul>
+        <li><strong>Income Tax</strong> — charged at progressive rates depending on how much you earn</li>
+        <li><strong>Class 4 National Insurance</strong> — charged on profits above £12,570</li>
+      </ul>
+
+      <h2>2025–26 income tax rates (England, Wales &amp; Northern Ireland)</h2>
+      <p>Everyone gets a tax-free Personal Allowance of <strong>£12,570</strong>. After that:</p>
+      <ul>
+        <li><strong>Basic rate (20%)</strong> on taxable income from £12,571 to £50,270</li>
+        <li><strong>Higher rate (40%)</strong> on taxable income from £50,271 to £125,140</li>
+        <li><strong>Additional rate (45%)</strong> on taxable income above £125,140</li>
+      </ul>
+      <p>If your income exceeds £100,000, your Personal Allowance is reduced by £1 for every £2 over that threshold. By £125,140, it&apos;s gone entirely — meaning your effective marginal rate between £100,000 and £125,140 is actually 60%.</p>
+
+      <h2>Class 4 National Insurance 2025–26</h2>
+      <p>On top of income tax, self-employed people pay Class 4 NICs:</p>
+      <ul>
+        <li><strong>6%</strong> on profits between £12,570 and £50,270</li>
+        <li><strong>2%</strong> on profits above £50,270</li>
+      </ul>
+      <p>These rates were reduced from 9% and 2% in January 2024, so if you&apos;re comparing to previous years, your NIC bill should be lower.</p>
+
+      <h2>What about Class 2 NICs?</h2>
+      <p>Class 2 National Insurance contributions (£3.50/week in 2025–26) became <strong>voluntary</strong> from April 2024. If your profits exceed £6,845, you&apos;re automatically treated as having paid them for state pension purposes — without actually needing to pay. Most self-employed people no longer need to worry about Class 2.</p>
+      <p>You may still choose to pay voluntarily if you want to fill gaps in your National Insurance record, but it&apos;s no longer a mandatory part of your tax bill.</p>
+
+      <h2>Example calculations</h2>
+      <p>Here are a few examples to give you a feel for the numbers:</p>
+
+      <h3>Sole trader earning £35,000 profit</h3>
+      <ul>
+        <li>Income Tax: £4,486 (20% on £22,430 above Personal Allowance)</li>
+        <li>Class 4 NICs: £1,345.80 (6% on £22,430)</li>
+        <li><strong>Total: £5,831.80</strong> — effective rate of 16.7%</li>
+      </ul>
+
+      <h3>Freelancer earning £55,000 profit</h3>
+      <ul>
+        <li>Income Tax: £9,432 (20% on £37,700 + 40% on £4,730)</li>
+        <li>Class 4 NICs: £2,356.60 (6% on £37,700 + 2% on £4,730)</li>
+        <li><strong>Total: £11,788.60</strong> — effective rate of 21.4%</li>
+      </ul>
+
+      <h3>Landlord earning £72,000 profit</h3>
+      <ul>
+        <li>Income Tax: £16,232 (20% on £37,700 + 40% on £21,730)</li>
+        <li>Class 4 NICs: £2,696.60 (6% on £37,700 + 2% on £21,730)</li>
+        <li><strong>Total: £18,928.60</strong> — effective rate of 26.3%</li>
+      </ul>
+
+      <h2>Scottish taxpayers</h2>
+      <p>If you live in Scotland, you pay Scottish Income Tax rates instead of the UK rates above. Scotland has its own bands — starter (19%), basic (20%), intermediate (21%), higher (42%), advanced (45%), and top (48%). The calculator on this site currently covers England, Wales, and Northern Ireland rates only.</p>
+
+      <h2>How Making Tax Digital changes things</h2>
+      <p>From April 2026, self-employed sole traders and landlords with qualifying income over £50,000 must submit quarterly updates to HMRC under Making Tax Digital for Income Tax. The threshold drops to £30,000 in April 2027 and £20,000 in April 2028.</p>
+      <p>This doesn&apos;t change how much tax you owe — MTD is about <strong>reporting</strong>, not calculating. But it does mean you&apos;ll have a clearer picture of your income throughout the year, which makes estimating your tax bill much easier.</p>
+      <p>With Flonancial, you submit your quarterly figures and can see an estimated tax calculation right on your business page — based on the cumulative data you&apos;ve submitted so far. It&apos;s a useful prompt to set money aside each quarter rather than scrambling at the end of the year.</p>
+
+      <h2>Tips for managing your tax bill</h2>
+      <ul>
+        <li><strong>Set aside money each quarter</strong> — a good rule of thumb is 25–30% of your profit. After each quarterly submission, move that amount into a savings account.</li>
+        <li><strong>Claim all allowable expenses</strong> — if you incur costs wholly and exclusively for your business, they reduce your taxable profit. Common ones: materials, tools, vehicle costs, phone bills, insurance, professional subscriptions.</li>
+        <li><strong>Use the trading allowance</strong> — if your total self-employment income is under £1,000, you don&apos;t need to report it at all. Between £1,000 and a few thousand, you can choose between the £1,000 trading allowance or claiming actual expenses — whichever is more favourable.</li>
+        <li><strong>Check if you&apos;re paying too much</strong> — if you have both PAYE employment and self-employment income, your Personal Allowance may already be used by your employer. Make sure you&apos;re not double-counting it.</li>
+        <li><strong>Payments on account</strong> — HMRC collects tax in advance via two payments on account (31 January and 31 July). These are based on last year&apos;s bill, so if your income has dropped, you can apply to reduce them.</li>
+      </ul>
+
+      <h2>Try the calculator</h2>
+      <p>Head to our <a href="/tools/tax-calculator" style="color:#2E88D0;text-decoration:underline;">free self-employed tax calculator</a> to see your estimated 2025–26 tax bill. It takes ten seconds, runs entirely in your browser, and nothing is stored or sent anywhere.</p>
+      <p>If you&apos;re earning above the MTD threshold, Flonancial can help you submit your quarterly updates to HMRC for free — <a href="/signup" style="color:#2E88D0;text-decoration:underline;">create your free account</a> and get started.</p>
+    `,
+  },
+  {
+    slug: "uk-tax-calculator-employed-2025-26",
+    title: "UK Tax Calculator for Employed Workers 2025–26: Salary, NI, Student Loans & Pension",
+    metaDescription: "Free UK tax calculator for employed workers. Calculate your 2025–26 take-home pay including income tax, National Insurance, student loan repayments, and pension contributions.",
+    category: "guide",
+    publishedDate: "2026-04-06",
+    image: "/blog25.png",
+    content: `
+      <p>Whether you&apos;ve just started a new job, received a pay rise, or simply want to understand where your money goes each month, knowing how your salary is taxed is essential. We&apos;ve built a <a href="/tools/tax-calculator" style="color:#2E88D0;text-decoration:underline;">free UK tax calculator</a> that covers everything — income tax, National Insurance, student loan repayments, and pension deductions — all based on the 2025–26 tax year rates.</p>
+
+      <h2>How your salary is taxed</h2>
+      <p>When you receive your salary, your employer deducts income tax and National Insurance before you see a penny. This is the PAYE system (Pay As You Earn). Here&apos;s how each deduction works.</p>
+
+      <h2>Income tax 2025–26</h2>
+      <p>You get a tax-free Personal Allowance of <strong>£12,570</strong>. Everything above that is taxed in bands:</p>
+      <ul>
+        <li><strong>Basic rate (20%)</strong> — on income from £12,571 to £50,270</li>
+        <li><strong>Higher rate (40%)</strong> — on income from £50,271 to £125,140</li>
+        <li><strong>Additional rate (45%)</strong> — on income above £125,140</li>
+      </ul>
+      <p>If you earn over £100,000, your Personal Allowance is reduced by £1 for every £2 above that threshold. This creates an effective 60% marginal tax rate between £100,000 and £125,140 — something many higher earners don&apos;t realise until they see their tax bill.</p>
+
+      <h2>Employee National Insurance (Class 1)</h2>
+      <p>As an employee, you pay Class 1 National Insurance on your earnings:</p>
+      <ul>
+        <li><strong>8%</strong> on earnings between £12,570 and £50,270</li>
+        <li><strong>2%</strong> on earnings above £50,270</li>
+      </ul>
+      <p>Your employer also pays NI on top of your salary (at 13.8%), but that doesn&apos;t come out of your pay — it&apos;s an additional cost to them.</p>
+
+      <h2>Student loan repayments</h2>
+      <p>If you have a student loan, repayments are deducted from your salary once you earn above your plan&apos;s threshold. The amount deducted depends on which plan you&apos;re on:</p>
+      <ul>
+        <li><strong>Plan 1</strong> (started before September 2012) — 9% on income over £26,065</li>
+        <li><strong>Plan 2</strong> (started September 2012 onwards) — 9% on income over £28,470</li>
+        <li><strong>Plan 4</strong> (Scottish students) — 9% on income over £32,745</li>
+        <li><strong>Plan 5</strong> (started September 2023 onwards) — 9% on income over £25,000</li>
+        <li><strong>Postgraduate loan</strong> — 6% on income over £21,000</li>
+      </ul>
+      <p>Not sure which plan you&apos;re on? Check your Student Loans Company account or look at your payslip — it should say Plan 1, Plan 2, Plan 4, or Plan 5.</p>
+      <p>If you have both an undergraduate and postgraduate loan, you&apos;ll make repayments on both simultaneously. Our calculator currently handles one at a time — for dual loans, calculate each separately.</p>
+
+      <h2>Pension contributions</h2>
+      <p>If you&apos;re auto-enrolled in a workplace pension (and most employees are), the minimum employee contribution is <strong>5%</strong> of qualifying earnings (between £6,240 and £50,270). Your employer contributes at least 3% on top.</p>
+      <p>Pension contributions are typically taken before tax (salary sacrifice) or receive tax relief at source. Either way, they reduce your taxable income — which means your actual tax bill is lower than if you had no pension.</p>
+      <p>You can contribute more than 5% if your employer allows it. Every extra percent you put in reduces your income tax. For higher-rate taxpayers, pension contributions are especially tax-efficient because you save 40% on each pound contributed.</p>
+
+      <h2>Example: £35,000 salary with student loan and pension</h2>
+      <p>Here&apos;s what a typical employee on £35,000 with a Plan 2 student loan and 5% pension would take home:</p>
+      <ul>
+        <li>Gross salary: £35,000</li>
+        <li>Pension (5%): −£1,750</li>
+        <li>Taxable income: £33,250</li>
+        <li>Income Tax: £4,136</li>
+        <li>Employee NI: £1,794.40</li>
+        <li>Student loan (Plan 2): £587.70</li>
+        <li><strong>Take-home: £26,731.90</strong> (£2,227.66/month)</li>
+      </ul>
+
+      <h2>Example: £55,000 salary with no student loan, 5% pension</h2>
+      <ul>
+        <li>Gross salary: £55,000</li>
+        <li>Pension (5%): −£2,750</li>
+        <li>Taxable income: £52,250</li>
+        <li>Income Tax: £8,330</li>
+        <li>Employee NI: £3,406</li>
+        <li><strong>Take-home: £40,514</strong> (£3,376.17/month)</li>
+      </ul>
+
+      <h2>How to reduce your tax bill</h2>
+      <ul>
+        <li><strong>Increase your pension contributions</strong> — every pound you put into your pension saves tax at your marginal rate. If you&apos;re on 40%, putting an extra £100 into your pension only &quot;costs&quot; you £60 in take-home pay.</li>
+        <li><strong>Salary sacrifice</strong> — if your employer offers salary sacrifice for pension, childcare vouchers, or cycle-to-work schemes, these reduce your gross pay before NI is calculated, saving you both tax and NI.</li>
+        <li><strong>Marriage allowance</strong> — if one partner earns less than £12,570 and the other is a basic-rate taxpayer, you can transfer up to £1,260 of the unused Personal Allowance, saving up to £252/year.</li>
+        <li><strong>Check your tax code</strong> — if it&apos;s wrong, you could be overpaying. Your tax code should usually be 1257L for 2025–26. Check your payslip or Personal Tax Account on gov.uk.</li>
+      </ul>
+
+      <h2>Try the calculator</h2>
+      <p>Use our <a href="/tools/tax-calculator" style="color:#2E88D0;text-decoration:underline;">free UK tax calculator</a> to see exactly what you&apos;ll take home. Switch between employed and self-employed, add your student loan plan, set your pension contribution, and see a full breakdown instantly. Everything runs in your browser — nothing is stored or sent anywhere.</p>
+    `,
+  },
 ];

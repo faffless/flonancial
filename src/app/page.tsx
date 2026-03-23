@@ -554,6 +554,17 @@ export default function HomePage() {
           </ul>
         </div>
 
+        {/* ── Tax calculator promo ─────────────────────────────────── */}
+        <div className="mt-8 rounded-3xl border border-[#B8D0EB]/60 bg-[#F0F5FB] px-8 py-8 shadow-sm text-center">
+          <h2 className="text-xl font-bold text-[#0F1C2E]">How much tax will you owe?</h2>
+          <p className="mx-auto mt-2 max-w-[440px] text-sm leading-6 text-[#2E4A63]">
+            Use our free self-employed tax calculator to estimate your income tax and National Insurance for 2025–26.
+          </p>
+          <Link href="/tools/tax-calculator" className="mt-5 inline-block rounded-xl bg-[#2E88D0] px-6 py-3 text-sm font-medium text-white transition hover:opacity-90">
+            Try the tax calculator
+          </Link>
+        </div>
+
         {/* ── FAQ ──────────────────────────────────────────────────── */}
         <div className="mt-8 rounded-3xl border border-[#B8D0EB]/60 bg-white px-8 py-8 shadow-sm">
           <h2 className="text-xl font-bold text-[#0F1C2E]">Frequently asked questions</h2>
