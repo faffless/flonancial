@@ -990,7 +990,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "MTD means self-employed sole traders now have verified, quarterly digital income records with HMRC. Here's why that could make your mortgage application smoother.",
     category: "guide",
     publishedDate: "2026-03-23",
-    image: "/blog14.png",
+    image: "/blog20.png",
     content: `
       <p>If you&apos;re self-employed and thinking about getting a mortgage, you already know the process is harder than it is for someone on PAYE. Lenders want proof of consistent income, and historically, self-employed applicants have had to jump through more hoops to provide it.</p>
       <p>Making Tax Digital for Income Tax changes the picture. From April 2026, sole traders are required to submit quarterly income and expense summaries to HMRC through compatible software. That means your income is now digitally recorded, verified, and submitted four times a year — not just once at the end of the tax year.</p>
@@ -1066,7 +1066,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Are you a contractor? Whether you work through a limited company or as a sole trader, here's what MTD for Income Tax means for you.",
     category: "guide",
     publishedDate: "2026-03-23",
-    image: "/blog14.png",
+    image: "/blog21.png",
     content: `
       <p>If you&apos;re a contractor, you&apos;ve probably heard about Making Tax Digital for Income Tax (MTD ITSA). But whether it actually affects you depends entirely on how your business is structured. The answer is different for limited company contractors and sole trader contractors — and getting it wrong could mean missed deadlines or unnecessary panic.</p>
 
@@ -1139,7 +1139,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Wondering if you need to pay your accountant for MTD quarterly updates? Here&apos;s what you can handle yourself with bridging software and when professional help makes sense.",
     category: "guide",
     publishedDate: "2026-03-23",
-    image: "/blog14.png",
+    image: "/blog22.png",
     content: `
       <p>Making Tax Digital is rolling out, and one of the first questions many sole traders and landlords ask is: do I need to pay my accountant to handle the quarterly updates?</p>
       <p>The honest answer, for most people with straightforward affairs: <strong>probably not</strong>. But that doesn&apos;t mean your accountant isn&apos;t valuable — it means their time is better spent on the things that actually require professional expertise.</p>
@@ -1207,7 +1207,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Don't have Excel? Here are the best free spreadsheet tools you can use for MTD record-keeping, including Google Sheets, Excel Online, and more.",
     category: "guide",
     publishedDate: "2026-03-23",
-    image: "/blog14.png",
+    image: "/blog23.png",
     content: `
       <p>Making Tax Digital requires you to keep digital records of your income and expenses. For most self-employed people, that means a spreadsheet. But here&apos;s the thing — you don&apos;t need to pay for one.</p>
       <p>If you don&apos;t have Microsoft Excel on your computer, or your licence has expired, there are several genuinely free options that do everything you need for MTD record-keeping. Here&apos;s a rundown of what&apos;s available.</p>
