@@ -132,11 +132,11 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
 
           {/* Right side — nav links + auth (stacked) */}
           <div className="flex shrink-0 items-center gap-6">
-            {/* Nav links — hidden on mobile, visible on desktop */}
-            <nav className="hidden items-center gap-4 sm:flex">
+            {/* Nav links — stacked, right-aligned, hidden on mobile */}
+            <nav className="hidden flex-col items-end gap-1 sm:flex">
               <Link href="/blog" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">Guides</Link>
-              <Link href="/tools/tax-calculator" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">Calculator</Link>
               <Link href="/demo" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">Demo</Link>
+              <Link href="/tools/tax-calculator" className="text-sm font-medium text-[#2E4A63] transition hover:text-[#0F1C2E]">Calculator</Link>
             </nav>
 
             {/* Auth — stacked as before */}
