@@ -1054,10 +1054,6 @@ export const blogArticles: BlogArticle[] = [
       <p>MTD is often talked about as a burden — more admin, more deadlines, more things to keep track of. And that&apos;s a fair reaction. But for self-employed people who want to buy property, the shift to quarterly digital reporting creates something genuinely useful: a verified income history that didn&apos;t exist before.</p>
       <p>Over time, as lenders adapt to the MTD world, self-employed mortgage applicants with clean quarterly records should find the process less painful than it has been historically. Your income will already be on record, verified, and consistent — exactly what a lender wants to see.</p>
 
-      <div style="margin-top:2.5rem;padding:1.5rem;border-radius:1rem;border:1px solid #B8D0EB;background:#CCE0F5;">
-<p style="font-weight:500;color:#0F1C2E;">Why is Flonancial free? What&apos;s the catch?</p>
-<p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:#2E4A63;">There isn&apos;t one. Your spreadsheet is processed in your browser — it never touches our servers. HMRC&apos;s API is free to use. We don&apos;t collect your financial data, we don&apos;t sell your information, and we don&apos;t show you ads. In 2026, the smart move isn&apos;t to charge people for something that costs nearly nothing — it&apos;s to build something genuinely useful and earn trust. The core MTD submission will always be free.</p>
-</div>
     `,
   },
   {
@@ -1126,11 +1122,6 @@ export const blogArticles: BlogArticle[] = [
       <p>You don&apos;t need expensive accounting software. A well-structured spreadsheet that tracks your income and expenses is all HMRC requires for your digital records. What you need on top of that is compatible software to submit your quarterly updates.</p>
       <p><strong>Flonancial is free MTD-compatible software that works with your existing spreadsheet.</strong> Download our free spreadsheet template, log your income and expenses throughout the quarter, and use Flonancial to submit your figures directly to HMRC. No subscription fees, no accounting jargon, no data leaving your browser.</p>
       <p>Whether you&apos;re a sole trader contractor who needs to start quarterly reporting, or a Ltd company director with rental income on the side, the process is the same: keep clean records, submit on time, and don&apos;t pay for something you can do for free.</p>
-
-      <div style="margin-top:2.5rem;padding:1.5rem;border-radius:1rem;border:1px solid #B8D0EB;background:#CCE0F5;">
-<p style="font-weight:500;color:#0F1C2E;">Why is Flonancial free? What&apos;s the catch?</p>
-<p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:#2E4A63;">There isn&apos;t one. Your spreadsheet is processed in your browser — it never touches our servers. HMRC&apos;s API is free to use. We don&apos;t collect your financial data, we don&apos;t sell your information, and we don&apos;t show you ads. In 2026, the smart move isn&apos;t to charge people for something that costs nearly nothing — it&apos;s to build something genuinely useful and earn trust. The core MTD submission will always be free.</p>
-</div>
     `,
   },
   {
@@ -1194,11 +1185,6 @@ export const blogArticles: BlogArticle[] = [
       <p>Flonancial is free bridging software for MTD. Upload your spreadsheet, pick your figures, and submit to HMRC in minutes. No accounting knowledge required for the submission itself — just your own records.</p>
       <p>Create a free account, connect to HMRC once using your Government Gateway credentials, and you&apos;re ready to submit your quarterly updates yourself. No subscription, no card required, no trial period.</p>
       <p>Save your accountant&apos;s time for the year-end, the Final Declaration, and the questions that actually need professional judgement. The quarterly updates? You&apos;ve got this.</p>
-
-      <div style="margin-top:2.5rem;padding:1.5rem;border-radius:1rem;border:1px solid #B8D0EB;background:#CCE0F5;">
-<p style="font-weight:500;color:#0F1C2E;">Why is Flonancial free? What&apos;s the catch?</p>
-<p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:#2E4A63;">There isn&apos;t one. Your spreadsheet is processed in your browser — it never touches our servers. HMRC&apos;s API is free to use. We don&apos;t collect your financial data, we don&apos;t sell your information, and we don&apos;t show you ads. In 2026, the smart move isn&apos;t to charge people for something that costs nearly nothing — it&apos;s to build something genuinely useful and earn trust. The core MTD submission will always be free.</p>
-</div>
     `,
   },
   {
@@ -1287,11 +1273,6 @@ export const blogArticles: BlogArticle[] = [
       <p>If you already have a Microsoft account and prefer the Excel look and feel, Excel Online at microsoft365.com is excellent and completely free.</p>
       <p>If you want a proper desktop application that works offline, LibreOffice Calc is the way to go. And if you&apos;re already on a Mac or iPad, Apple Numbers is right there waiting for you.</p>
       <p>All four options can produce .xlsx files that work perfectly with Flonancial. There&apos;s no wrong choice here — just pick whichever one feels most comfortable and start keeping your records.</p>
-
-      <div style="margin-top:2.5rem;padding:1.5rem;border-radius:1rem;border:1px solid #B8D0EB;background:#CCE0F5;">
-<p style="font-weight:500;color:#0F1C2E;">Why is Flonancial free? What&apos;s the catch?</p>
-<p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:#2E4A63;">There isn&apos;t one. Your spreadsheet is processed in your browser — it never touches our servers. HMRC&apos;s API is free to use. We don&apos;t collect your financial data, we don&apos;t sell your information, and we don&apos;t show you ads. In 2026, the smart move isn&apos;t to charge people for something that costs nearly nothing — it&apos;s to build something genuinely useful and earn trust. The core MTD submission will always be free.</p>
-</div>
     `,
   },
 ];
