@@ -674,4 +674,309 @@ export const blogArticles: BlogArticle[] = [
       <p>A well-maintained spreadsheet meets all of these requirements.</p>
     `,
   },
+  {
+    slug: "making-tax-digital-for-taxi-drivers",
+    title: "Making Tax Digital for Taxi Drivers — What You Need to Know",
+    metaDescription: "Self-employed taxi and private hire drivers: MTD is coming. Here's what changes, what you need to do, and how to submit your quarterly updates for free.",
+    category: "guide",
+    publishedDate: "2026-03-22",
+    image: "/blog14.png",
+    content: `
+      <p>If you drive a taxi or work as a private hire driver and you&apos;re self-employed, Making Tax Digital for Income Tax is going to affect you. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC. The threshold drops to £30,000 in 2027 and £20,000 in 2028.</p>
+      <p>Here&apos;s what it means in practice and how to handle it without spending money on software you don&apos;t need.</p>
+
+      <h2>Does MTD apply to me?</h2>
+      <p>If you&apos;re self-employed (not employed by a taxi company) and your <strong>gross income</strong> is over £50,000, yes — from April 2026. If you earn between £30,000 and £50,000, you&apos;ll be brought in from April 2027. Between £20,000 and £50,000, from April 2028.</p>
+      <p>An important detail: HMRC uses your total turnover, not your profit. If you take £55,000 in fares but spend £20,000 on fuel, insurance, and vehicle costs, your profit is £35,000 — but your gross income is £55,000, so you&apos;re in scope from April 2026.</p>
+      <p>If you&apos;re an employee of a taxi firm and they handle your tax, MTD doesn&apos;t apply to you directly. It&apos;s for self-employed sole traders only.</p>
+
+      <h2>What changes?</h2>
+      <p>Instead of doing everything in one go at the end of the tax year, you&apos;ll need to send summary figures to HMRC four times a year. Each quarterly update includes three numbers: your total income, your total expenses, and any other business income.</p>
+      <p><strong>This does not mean you pay tax quarterly.</strong> You still pay your tax bill annually through Self Assessment. The quarterly updates are a reporting requirement — you&apos;re telling HMRC how the year is going, not settling up.</p>
+
+      <h2>What records do I need to keep?</h2>
+      <p>You need to keep digital records of every transaction — the date, the amount, and what it was for. If you already track your fares, fuel, insurance, vehicle costs, and other expenses in a spreadsheet, that counts as a digital record. A notebook on its own doesn&apos;t.</p>
+      <p>The practical challenge for taxi drivers is that income comes from multiple sources — street hails, app bookings (Uber, Bolt, Free Now), radio circuit work, and private bookings. All of these combine into your total income and all need recording.</p>
+      <p>A good habit is to record your fares at the end of each shift or day, rather than trying to reconstruct a week or month from memory. Even a simple spreadsheet with the date, total fares, and how they were paid is enough.</p>
+
+      <h3>Common expenses for taxi drivers</h3>
+      <ul>
+        <li>Fuel or electric charging</li>
+        <li>Vehicle insurance (business use portion)</li>
+        <li>Vehicle maintenance, servicing, repairs, and MOT</li>
+        <li>Road tax</li>
+        <li>Licence and badge renewal fees</li>
+        <li>Vehicle lease or hire payments</li>
+        <li>Phone and data costs (business use portion)</li>
+        <li>Platform or booking app fees</li>
+        <li>Card reader fees</li>
+        <li>Car wash and valeting</li>
+        <li>AA/RAC or breakdown cover</li>
+        <li>Sat-nav or dashcam equipment</li>
+        <li>Capital allowances on your vehicle (up to 100% first-year allowance for new vehicles, typically 18% annually otherwise)</li>
+        <li>Parking fees (not fines)</li>
+      </ul>
+      <p>If you use your vehicle for both personal and business driving, you can either claim actual costs split by business mileage percentage, or use HMRC&apos;s simplified expenses: 45p per mile for the first 10,000 business miles, then 25p per mile after that.</p>
+
+      <h2>What about cash fares?</h2>
+      <p>All income needs to be recorded, regardless of how you&apos;re paid. Card payments, app payments, and cash fares all count toward your total income. The important thing is that your spreadsheet includes everything so the figures you submit to HMRC are accurate.</p>
+      <p>A practical tip: deposit cash fares into your business bank account regularly. This creates a paper trail and makes it much easier to reconcile your records at the end of each quarter.</p>
+
+      <h2>Do I need accounting software?</h2>
+      <p>No. HMRC requires compatible software to submit your quarterly updates, but that doesn&apos;t mean you need a full accounting package costing £15–£35 a month. If you keep your records in a spreadsheet, all you need is bridging software to send your totals to HMRC. Bridging software is a legitimate, HMRC-recognised category — it&apos;s not a workaround or a shortcut. It&apos;s listed on HMRC&apos;s own Software Choices page as a valid option.</p>
+      <p>Flonancial is free bridging software that does exactly this. Upload your spreadsheet, pick the cells with your income and expense totals, and submit. No monthly fees, no learning a new system.</p>
+
+      <h2>Tips for keeping on top of it</h2>
+      <ul>
+        <li><strong>Record daily, not weekly</strong> — after a 12-hour shift the last thing you want to do is admin, but logging your fares takes two minutes. Leaving it a week makes it ten times harder.</li>
+        <li><strong>Keep fuel receipts</strong> — thermal paper receipts fade over time. Take a photo or log the amount in your spreadsheet on the same day.</li>
+        <li><strong>Separate business and personal</strong> — a dedicated business bank account isn&apos;t legally required, but it makes life dramatically easier when it comes to totalling up each quarter.</li>
+        <li><strong>Don&apos;t panic about mistakes</strong> — if you submit a quarterly update and realise the figures were wrong, you can correct them. Your next submission automatically reflects the updated cumulative figures.</li>
+      </ul>
+
+      <h2>When are the deadlines?</h2>
+      <p>For the 2026/27 tax year, the quarterly update deadlines are:</p>
+      <ul>
+        <li>Quarter 1 (6 April – 5 July) — due 7 August 2026</li>
+        <li>Quarter 2 (6 July – 5 October) — due 7 November 2026</li>
+        <li>Quarter 3 (6 October – 5 January) — due 7 February 2027</li>
+        <li>Quarter 4 (6 January – 5 April) — due 7 May 2027</li>
+      </ul>
+      <p>HMRC has confirmed a soft landing for the first year — no penalties for late quarterly updates in 2026/27. After that, four late submissions within 24 months triggers a £200 fine, with £200 for each additional late one. So the first year is your chance to get the habit established without pressure.</p>
+
+      <h2>Getting started</h2>
+      <p>If you already keep a spreadsheet of your fares and expenses, you&apos;re most of the way there. If you don&apos;t, now is the time to start — even a simple one with date, income, and expense columns is enough. Create a free Flonancial account, connect to HMRC once, and you can submit your quarterly updates in minutes.</p>
+    `,
+  },
+  {
+    slug: "making-tax-digital-for-tradespeople",
+    title: "Making Tax Digital for Plumbers, Electricians & Builders",
+    metaDescription: "Self-employed tradespeople: MTD for Income Tax starts April 2026. Here's what you need to know and how to submit quarterly updates for free using your spreadsheet.",
+    category: "guide",
+    publishedDate: "2026-03-22",
+    image: "/blog14.png",
+    content: `
+      <p>If you&apos;re a self-employed plumber, electrician, builder, carpenter, painter, roofer, or any other tradesperson, Making Tax Digital for Income Tax is coming your way. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC.</p>
+      <p>Here&apos;s a practical guide to what&apos;s changing, what you actually need to do, and how to keep it simple.</p>
+
+      <h2>Does MTD apply to me?</h2>
+      <p>If you&apos;re self-employed (not on someone else&apos;s payroll) and your <strong>gross income</strong> — that&apos;s your total turnover before expenses — is over £50,000, then yes, from April 2026. The threshold drops to £30,000 in 2027 and £20,000 in 2028, so most self-employed tradespeople will be affected eventually.</p>
+      <p>A common misunderstanding: MTD uses your turnover, not your profit. If you invoice £60,000 but spend £25,000 on materials and subcontractors, your profit is £35,000 — but HMRC sees £60,000, so you&apos;re in scope.</p>
+      <p>If you work through a limited company (Ltd), MTD for Income Tax doesn&apos;t apply to you. It&apos;s specifically for sole traders and landlords.</p>
+
+      <h2>What do I have to do?</h2>
+      <p>Four times a year, you&apos;ll need to send HMRC a summary of your income and expenses for that quarter. Each update includes three numbers: total income, total expenses, and any other business income. That&apos;s it.</p>
+      <p><strong>You are not paying tax quarterly.</strong> This is a common worry but it&apos;s not how it works. The quarterly updates are reporting only — you&apos;re telling HMRC how the year is going. Your tax bill is still calculated and paid annually through Self Assessment.</p>
+
+      <h2>What records do I need?</h2>
+      <p>HMRC requires digital records of every business transaction — the date, the amount, and what it was. A spreadsheet counts. A notebook, a box of receipts, or a pile of invoices on their own don&apos;t.</p>
+      <p>For tradespeople, the biggest challenge is often recording things in real time. You&apos;re on a job site, not at a desk. The key habit is to log income and expenses at the end of each day or week, rather than trying to reconstruct months of activity at the end of a quarter.</p>
+
+      <h3>Typical expenses for tradespeople</h3>
+      <ul>
+        <li>Materials and supplies</li>
+        <li>Tool purchases and replacements</li>
+        <li>Plant and equipment hire</li>
+        <li>Van or vehicle costs (fuel, insurance, maintenance, road tax)</li>
+        <li>Public liability and professional insurance</li>
+        <li>Subcontractor payments</li>
+        <li>Phone and data costs (business use)</li>
+        <li>Workwear and PPE</li>
+        <li>Trade body memberships and certifications</li>
+        <li>Advertising, website, and signwriting costs</li>
+        <li>Parking fees (not fines)</li>
+        <li>Home office costs if you do admin from home (proportion of utilities)</li>
+      </ul>
+      <p>Keep receipts for everything. Physical receipts from builders&apos; merchants and fuel stations fade over time — take a photo or log the amount in your spreadsheet on the same day.</p>
+
+      <h2>What about the CIS?</h2>
+      <p>If you work in construction and are registered under the Construction Industry Scheme, MTD is a separate obligation that runs alongside CIS. Your CIS deductions (the 20% or 30% withheld by contractors) are handled through your Self Assessment. MTD quarterly updates are just your income and expenses summary — they don&apos;t replace or change anything about CIS.</p>
+      <p>One thing to be aware of: if you use subcontractors yourself, you need to keep clear records of what you pay them. Subcontractor costs are a legitimate business expense and should be included in your quarterly totals. If you&apos;re both a subcontractor and a contractor, you&apos;ll need to track both the deductions taken from your income and the payments you make to your own subbies.</p>
+
+      <h2>Do I need to buy accounting software?</h2>
+      <p>No. You need compatible software to submit your updates, but if you track your income and expenses in a spreadsheet, all you need is bridging software to send the totals to HMRC. Bridging software is HMRC-recognised — it&apos;s listed on their Software Choices page. You don&apos;t need to learn Xero, QuickBooks, or anything else.</p>
+      <p>Flonancial is free bridging software that works with your existing spreadsheet. Upload it, pick the cells with your totals, review, and submit. No monthly subscription.</p>
+
+      <h2>Deadlines and penalties</h2>
+      <p>Quarterly updates are due on the 7th of the month following the end of each quarter. For the first year (2026/27), HMRC has confirmed a soft landing — no penalties for late quarterly submissions. After that, four late submissions in 24 months triggers a £200 fine.</p>
+
+      <h2>Getting started</h2>
+      <p>If you already keep track of your jobs, invoices, and expenses in a spreadsheet, you&apos;re ready. If you don&apos;t, start now — even a simple sheet with date, description, income, and expense columns is all you need. Create a free Flonancial account and submit your first quarterly update in minutes.</p>
+    `,
+  },
+  {
+    slug: "making-tax-digital-for-hairdressers",
+    title: "Making Tax Digital for Hairdressers & Barbers — A Simple Guide",
+    metaDescription: "Self-employed hairdressers and barbers: MTD is coming. Here's what you need to do and how to submit your quarterly updates to HMRC for free.",
+    category: "guide",
+    publishedDate: "2026-03-22",
+    image: "/blog14.png",
+    content: `
+      <p>If you&apos;re a self-employed hairdresser, barber, or beauty therapist — whether you rent a chair, work mobile, or run your own salon as a sole trader — Making Tax Digital for Income Tax is going to affect you.</p>
+      <p>From April 2026, sole traders earning over £50,000 must submit quarterly updates to HMRC digitally. The threshold drops to £30,000 in 2027 and £20,000 in 2028.</p>
+
+      <h2>Does this apply to me?</h2>
+      <p>It depends on how you work:</p>
+      <ul>
+        <li><strong>Self-employed chair renter</strong> — yes, if your gross income is over the threshold</li>
+        <li><strong>Mobile hairdresser or barber</strong> — yes, same rules</li>
+        <li><strong>Sole trader salon owner</strong> — yes</li>
+        <li><strong>Employed by a salon</strong> — no, MTD for Income Tax is for self-employed people only</li>
+        <li><strong>Limited company</strong> — no, this is for sole traders</li>
+      </ul>
+      <p>Remember: HMRC uses your <strong>gross income</strong> (total takings), not your profit. If your total client payments come to £55,000 but you pay £15,000 in chair rent and £5,000 in products, your profit is £35,000 — but your turnover is £55,000, putting you in scope from April 2026. This catches more hairdressers than people expect.</p>
+
+      <h2>What changes?</h2>
+      <p>Instead of totalling everything up once a year for Self Assessment, you&apos;ll send HMRC a quarterly summary: your total income, your total expenses, and any other business income. You still do your annual return — these updates are in addition to that.</p>
+      <p>You are <strong>not paying tax quarterly</strong>. The updates are reporting only. Your tax bill is still calculated and settled annually.</p>
+
+      <h2>What records do I need to keep?</h2>
+      <p>Digital records of every transaction — date, amount, and what it was. A spreadsheet is fine. A paper appointment diary on its own isn&apos;t — it needs to be digital.</p>
+
+      <h3>Common expenses in hairdressing and barbering</h3>
+      <ul>
+        <li>Chair rental or salon rent</li>
+        <li>Products for use on clients (colour, shampoo, conditioner, styling products)</li>
+        <li>Products bought for resale to clients</li>
+        <li>Equipment purchases (dryers, straighteners, clippers, scissors, trolleys)</li>
+        <li>Insurance (public liability, professional indemnity)</li>
+        <li>Training, courses, and CPD</li>
+        <li>Phone costs (business use)</li>
+        <li>Travel costs if you&apos;re mobile (fuel, mileage, parking)</li>
+        <li>Laundry costs for towels and uniforms</li>
+        <li>Aprons and protective wear</li>
+        <li>Card machine or payment app fees</li>
+        <li>Trade publications and subscriptions</li>
+        <li>Advertising and marketing</li>
+      </ul>
+      <p>One thing to watch: personal grooming products you buy for yourself are not business expenses, even if you use them at work. Only products used on clients or bought specifically for the business count.</p>
+
+      <h2>Recording income</h2>
+      <p>Whether clients pay by card, bank transfer, or cash, it all counts as income and all needs recording. The simplest approach is to log your daily takings in a spreadsheet at the end of each day — total amount and how it was received. Don&apos;t leave it to the end of the week or month if you can help it.</p>
+      <p>If you use a booking system that tracks payments, you may already have most of the data you need — you just need to make sure it includes all income, not just card payments.</p>
+
+      <h2>Do I need accounting software?</h2>
+      <p>No. If you keep your records in a spreadsheet, bridging software can submit your quarterly totals to HMRC. You don&apos;t need to switch to a full accounting platform or pay a monthly subscription.</p>
+      <p>Flonancial is free bridging software — upload your spreadsheet, pick your totals, and submit. That&apos;s the whole process.</p>
+
+      <h2>Getting started</h2>
+      <p>If you already track your income and expenses in a spreadsheet, you&apos;re set. If you don&apos;t, start a simple one now — date, description, amount in, amount out. Create a free Flonancial account and you can submit your quarterly updates in minutes.</p>
+    `,
+  },
+  {
+    slug: "making-tax-digital-for-personal-trainers",
+    title: "Making Tax Digital for Personal Trainers & Fitness Instructors",
+    metaDescription: "Self-employed PTs and fitness instructors: MTD for Income Tax is coming. Here's what it means and how to submit your quarterly updates for free.",
+    category: "guide",
+    publishedDate: "2026-03-22",
+    image: "/blog14.png",
+    content: `
+      <p>If you&apos;re a self-employed personal trainer, yoga instructor, fitness coach, or gym-based freelancer, Making Tax Digital for Income Tax will affect you. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC.</p>
+      <p>The threshold drops to £30,000 in 2027 and £20,000 in 2028 — so even if you&apos;re not caught this year, you likely will be soon.</p>
+
+      <h2>Does this apply to me?</h2>
+      <ul>
+        <li><strong>Self-employed PT or instructor</strong> — yes, if your gross income is over the threshold</li>
+        <li><strong>Employed by a gym</strong> — no, this is for self-employed people only</li>
+        <li><strong>Mix of employed and self-employed</strong> — MTD applies to the self-employed income only, but all your self-employed income streams count toward the threshold</li>
+        <li><strong>Limited company</strong> — no, this is for sole traders</li>
+      </ul>
+      <p>If you do one-to-one sessions, group classes, online coaching, and sell nutrition plans, all of that is self-employed income and it all adds up toward the threshold.</p>
+
+      <h2>What do I need to do?</h2>
+      <p>Four times a year, submit a summary to HMRC: your total income, your total expenses, and any other business income. You still complete your annual Self Assessment — these are additional updates, not a replacement.</p>
+      <p><strong>You are not paying tax four times a year.</strong> Quarterly updates are reporting only. Your actual tax bill is still calculated and paid annually.</p>
+
+      <h2>What records do I need?</h2>
+      <p>Digital records of every business transaction — date, amount, and description. A spreadsheet works perfectly. A notes app or paper diary on its own doesn&apos;t meet the requirement.</p>
+
+      <h3>Common expenses for PTs and fitness professionals</h3>
+      <ul>
+        <li>Gym or studio hire for client sessions</li>
+        <li>Equipment purchases (bands, mats, weights, kettlebells, stopwatches)</li>
+        <li>Insurance (public liability, professional indemnity — typically £40–£60/month)</li>
+        <li>Qualifications, CPD courses, and certifications (to update existing skills — not to start a new line of work)</li>
+        <li>Marketing and social media advertising</li>
+        <li>Phone and data costs (business use)</li>
+        <li>Travel between clients or venues</li>
+        <li>Software subscriptions (programming, scheduling, payment platforms)</li>
+        <li>Music subscriptions used in classes</li>
+        <li>Sound equipment for group sessions</li>
+        <li>Professional body memberships (CIMSPA, REPs)</li>
+      </ul>
+
+      <h3>What you cannot claim</h3>
+      <p>A few common gotchas for PTs:</p>
+      <ul>
+        <li><strong>Personal gym membership</strong> — even though you work in a gym, your own gym membership is a personal expense, not a business one. However, <strong>hiring gym space</strong> for client sessions is deductible. The distinction matters.</li>
+        <li><strong>Everyday activewear</strong> — leggings, trainers, and t-shirts you could wear outside of work are not claimable. Branded uniforms or specialist protective wear are.</li>
+        <li><strong>Courses to start a new business area</strong> — CPD that updates your existing PT skills is fine. A course to become, say, a nutritionist when you&apos;re not already one is not claimable as a business expense.</li>
+      </ul>
+
+      <h2>Seasonal income</h2>
+      <p>Many PTs see income spike in January and drop off in summer. You still need to submit quarterly regardless, even if a quarter is quiet. If you made less than expected, you just submit lower figures — there&apos;s no minimum.</p>
+
+      <h2>Do I need accounting software?</h2>
+      <p>No. If you already track your sessions, income, and costs in a spreadsheet, you just need bridging software to send the totals to HMRC. You don&apos;t need to switch to a full accounting platform or pay a monthly subscription.</p>
+      <p>Flonancial is free bridging software. Upload your spreadsheet, pick the cells with your totals, and submit directly to HMRC.</p>
+
+      <h2>Getting started</h2>
+      <p>If you keep a spreadsheet of your income and outgoings, you&apos;re already most of the way there. If you don&apos;t, start one now. Create a free Flonancial account and handle your quarterly updates in minutes.</p>
+    `,
+  },
+  {
+    slug: "making-tax-digital-for-cleaners",
+    title: "Making Tax Digital for Cleaners & Domestic Service Providers",
+    metaDescription: "Self-employed cleaners and domestic workers: MTD for Income Tax is coming. Here's a simple guide to what you need to do and how to submit for free.",
+    category: "guide",
+    publishedDate: "2026-03-22",
+    image: "/blog14.png",
+    content: `
+      <p>If you&apos;re a self-employed cleaner, housekeeper, or domestic service provider, Making Tax Digital for Income Tax is going to affect you. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC. The threshold drops to £30,000 in 2027 and £20,000 in 2028.</p>
+
+      <h2>Am I self-employed?</h2>
+      <p>This is the first question to answer, because MTD only applies to self-employed sole traders. If you work through an agency and they pay you a wage, deduct tax, and give you payslips, you&apos;re likely employed — and MTD doesn&apos;t apply to you.</p>
+      <p>If you find your own clients, set your own hours, provide your own supplies, and invoice or get paid directly, you&apos;re self-employed. If you&apos;re unsure, HMRC has a <a href="https://www.gov.uk/employment-status" target="_blank" rel="noopener noreferrer">Check Employment Status tool</a> that can help.</p>
+
+      <h2>Does MTD apply to me?</h2>
+      <ul>
+        <li><strong>Self-employed cleaner with your own clients</strong> — yes, if your gross income is over the threshold</li>
+        <li><strong>Working through an agency that employs you</strong> — no</li>
+        <li><strong>Running a cleaning business as a sole trader</strong> — yes</li>
+        <li><strong>Limited company</strong> — no, this applies to sole traders only</li>
+      </ul>
+      <p>Many self-employed cleaners won&apos;t hit the £50,000 threshold in 2026. But the threshold drops to £30,000 in 2027 and £20,000 in 2028. If you clean multiple properties and your total income across all clients is approaching those numbers, you&apos;ll be brought in. It&apos;s worth getting into good habits now rather than scrambling later.</p>
+
+      <h2>What changes?</h2>
+      <p>You&apos;ll need to send HMRC a quarterly summary of your income and expenses — four times a year instead of totalling everything up once for Self Assessment. Each update is just three numbers: total income, total expenses, and any other business income.</p>
+      <p>You still complete your annual Self Assessment as well. And <strong>you are not paying tax quarterly</strong> — the updates are reporting only.</p>
+
+      <h2>What records do I need?</h2>
+      <p>Digital records of every transaction — date, amount, and what it was for. A spreadsheet counts as a digital record. A paper notebook on its own doesn&apos;t.</p>
+      <p>The challenge for cleaners is often that individual payments are small and frequent. If you clean five houses a day, five days a week, that&apos;s a lot of transactions to track. The simplest approach is to log your daily total at the end of each day — you don&apos;t need a separate line for every client if you record the daily total and keep your own records of who paid what.</p>
+
+      <h3>Common expenses for cleaners</h3>
+      <ul>
+        <li>Cleaning products and supplies (if you provide your own)</li>
+        <li>Equipment (vacuum cleaner, steam cleaner, mop, bucket)</li>
+        <li>Travel costs between clients (fuel, public transport, parking)</li>
+        <li>Vehicle costs if you drive to jobs (insurance, maintenance, road tax)</li>
+        <li>Insurance (public liability)</li>
+        <li>Phone costs (business use)</li>
+        <li>Uniforms and protective clothing (rubber gloves, aprons)</li>
+        <li>DBS check fees</li>
+        <li>Advertising costs (flyers, online listings)</li>
+        <li>Home office costs if you do admin from home (proportion of utilities)</li>
+      </ul>
+      <p>Note: if your clients provide the cleaning products and equipment, you won&apos;t have those expenses to claim — but you also won&apos;t need to buy them. Your expense profile depends on how you work.</p>
+      <p>Keep receipts for at least six years — HMRC can request evidence of your expenses during that period.</p>
+
+      <h2>Do I need accounting software?</h2>
+      <p>No. If you keep your records in a spreadsheet — even a simple one listing your daily income and weekly expenses — bridging software can submit your quarterly totals to HMRC. No need for a full accounting package or a monthly subscription.</p>
+      <p>Flonancial is free bridging software. Upload your spreadsheet, pick the cells with your income and expense totals, and submit. That&apos;s it.</p>
+
+      <h2>Getting started</h2>
+      <p>Start by keeping a spreadsheet of what you earn and what you spend on the business. Even if you&apos;re below the threshold now, having digital records in place means you won&apos;t be caught out when the threshold drops. Create a free Flonancial account and you can send your figures to HMRC in minutes when the time comes.</p>
+    `,
+  },
 ];
