@@ -419,9 +419,11 @@ export default function BusinessPage() {
       setSuccessMessage(
         `Submitted to HMRC for ${business.name} (${quarter.shortLabel}): Turnover ${formatCurrency(figures.turnover)}, Expenses ${formatCurrency(figures.expenses)}. Confirmation ID: ${result.correlationId ?? "pending"}`
       );
+      window.scrollTo({ top: 0, behavior: "smooth" });
       await loadData();
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : "Submission failed — please try again.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } finally {
       setSubmitting(false);
     }
