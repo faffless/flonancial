@@ -162,6 +162,7 @@ export default function TaxCalculatorPage() {
             <div className="rounded-xl border border-[#B8D0EB] bg-white p-4">
               <button
                 type="button"
+                aria-expanded={showAdvanced}
                 onClick={() => setShowAdvanced(!showAdvanced)}
                 className="flex w-full items-center justify-between text-xs font-medium text-[#0F1C2E]"
               >

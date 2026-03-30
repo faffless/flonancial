@@ -305,6 +305,7 @@ export function SpreadsheetUpload({
                           key={cIdx}
                           role="button"
                           tabIndex={0}
+                          aria-label={`Cell ${cellRef}${val != null ? `, value: ${val}` : ""}`}
                           onClick={() => handleCellClick(rIdx, cIdx)}
                           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleCellClick(rIdx, cIdx); } }}
                           className={`border-r border-b border-[#B8D0EB] px-2 py-1 cursor-pointer transition whitespace-nowrap ${

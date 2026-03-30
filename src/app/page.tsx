@@ -33,7 +33,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="border-b border-[#B8D0EB]/60">
-      <button onClick={() => setOpen(!open)} className="flex w-full items-center justify-between py-4 text-left text-sm font-medium text-[#0F1C2E] transition hover:text-[#2E88D0]">
+      <button aria-expanded={open} onClick={() => setOpen(!open)} className="flex w-full items-center justify-between py-4 text-left text-sm font-medium text-[#0F1C2E] transition hover:text-[#2E88D0]">
         <span>{q}</span>
         <span className="ml-4 shrink-0 text-[#2E4A63]">{open ? "−" : "+"}</span>
       </button>
@@ -387,6 +387,7 @@ export default function HomePage() {
                                       key={cIdx}
                                       role="button"
                                       tabIndex={0}
+                                      aria-label={`Cell ${cellRef}${val != null ? `, value: ${val}` : ""}`}
                                       onClick={() => handleCellClick(rIdx, cIdx)}
                                       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleCellClick(rIdx, cIdx); } }}
                                       className={`cursor-pointer whitespace-nowrap border-b border-r border-[#B8D0EB] px-2 py-1 transition ${
