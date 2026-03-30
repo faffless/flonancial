@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { HMRC_AUTHORIZE_URL } from "@/utils/hmrc/config";
 
 export async function GET() {
   const clientId = process.env.HMRC_CLIENT_ID;
@@ -17,7 +18,7 @@ export async function GET() {
   const state = crypto.randomUUID();
 
   const authorizeUrl = new URL(
-    "https://test-www.tax.service.gov.uk/oauth/authorize"
+    HMRC_AUTHORIZE_URL
   );
 
   authorizeUrl.searchParams.set("response_type", "code");

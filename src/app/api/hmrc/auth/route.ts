@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
+import { HMRC_AUTHORIZE_URL } from "@/utils/hmrc/config";
 
 export async function GET() {
   const state = randomUUID();
@@ -12,7 +13,7 @@ export async function GET() {
     state,
   });
 
-  const hmrcAuthUrl = `https://test-www.tax.service.gov.uk/oauth/authorize?${params.toString()}`;
+  const hmrcAuthUrl = `${HMRC_AUTHORIZE_URL}?${params.toString()}`;
 
   const response = NextResponse.redirect(hmrcAuthUrl);
 

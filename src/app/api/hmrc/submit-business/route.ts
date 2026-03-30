@@ -11,6 +11,7 @@ import {
   type ClientFraudData,
 } from "@/utils/hmrc/fraud-prevention";
 import { sendSubmissionConfirmation } from "@/utils/email/send-submission-confirmation";
+import { HMRC_API_BASE } from "@/utils/hmrc/config";
 
 type HMRCErrorResponse = {
   code?: string;
@@ -313,8 +314,8 @@ export async function POST(request: Request) {
   const isProperty = business.business_type === "uk_property";
 
   const hmrcUrl = isProperty
-    ? `https://test-api.service.hmrc.gov.uk/individuals/business/property/uk/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`
-    : `https://test-api.service.hmrc.gov.uk/individuals/business/self-employment/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`;
+    ? `${HMRC_API_BASE}/individuals/business/property/uk/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`
+    : `${HMRC_API_BASE}/individuals/business/self-employment/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`;
 
   const acceptHeader = isProperty
     ? "application/vnd.hmrc.6.0+json"

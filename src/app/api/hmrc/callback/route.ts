@@ -5,6 +5,7 @@ import {
   buildFraudPreventionHeaders,
   parseFraudDataFromCookie,
 } from "@/utils/hmrc/fraud-prevention";
+import { HMRC_API_BASE, HMRC_TOKEN_URL } from "@/utils/hmrc/config";
 
 type HMRCTokenResponse = {
   access_token: string;
@@ -127,7 +128,7 @@ export async function GET(request: NextRequest) {
     code,
   });
 
-  const tokenResponse = await fetch("https://test-api.service.hmrc.gov.uk/oauth/token", {
+  const tokenResponse = await fetch(HMRC_TOKEN_URL, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: tokenBody.toString(),
@@ -167,15 +168,13 @@ export async function GET(request: NextRequest) {
           user.email
         );
 
-        // NOTE: Gov-Test-Scenario: BUSINESS_AND_PROPERTY is for sandbox only — remove before going to production
         const listResponse = await fetch(
-          `https://test-api.service.hmrc.gov.uk/individuals/business/details/${nino}/list`,
+          `${HMRC_API_BASE}/individuals/business/details/${nino}/list`,
           {
             method: "GET",
             headers: {
               Accept: "application/vnd.hmrc.2.0+json",
               Authorization: `Bearer ${tokenJson.access_token}`,
-              "Gov-Test-Scenario": "BUSINESS_AND_PROPERTY",
               ...fraudHeaders,
             },
             cache: "no-store",
@@ -193,15 +192,13 @@ export async function GET(request: NextRequest) {
             // Get detailed info
             let detail: HMRCBusinessDetail | null = null;
             try {
-              // NOTE: Gov-Test-Scenario: BUSINESS_AND_PROPERTY is for sandbox only — remove before going to production
               const detailResponse = await fetch(
-                `https://test-api.service.hmrc.gov.uk/individuals/business/details/${nino}/${hmrcBusiness.businessId}`,
+                `${HMRC_API_BASE}/individuals/business/details/${nino}/${hmrcBusiness.businessId}`,
                 {
                   method: "GET",
                   headers: {
                     Accept: "application/vnd.hmrc.2.0+json",
                     Authorization: `Bearer ${tokenJson.access_token}`,
-                    "Gov-Test-Scenario": "BUSINESS_AND_PROPERTY",
                     ...fraudHeaders,
                   },
                   cache: "no-store",

@@ -55,7 +55,8 @@ type HmrcFetchResult =
       cookieMutations: CookieMutation[];
     };
 
-const HMRC_TOKEN_URL = "https://test-api.service.hmrc.gov.uk/oauth/token";
+import { HMRC_TOKEN_URL } from "@/utils/hmrc/config";
+
 
 function getSecureCookieFlag() {
   return process.env.NODE_ENV === "production";

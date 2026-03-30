@@ -9,6 +9,7 @@ import {
   buildFraudPreventionHeaders,
   parseFraudDataFromHeader,
 } from "@/utils/hmrc/fraud-prevention";
+import { HMRC_API_BASE } from "@/utils/hmrc/config";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -55,9 +56,9 @@ export async function GET(request: Request) {
 
   let hmrcUrl: string;
   if (business.business_type === "uk_property") {
-    hmrcUrl = `https://test-api.service.hmrc.gov.uk/individuals/business/property/uk/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`;
+    hmrcUrl = `${HMRC_API_BASE}/individuals/business/property/uk/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`;
   } else {
-    hmrcUrl = `https://test-api.service.hmrc.gov.uk/individuals/business/self-employment/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`;
+    hmrcUrl = `${HMRC_API_BASE}/individuals/business/self-employment/${nino}/${business.hmrc_business_id}/cumulative/${taxYear}`;
   }
 
   const acceptHeader =

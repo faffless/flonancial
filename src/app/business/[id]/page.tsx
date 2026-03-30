@@ -687,13 +687,30 @@ export default function BusinessPage() {
           ) : null}
 
           {selectedYear ? (
-            <div className="mt-8 rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] px-6 py-5">
-              <p className="text-sm font-medium text-[#0F1C2E]">Final Declaration (year-end)</p>
-              <p className="mt-1 text-xs leading-5 text-[#2E4A63]">
-                Flonancial handles quarterly updates only. For the year-end Final Declaration, use{" "}
-                <a href="https://www.gov.uk/personal-tax-account" target="_blank" rel="noopener noreferrer" className="text-[#2E88D0] underline hover:no-underline">HMRC's online service</a>{" "}
-                or another compatible product. The deadline is 31 January following the end of the tax year.
-              </p>
+            <div className="mt-8 space-y-4">
+              <div className="rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] px-6 py-5">
+                <p className="text-sm font-medium text-[#0F1C2E]">Final Declaration (year-end)</p>
+                <p className="mt-1 text-xs leading-5 text-[#2E4A63]">
+                  Flonancial handles quarterly updates only. For the year-end Final Declaration, use{" "}
+                  <a href="https://www.gov.uk/personal-tax-account" target="_blank" rel="noopener noreferrer" className="text-[#2E88D0] underline hover:no-underline">HMRC&apos;s online service</a>{" "}
+                  or another compatible product. The deadline is 31 January following the end of the tax year.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] px-6 py-5">
+                <p className="text-sm font-medium text-[#0F1C2E]">Tax calculation</p>
+                <p className="mt-1 text-xs leading-5 text-[#2E4A63]">
+                  To view your tax calculation, visit your{" "}
+                  <a href="https://www.gov.uk/personal-tax-account" target="_blank" rel="noopener noreferrer" className="text-[#2E88D0] underline hover:no-underline">HMRC Personal Tax Account</a>.
+                  {" "}Flonancial does not currently support tax calculations.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-[#B8D0EB] bg-[#DEE9F8] px-6 py-5">
+                <p className="text-sm font-medium text-[#0F1C2E]">Other income sources</p>
+                <p className="mt-1 text-xs leading-5 text-[#2E4A63]">
+                  Flonancial supports self-employment and UK property income. If you have other income sources (e.g. foreign property, partnerships), you may need additional software.{" "}
+                  <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer" className="text-[#2E88D0] underline hover:no-underline">Find compatible software on GOV.UK</a>.
+                </p>
+              </div>
             </div>
           ) : null}
 

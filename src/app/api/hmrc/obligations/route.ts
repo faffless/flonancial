@@ -9,6 +9,7 @@ import {
   buildFraudPreventionHeaders,
   parseFraudDataFromHeader,
 } from "@/utils/hmrc/fraud-prevention";
+import { HMRC_API_BASE } from "@/utils/hmrc/config";
 
 type HMRCObligationGroup = {
   typeOfBusiness?: string;
@@ -91,7 +92,7 @@ export async function GET(request: Request) {
 
     const hmrcBusinessType = toHmrcBusinessType(business.business_type);
     const hmrcUrl = new URL(
-      `https://test-api.service.hmrc.gov.uk/obligations/details/${encodeURIComponent(nino)}/income-and-expenditure`
+      `${HMRC_API_BASE}/obligations/details/${encodeURIComponent(nino)}/income-and-expenditure`
     );
     hmrcUrl.searchParams.set("typeOfBusiness", hmrcBusinessType);
     hmrcUrl.searchParams.set("businessId", business.hmrc_business_id);
