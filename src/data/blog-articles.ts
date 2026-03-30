@@ -14,7 +14,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Can You Use Excel for Making Tax Digital? Yes — Here's How",
     metaDescription: "You don't need to ditch your spreadsheet for MTD. Learn how to use Excel or Google Sheets with free bridging software to submit quarterly updates to HMRC.",
     category: "guide",
-    publishedDate: "2026-03-01",
+    publishedDate: "2026-03-03",
     image: "/blog1.png",
     content: `
       <p>If you already track your income and expenses in Excel or Google Sheets, you might be wondering whether Making Tax Digital forces you to switch to accounting software like Xero or QuickBooks.</p>
@@ -59,7 +59,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Free MTD Bridging Software for Spreadsheets — Flonancial",
     metaDescription: "Submit your Making Tax Digital quarterly updates to HMRC for free. Upload your spreadsheet, pick your figures, and submit. No accounting software needed.",
     category: "comparison",
-    publishedDate: "2026-03-02",
+    publishedDate: "2026-03-04",
     image: "/blog2.png",
     content: `
       <p>Most Making Tax Digital software costs between £12 and £35 per month. If you're a sole trader or landlord with straightforward finances, that feels like a lot to pay for something the government is forcing you to do.</p>
@@ -99,7 +99,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Landlords — Free Software and What You Need to Know",
     metaDescription: "UK landlords earning over £50,000 must comply with MTD from April 2026. Learn what's required and how to submit quarterly updates for free with your spreadsheet.",
     category: "guide",
-    publishedDate: "2026-03-03",
+    publishedDate: "2026-03-05",
     image: "/blog3.png",
     content: `
       <p>If you earn rental income from UK property and your total income exceeds £50,000, Making Tax Digital for Income Tax applies to you from 6 April 2026.</p>
@@ -153,7 +153,7 @@ export const blogArticles: BlogArticle[] = [
     title: "MTD Software Comparison 2026: Free vs Paid Options",
     metaDescription: "Compare the best Making Tax Digital software for 2026 — pricing, features, and what sole traders and landlords actually need. Includes free options.",
     category: "comparison",
-    publishedDate: "2026-03-04",
+    publishedDate: "2026-03-06",
     image: "/blog4.png",
     content: `
       <p>There are dozens of MTD-compatible software options, but most sole traders and landlords only need the basics. Here's an honest comparison of what's available, what it costs, and what you actually need.</p>
@@ -213,7 +213,7 @@ export const blogArticles: BlogArticle[] = [
     title: "MTD Bridging Software Explained: What It Is and Why You Need It",
     metaDescription: "Bridging software connects your spreadsheet to HMRC for Making Tax Digital. Learn what it does, how it works, and whether you need it.",
     category: "guide",
-    publishedDate: "2026-03-05",
+    publishedDate: "2026-03-07",
     image: "/blog5.png",
     content: `
       <p>You'll see the term "bridging software" a lot when researching Making Tax Digital. Here's what it actually means and whether it's what you need.</p>
@@ -254,7 +254,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Sole Traders — Keep Your Spreadsheet",
     metaDescription: "Self-employed and worried about MTD? You don't need to switch to accounting software. Learn how sole traders can comply using their existing spreadsheet.",
     category: "guide",
-    publishedDate: "2026-03-06",
+    publishedDate: "2026-03-08",
     image: "/blog6.png",
     content: `
       <p>Making Tax Digital for Income Tax starts on 6 April 2026. If you're self-employed and earn over £50,000, you need to start submitting quarterly updates to HMRC using compatible software.</p>
@@ -307,7 +307,7 @@ export const blogArticles: BlogArticle[] = [
     title: "How to Submit Your First MTD Quarterly Update (Step by Step)",
     metaDescription: "A practical step-by-step guide to submitting your first Making Tax Digital quarterly update to HMRC using your spreadsheet and free bridging software.",
     category: "guide",
-    publishedDate: "2026-03-07",
+    publishedDate: "2026-03-09",
     image: "/blog7.png",
     content: `
       <p>Your first MTD quarterly submission can feel daunting. Here's exactly what happens, step by step, so there are no surprises.</p>
@@ -353,7 +353,7 @@ export const blogArticles: BlogArticle[] = [
     title: "MTD Quarterly Deadlines 2026/27: Every Date You Need to Know",
     metaDescription: "All the Making Tax Digital quarterly submission deadlines for the 2026/27 tax year. Don't miss a deadline — know exactly when to submit.",
     category: "reference",
-    publishedDate: "2026-03-08",
+    publishedDate: "2026-03-10",
     image: "/blog8.png",
     content: `
       <p>Making Tax Digital for Income Tax starts on 6 April 2026 for anyone earning over £50,000. Here are all the deadlines you need for the first tax year.</p>
@@ -392,7 +392,7 @@ export const blogArticles: BlogArticle[] = [
     title: "MTD Penalties Explained: Points, Fines, and the 2026 Grace Period",
     metaDescription: "What happens if you submit late or get your MTD figures wrong? Understand the new penalty points system, fines, and the first-year grace period.",
     category: "reference",
-    publishedDate: "2026-03-09",
+    publishedDate: "2026-03-11",
     image: "/blog9.png",
     content: `
       <p>One of the biggest anxieties around Making Tax Digital is penalties. What if you submit late? What if you get the numbers wrong? Here's how the system actually works.</p>
@@ -444,7 +444,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Do I Need Making Tax Digital? A Quick Eligibility Check",
     metaDescription: "Find out if Making Tax Digital applies to you. Check the income thresholds, exemptions, and timeline for MTD for Income Tax.",
     category: "guide",
-    publishedDate: "2026-03-10",
+    publishedDate: "2026-03-12",
     image: "/blog10.png",
     content: `
       <p>Not sure if Making Tax Digital affects you? Here's a quick way to check.</p>
@@ -500,7 +500,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital 2026: The Complete Guide for Beginners",
     metaDescription: "Everything you need to know about Making Tax Digital for Income Tax in 2026. Who's affected, what's required, deadlines, and how to comply.",
     category: "guide",
-    publishedDate: "2026-03-11",
+    publishedDate: "2026-03-13",
     image: "/blog11.png",
     content: `
       <p>Making Tax Digital (MTD) for Income Tax is the biggest change to UK tax reporting in decades. From 6 April 2026, hundreds of thousands of sole traders and landlords must start submitting quarterly digital updates to HMRC.</p>
@@ -548,7 +548,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital vs Self Assessment — What's Actually Changing?",
     metaDescription: "Confused about the difference between MTD and Self Assessment? Here's what's changing, what stays the same, and what you need to do differently.",
     category: "guide",
-    publishedDate: "2026-03-12",
+    publishedDate: "2026-03-14",
     image: "/blog12.png",
     content: `
       <p>If you already do Self Assessment, Making Tax Digital might sound like a completely new system. It's not — it's more of an extension. Here's what's actually changing.</p>
@@ -589,7 +589,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Best Free Making Tax Digital Software 2026",
     metaDescription: "Looking for free MTD software? Here are the genuinely free options for Making Tax Digital for Income Tax — no trials, no hidden fees.",
     category: "comparison",
-    publishedDate: "2026-03-13",
+    publishedDate: "2026-03-15",
     image: "/blog13.png",
     content: `
       <p>Searching for free MTD software and finding that "free" usually means "free trial" or "free for VAT only"? Here's what's genuinely available for Making Tax Digital for Income Tax without paying.</p>
@@ -636,7 +636,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Free MTD Spreadsheet Template (Download)",
     metaDescription: "Download a free Making Tax Digital spreadsheet template for sole traders and landlords. Track income, expenses, and submit to HMRC with one click.",
     category: "reference",
-    publishedDate: "2026-03-14",
+    publishedDate: "2026-03-16",
     image: "/blog14.png",
     content: `
       <p>If you need a spreadsheet to track your income and expenses for Making Tax Digital, you can download our free template. It's designed to work seamlessly with Flonancial's upload — but you can also use it standalone.</p>
@@ -679,7 +679,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Taxi Drivers — What You Need to Know",
     metaDescription: "Self-employed taxi and private hire drivers: MTD is coming. Here's what changes, what you need to do, and how to submit your quarterly updates for free.",
     category: "guide",
-    publishedDate: "2026-03-15",
+    publishedDate: "2026-03-17",
     image: "/blog15.png",
     content: `
       <p>If you drive a taxi or work as a private hire driver and you&apos;re self-employed, Making Tax Digital for Income Tax is going to affect you. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC. The threshold drops to £30,000 in 2027 and £20,000 in 2028.</p>
@@ -754,7 +754,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Plumbers, Electricians & Builders",
     metaDescription: "Self-employed tradespeople: MTD for Income Tax starts April 2026. Here's what you need to know and how to submit quarterly updates for free using your spreadsheet.",
     category: "guide",
-    publishedDate: "2026-03-16",
+    publishedDate: "2026-03-18",
     image: "/blog16.png",
     content: `
       <p>If you&apos;re a self-employed plumber, electrician, builder, carpenter, painter, roofer, or any other tradesperson, Making Tax Digital for Income Tax is coming your way. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC.</p>
@@ -811,7 +811,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Hairdressers & Barbers — A Simple Guide",
     metaDescription: "Self-employed hairdressers and barbers: MTD is coming. Here's what you need to do and how to submit your quarterly updates to HMRC for free.",
     category: "guide",
-    publishedDate: "2026-03-17",
+    publishedDate: "2026-03-19",
     image: "/blog17.png",
     content: `
       <p>If you&apos;re a self-employed hairdresser, barber, or beauty therapist — whether you rent a chair, work mobile, or run your own salon as a sole trader — Making Tax Digital for Income Tax is going to affect you.</p>
@@ -871,7 +871,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Personal Trainers & Fitness Instructors",
     metaDescription: "Self-employed PTs and fitness instructors: MTD for Income Tax is coming. Here's what it means and how to submit your quarterly updates for free.",
     category: "guide",
-    publishedDate: "2026-03-18",
+    publishedDate: "2026-03-20",
     image: "/blog18.png",
     content: `
       <p>If you&apos;re a self-employed personal trainer, yoga instructor, fitness coach, or gym-based freelancer, Making Tax Digital for Income Tax will affect you. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC.</p>
@@ -933,7 +933,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Cleaners & Domestic Service Providers",
     metaDescription: "Self-employed cleaners and domestic workers: MTD for Income Tax is coming. Here's a simple guide to what you need to do and how to submit for free.",
     category: "guide",
-    publishedDate: "2026-03-19",
+    publishedDate: "2026-03-21",
     image: "/blog19.png",
     content: `
       <p>If you&apos;re a self-employed cleaner, housekeeper, or domestic service provider, Making Tax Digital for Income Tax is going to affect you. From April 2026, sole traders earning over £50,000 must keep digital records and submit quarterly updates to HMRC. The threshold drops to £30,000 in 2027 and £20,000 in 2028.</p>
@@ -989,7 +989,7 @@ export const blogArticles: BlogArticle[] = [
     title: "How Making Tax Digital Could Help Your Mortgage Application",
     metaDescription: "MTD means self-employed sole traders now have verified, quarterly digital income records with HMRC. Here's why that could make your mortgage application smoother.",
     category: "guide",
-    publishedDate: "2026-03-20",
+    publishedDate: "2026-03-22",
     image: "/blog20.png",
     content: `
       <p>If you&apos;re self-employed and thinking about getting a mortgage, you already know the process is harder than it is for someone on PAYE. Lenders want proof of consistent income, and historically, self-employed applicants have had to jump through more hoops to provide it.</p>
@@ -1061,7 +1061,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for Contractors — Limited Company vs Sole Trader",
     metaDescription: "Are you a contractor? Whether you work through a limited company or as a sole trader, here's what MTD for Income Tax means for you.",
     category: "guide",
-    publishedDate: "2026-03-21",
+    publishedDate: "2026-03-23",
     image: "/blog21.png",
     content: `
       <p>If you&apos;re a contractor, you&apos;ve probably heard about Making Tax Digital for Income Tax (MTD ITSA). But whether it actually affects you depends entirely on how your business is structured. The answer is different for limited company contractors and sole trader contractors — and getting it wrong could mean missed deadlines or unnecessary panic.</p>
@@ -1129,7 +1129,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Do I Need My Accountant for MTD Quarterly Updates?",
     metaDescription: "Wondering if you need to pay your accountant for MTD quarterly updates? Here&apos;s what you can handle yourself with bridging software and when professional help makes sense.",
     category: "guide",
-    publishedDate: "2026-03-22",
+    publishedDate: "2026-03-24",
     image: "/blog22.png",
     content: `
       <p>Making Tax Digital is rolling out, and one of the first questions many sole traders and landlords ask is: do I need to pay my accountant to handle the quarterly updates?</p>
@@ -1192,7 +1192,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Free Spreadsheet Software for Making Tax Digital — What Are Your Options?",
     metaDescription: "Don't have Excel? Here are the best free spreadsheet tools you can use for MTD record-keeping, including Google Sheets, Excel Online, and more.",
     category: "guide",
-    publishedDate: "2026-03-23",
+    publishedDate: "2026-03-25",
     image: "/blog23.png",
     content: `
       <p>Making Tax Digital requires you to keep digital records of your income and expenses. For most self-employed people, that means a spreadsheet. But here&apos;s the thing — you don&apos;t need to pay for one.</p>
@@ -1280,7 +1280,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Self-Employed Tax Calculator 2025–26: How Much Will You Owe?",
     metaDescription: "Use our free self-employed tax calculator for 2025–26. Understand income tax bands, Class 4 NICs, Personal Allowance, and what Making Tax Digital means for your bill.",
     category: "guide",
-    publishedDate: "2026-03-24",
+    publishedDate: "2026-03-26",
     image: "/blog24.png",
     content: `
       <p>One of the biggest questions every self-employed person has is: how much tax am I actually going to owe? Whether you&apos;re a sole trader, a freelancer, or a landlord, understanding your estimated tax bill helps you plan ahead, set money aside, and avoid surprises when January rolls around.</p>
@@ -1366,7 +1366,7 @@ export const blogArticles: BlogArticle[] = [
     title: "UK Tax Calculator for Employed Workers 2025–26: Salary, NI, Student Loans & Pension",
     metaDescription: "Free UK tax calculator for employed workers. Calculate your 2025–26 take-home pay including income tax, National Insurance, student loan repayments, and pension contributions.",
     category: "guide",
-    publishedDate: "2026-03-25",
+    publishedDate: "2026-03-27",
     image: "/blog25.png",
     content: `
       <p>Whether you&apos;ve just started a new job, received a pay rise, or simply want to understand where your money goes each month, knowing how your salary is taxed is essential. We&apos;ve built a <a href="/tools/tax-calculator" style="color:#2E88D0;text-decoration:underline;">free UK tax calculator</a> that covers everything — income tax, National Insurance, student loan repayments, and pension deductions — all based on the 2025–26 tax year rates.</p>
@@ -1447,7 +1447,7 @@ export const blogArticles: BlogArticle[] = [
     title: "MTD Starts in April 2026 — What to Do If You Haven't Signed Up Yet",
     metaDescription: "Making Tax Digital for Income Tax starts 6 April 2026. If you haven't signed up yet, here's exactly what you need to do right now.",
     category: "guide",
-    publishedDate: "2026-03-26",
+    publishedDate: "2026-03-28",
     image: "/blog1.png",
     content: `
       <p>Making Tax Digital for Income Tax goes live on <strong>6 April 2026</strong>. If you earn over £50,000 from self-employment or UK property and haven't signed up yet, don't panic — but do act now.</p>
@@ -1480,7 +1480,7 @@ export const blogArticles: BlogArticle[] = [
     title: "How to Sign Up for MTD on GOV.UK — Step by Step",
     metaDescription: "A simple step-by-step guide to signing up for Making Tax Digital for Income Tax through your Government Gateway account on GOV.UK.",
     category: "guide",
-    publishedDate: "2026-03-27",
+    publishedDate: "2026-03-28",
     image: "/blog2.png",
     content: `
       <p>Before you can use any MTD software (including Flonancial), you need to sign up for Making Tax Digital through GOV.UK. Here's exactly how.</p>
@@ -1525,7 +1525,7 @@ export const blogArticles: BlogArticle[] = [
     title: "Making Tax Digital for eBay and Etsy Sellers — What You Need to Know",
     metaDescription: "Sell on eBay or Etsy? If your income exceeds £50,000, Making Tax Digital applies from April 2026. Learn what's required and how to comply for free.",
     category: "guide",
-    publishedDate: "2026-03-28",
+    publishedDate: "2026-03-29",
     image: "/blog3.png",
     content: `
       <p>If you sell on eBay, Etsy, Vinted, Depop, or any online marketplace and your self-employment income exceeds £50,000, Making Tax Digital for Income Tax applies to you from 6 April 2026.</p>
