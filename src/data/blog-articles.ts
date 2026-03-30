@@ -74,7 +74,7 @@ export const blogArticles: BlogArticle[] = [
       </ul>
 
       <h2>Why is Flonancial free?</h2>
-      <p>Flonancial is free for everyone — sole traders, landlords, and accountants. No card required, no trial period, no catch.</p>
+      <p>Flonancial is free for sole traders and landlords. No card required, no trial period, no catch.</p>
 
       <h2>How it works</h2>
       <ol>
@@ -170,7 +170,7 @@ export const blogArticles: BlogArticle[] = [
       <table>
         <thead><tr><th>Software</th><th>Type</th><th>Price</th><th>Best for</th></tr></thead>
         <tbody>
-          <tr><td>Flonancial</td><td>Bridging</td><td>Free (forever for individuals)</td><td>Spreadsheet users, sole traders, landlords</td></tr>
+          <tr><td>Flonancial</td><td>Bridging</td><td>Free</td><td>Spreadsheet users, sole traders, landlords</td></tr>
           <tr><td>Xero</td><td>Full accounting</td><td>From £17/month</td><td>Businesses wanting full bookkeeping</td></tr>
           <tr><td>QuickBooks</td><td>Full accounting</td><td>From £12/month</td><td>Similar to Xero, cheaper entry point</td></tr>
           <tr><td>FreeAgent</td><td>Full accounting</td><td>From £14.50/month</td><td>Freelancers (free with some banks)</td></tr>
@@ -468,7 +468,7 @@ export const blogArticles: BlogArticle[] = [
 
       <h2>What counts as qualifying income?</h2>
       <p>It's your <strong>gross</strong> income from self-employment and/or property, before expenses. If you have both a sole trader business and rental income, you add them together.</p>
-      <p>Employment income (PAYE salary) doesn't count towards the threshold, but it doesn't exempt you either. A landlord earning £45,000 in salary plus £10,000 in rent needs MTD because the rental income plus any self-employment income exceeds £50,000. Actually, only the self-employment and property income counts — so in this example, if their qualifying income is just the £10,000 rent, they wouldn't need MTD until the threshold drops to cover them.</p>
+      <p>Employment income (PAYE salary) doesn't count towards the threshold. Only self-employment and property income counts. For example, a landlord earning £45,000 in salary plus £10,000 in rent has qualifying income of just £10,000 — they wouldn't need MTD until the threshold drops to cover them.</p>
 
       <h2>Who is exempt?</h2>
       <p>You don't need MTD if:</p>

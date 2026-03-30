@@ -48,7 +48,7 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
 
   const daysToMtd50k = useDaysUntil("2026-04-06");
   const daysToMtd30k = useDaysUntil("2027-04-06");
-  const daysToDeadline = useDaysUntil("2026-05-05");
+  const daysToDeadline = useDaysUntil("2026-05-07");
   const time = useCurrentTime();
 
   const showBusinessInfo = Boolean(businessName);
@@ -120,7 +120,7 @@ export function SiteHeader({ businessEmoji, businessName, businessTagline, busin
                 <span className="font-bold text-[#2E88D0]">{daysToMtd50k} days</span>
               </p>
               <p className="text-xs font-medium text-[#0F1C2E]">
-                Next quarterly deadline (05/05/26) in{" "}
+                Next quarterly deadline (07/05/26) in{" "}
                 <span className="font-bold text-[#2E88D0]">{daysToDeadline} days</span>
               </p>
               <p className="text-xs font-medium text-[#0F1C2E]">

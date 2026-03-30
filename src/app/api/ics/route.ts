@@ -39,13 +39,12 @@ function buildCalendar(): string {
   // Helper for UTC midday (avoids timezone weirdness)
   const middayUTC = (y: number, m: number, d: number) => new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
 
-  // Example quarterly period-end dates (common pattern: Jul 5, Oct 5, Jan 5, Apr 5).
-  // Keep these as placeholders if you want to avoid hard claims.
+  // Quarterly deadlines: 7th of the month following quarter end (changed March 2026 to align with VAT).
   const deadlines = [
-    { label: "Quarter 1 update window", deadline: middayUTC(startYear, 8, 5) },
-    { label: "Quarter 2 update window", deadline: middayUTC(startYear, 11, 5) },
-    { label: "Quarter 3 update window", deadline: middayUTC(startYear + 1, 2, 5) },
-    { label: "Quarter 4 update window", deadline: middayUTC(startYear + 1, 5, 5) },
+    { label: "Quarter 1 update window", deadline: middayUTC(startYear, 8, 7) },
+    { label: "Quarter 2 update window", deadline: middayUTC(startYear, 11, 7) },
+    { label: "Quarter 3 update window", deadline: middayUTC(startYear + 1, 2, 7) },
+    { label: "Quarter 4 update window", deadline: middayUTC(startYear + 1, 5, 7) },
   ];
 
   const events: string[] = [];
