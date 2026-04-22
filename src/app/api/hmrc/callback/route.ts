@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import { getNinoForUser } from "@/utils/hmrc/server";
+import { getNinoForUser, logHmrcCall } from "@/utils/hmrc/server";
 import {
   buildFraudPreventionHeaders,
   parseFraudDataFromCookie,
@@ -182,6 +182,7 @@ export async function GET(request: NextRequest) {
         console.log(
           `[HMRC] GET ${listUrl} → ${listResponse.status} x-correlationid=${listResponse.headers.get("x-correlationid") ?? "(none)"}`
         );
+        await logHmrcCall("GET", listUrl, listResponse);
         // ──────────────────────────────────────────────────────────────────────
 
         if (listResponse.ok) {
@@ -209,6 +210,7 @@ export async function GET(request: NextRequest) {
               console.log(
                 `[HMRC] GET ${detailUrl} → ${detailResponse.status} x-correlationid=${detailResponse.headers.get("x-correlationid") ?? "(none)"}`
               );
+              await logHmrcCall("GET", detailUrl, detailResponse);
               // ──────────────────────────────────────────────────────────────────────
               if (detailResponse.ok) {
                 detail = (await detailResponse.json()) as HMRCBusinessDetail;
