@@ -225,6 +225,11 @@ export async function hmrcFetchWithAuth(
   });
 
   if (response.status !== 401) {
+    // ── TEMP: correlation-ID logger for HMRC production approval testing ──
+    console.log(
+      `[HMRC] ${init?.method ?? "GET"} ${input} → ${response.status} x-correlationid=${response.headers.get("x-correlationid") ?? "(none)"}`
+    );
+    // ──────────────────────────────────────────────────────────────────────
     return {
       ok: true,
       response,
@@ -259,6 +264,12 @@ export async function hmrcFetchWithAuth(
     headers: retryHeaders,
     cache: "no-store",
   });
+
+  // ── TEMP: correlation-ID logger for HMRC production approval testing ──
+  console.log(
+    `[HMRC] ${init?.method ?? "GET"} ${input} → ${response.status} x-correlationid=${response.headers.get("x-correlationid") ?? "(none)"}`
+  );
+  // ──────────────────────────────────────────────────────────────────────
 
   return {
     ok: true,
