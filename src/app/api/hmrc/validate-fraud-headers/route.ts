@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 import { buildFraudPreventionHeaders, type ClientFraudData } from "@/utils/hmrc/fraud-prevention";
 import { logHmrcCall } from "@/utils/hmrc/server";
 import { HMRC_API_BASE } from "@/utils/hmrc/config";
 
 type ValidateBody = {
   fraudData: ClientFraudData;
-  userId?: string;
-  userEmail?: string | null;
 };
 
 export async function POST(req: NextRequest) {
@@ -51,11 +50,26 @@ export async function POST(req: NextRequest) {
 
   const tokenJson = await tokenResponse.json();
 
+  // Read the logged-in Supabase user so Gov-Client-User-IDs reflects a real user
+  // (falls back to a placeholder if not logged in — validator only checks format)
+  let userId = "validate-fraud-headers-route";
+  let userEmail: string | null = null;
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      userId = user.id;
+      userEmail = user.email ?? null;
+    }
+  } catch {
+    // ignore — fall through with placeholder
+  }
+
   const fraudHeaders = buildFraudPreventionHeaders(
     req.headers,
     body.fraudData,
-    body.userId ?? "validate-fraud-headers-route",
-    body.userEmail ?? null,
+    userId,
+    userEmail,
   );
 
   const validateUrl = `${HMRC_API_BASE}/test/fraud-prevention-headers/validate`;
