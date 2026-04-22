@@ -65,7 +65,7 @@ export default function AboutPage() {
             <div>
               <h2 className="text-base font-medium text-[#0F1C2E]">Who this is for</h2>
               <p className="mt-3">
-                From April 2026, sole traders and landlords earning over £50,000 must submit
+                Since April 2026, sole traders and landlords earning over £50,000 must submit
                 quarterly updates to HMRC digitally. The threshold drops to £30,000 in 2027
                 and £20,000 in 2028. Millions of people will need compatible software.
               </p>
