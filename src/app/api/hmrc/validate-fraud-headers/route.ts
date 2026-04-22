@@ -10,13 +10,6 @@ type ValidateBody = {
 };
 
 export async function POST(req: NextRequest) {
-  const clientId = process.env.HMRC_CLIENT_ID;
-  const clientSecret = process.env.HMRC_CLIENT_SECRET;
-
-  if (!clientId || !clientSecret) {
-    return NextResponse.json({ error: "missing_hmrc_env" }, { status: 500 });
-  }
-
   let body: ValidateBody;
   try {
     body = (await req.json()) as ValidateBody;
@@ -28,30 +21,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "missing_fraud_data" }, { status: 400 });
   }
 
-  // Application-restricted token — the validator endpoint accepts these
-  const tokenResponse = await fetch(`${HMRC_API_BASE}/oauth/token`, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      client_id: clientId,
-      client_secret: clientSecret,
-      grant_type: "client_credentials",
-      scope: "read:transactions-monitoring",
-    }).toString(),
-    cache: "no-store",
-  });
-
-  if (!tokenResponse.ok) {
-    let error = "token_request_failed";
-    try {
-      const errJson = await tokenResponse.json();
-      error = errJson.error_description || errJson.error || error;
-    } catch {}
-    return NextResponse.json({ error, hint: "Confirm sandbox credentials are subscribed to 'Test Fraud Prevention Headers' API" }, { status: tokenResponse.status });
-  }
-
-  const tokenJson = await tokenResponse.json();
-
   const fraudHeaders = buildFraudPreventionHeaders(
     req.headers,
     body.fraudData,
@@ -61,11 +30,11 @@ export async function POST(req: NextRequest) {
 
   const validateUrl = `${HMRC_API_BASE}/test/fraud-prevention-headers/validate`;
 
+  // Test Fraud Prevention Headers is an open-access API — no Authorization required
   const validateRes = await fetch(validateUrl, {
     method: "GET",
     headers: {
       Accept: "application/vnd.hmrc.1.0+json",
-      Authorization: `Bearer ${tokenJson.access_token}`,
       ...fraudHeaders,
     },
     cache: "no-store",
