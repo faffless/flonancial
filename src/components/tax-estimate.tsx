@@ -180,9 +180,9 @@ export function calculateFullTax(inputs: TaxInputs): TaxResult {
 
   // Student loan repayments — multiple simultaneous
   const slThresholds: Record<StudentLoanPlan, { threshold: number; rate: number }> = {
-    plan1: { threshold: 26_065, rate: 0.09 },
-    plan2: { threshold: 28_470, rate: 0.09 },
-    plan4: { threshold: 31_395, rate: 0.09 },
+    plan1: { threshold: 26_900, rate: 0.09 },
+    plan2: { threshold: 29_385, rate: 0.09 },
+    plan4: { threshold: 33_795, rate: 0.09 },
     plan5: { threshold: 25_000, rate: 0.09 },
     postgrad: { threshold: 21_000, rate: 0.06 },
   };
@@ -292,9 +292,9 @@ export default function TaxEstimate({ turnover, expenses, isQuarterly, compact }
         <span className="text-sm font-semibold text-[#0F1C2E]">{t.effectiveRate.toFixed(1)}%</span>
       </div>
 
-      {annualProfit > 6_845 && (
+      {annualProfit > 7_105 && (
         <p className="mt-2 text-[11px] text-[#5A7A9B]">
-          Class 2 NICs (£182.00/year) are voluntary since April 2024 and not included above.
+          Class 2 NICs are auto-credited above the Small Profits Threshold (£7,105) since April 2024 — no payment needed.
         </p>
       )}
 

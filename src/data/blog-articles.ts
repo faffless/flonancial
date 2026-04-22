@@ -1312,7 +1312,7 @@ export const blogArticles: BlogArticle[] = [
       <p>These rates were reduced from 9% and 2% in January 2024, so if you&apos;re comparing to previous years, your NIC bill should be lower.</p>
 
       <h2>What about Class 2 NICs?</h2>
-      <p>Class 2 National Insurance contributions (£3.50/week in 2025–26) became <strong>voluntary</strong> from April 2024. If your profits exceed £6,845, you&apos;re automatically treated as having paid them for state pension purposes — without actually needing to pay. Most self-employed people no longer need to worry about Class 2.</p>
+      <p>Class 2 National Insurance contributions (£3.65/week voluntary rate in 2026–27) became <strong>voluntary</strong> from April 2024. If your profits exceed the Small Profits Threshold (£7,105 for 2026–27), you&apos;re automatically treated as having paid them for state pension purposes — without actually needing to pay. Most self-employed people no longer need to worry about Class 2.</p>
       <p>You may still choose to pay voluntarily if you want to fill gaps in your National Insurance record, but it&apos;s no longer a mandatory part of your tax bill.</p>
 
       <h2>Example calculations</h2>
@@ -1394,9 +1394,9 @@ export const blogArticles: BlogArticle[] = [
       <h2>Student loan repayments</h2>
       <p>If you have a student loan, repayments are deducted from your salary once you earn above your plan&apos;s threshold. The amount deducted depends on which plan you&apos;re on:</p>
       <ul>
-        <li><strong>Plan 1</strong> (started before September 2012) — 9% on income over £26,065</li>
-        <li><strong>Plan 2</strong> (started September 2012 onwards) — 9% on income over £28,470</li>
-        <li><strong>Plan 4</strong> (Scottish students) — 9% on income over £31,395</li>
+        <li><strong>Plan 1</strong> (started before September 2012) — 9% on income over £26,900</li>
+        <li><strong>Plan 2</strong> (started September 2012 onwards) — 9% on income over £29,385</li>
+        <li><strong>Plan 4</strong> (Scottish students) — 9% on income over £33,795</li>
         <li><strong>Plan 5</strong> (started September 2023 onwards) — 9% on income over £25,000</li>
         <li><strong>Postgraduate loan</strong> — 6% on income over £21,000</li>
       </ul>

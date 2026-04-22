@@ -274,8 +274,8 @@ export default function TaxCalculatorPage() {
                 {result.personalAllowance >= 0 && result.personalAllowance < 12_570 && !taxCode && (
                   <p className="text-[10px] text-amber-700">PA reduced to £{fmtShort(result.personalAllowance)} (income over £100k).</p>
                 )}
-                {employmentType === "self-employed" && profit > 6_845 && (
-                  <p className="text-[10px] text-[#5A7A9B]">Class 2 NICs (£182/yr) voluntary since April 2024, not included.</p>
+                {employmentType === "self-employed" && profit > 7_105 && (
+                  <p className="text-[10px] text-[#5A7A9B]">Class 2 NICs auto-credited above the Small Profits Threshold (£7,105) since April 2024 — no payment needed.</p>
                 )}
                 <p className="text-[9px] leading-tight text-[#8BA4BD]">
                   Estimate — 2026–27 England/Wales/NI rates. Does not include Scottish rates or other reliefs. Your actual liability may differ.
@@ -340,9 +340,9 @@ export default function TaxCalculatorPage() {
             <h3 className="mt-5 text-sm font-medium text-[#0F1C2E]">Student Loan Thresholds</h3>
             <table className="mt-2 w-full text-sm">
               <tbody className="text-[#0F1C2E]">
-                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 1</td><td className="py-1.5 text-right">9% over £26,065</td></tr>
-                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 2</td><td className="py-1.5 text-right">9% over £28,470</td></tr>
-                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 4</td><td className="py-1.5 text-right">9% over £31,395</td></tr>
+                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 1</td><td className="py-1.5 text-right">9% over £26,900</td></tr>
+                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 2</td><td className="py-1.5 text-right">9% over £29,385</td></tr>
+                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 4</td><td className="py-1.5 text-right">9% over £33,795</td></tr>
                 <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 5</td><td className="py-1.5 text-right">9% over £25,000</td></tr>
                 <tr><td className="py-1.5">Postgraduate</td><td className="py-1.5 text-right">6% over £21,000</td></tr>
               </tbody>
