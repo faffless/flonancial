@@ -812,7 +812,7 @@ export const blogArticles: BlogArticle[] = [
     metaDescription: "Self-employed hairdressers and barbers: MTD is coming. Here's what you need to do and how to submit your quarterly updates to HMRC for free.",
     category: "guide",
     publishedDate: "2026-03-19",
-    image: "/blog17.png",
+    image: "/blog33.png",
     content: `
       <p>If you&apos;re a self-employed hairdresser, barber, or beauty therapist — whether you rent a chair, work mobile, or run your own salon as a sole trader — Making Tax Digital for Income Tax is going to affect you.</p>
       <p>From April 2026, sole traders earning over £50,000 must submit quarterly updates to HMRC digitally. The threshold drops to £30,000 in 2027 and £20,000 in 2028.</p>
@@ -1275,173 +1275,8 @@ export const blogArticles: BlogArticle[] = [
       <p>All four options can produce .xlsx files that work perfectly with Flonancial. There&apos;s no wrong choice here — just pick whichever one feels most comfortable and start keeping your records.</p>
     `,
   },
-  {
-    slug: "self-employed-tax-calculator-2025-26",
-    title: "Self-Employed Tax Calculator 2025–26: How Much Will You Owe?",
-    metaDescription: "Use our free self-employed tax calculator for 2025–26. Understand income tax bands, Class 4 NICs, Personal Allowance, and what Making Tax Digital means for your bill.",
-    category: "guide",
-    publishedDate: "2026-03-26",
-    image: "/blog24.png",
-    content: `
-      <p>One of the biggest questions every self-employed person has is: how much tax am I actually going to owe? Whether you&apos;re a sole trader, a freelancer, or a landlord, understanding your estimated tax bill helps you plan ahead, set money aside, and avoid surprises when January rolls around.</p>
-      <p>We&apos;ve built a <a href="/tools/tax-calculator" style="color:#2E88D0;text-decoration:underline;">free self-employed tax calculator</a> that gives you an instant estimate based on the 2025–26 tax year rates. Enter your annual income and expenses, and it calculates your income tax, Class 4 National Insurance, and effective tax rate — all in your browser, nothing stored.</p>
 
-      <h2>How self-employed tax works in the UK</h2>
-      <p>If you&apos;re self-employed, you pay tax on your <strong>profit</strong> — that&apos;s your total income (turnover) minus your allowable business expenses. You don&apos;t pay tax on your turnover itself, only on what&apos;s left after expenses.</p>
-      <p>There are two main taxes you&apos;ll pay:</p>
-      <ul>
-        <li><strong>Income Tax</strong> — charged at progressive rates depending on how much you earn</li>
-        <li><strong>Class 4 National Insurance</strong> — charged on profits above £12,570</li>
-      </ul>
 
-      <h2>2025–26 income tax rates (England, Wales &amp; Northern Ireland)</h2>
-      <p>Everyone gets a tax-free Personal Allowance of <strong>£12,570</strong>. After that:</p>
-      <ul>
-        <li><strong>Basic rate (20%)</strong> on taxable income from £12,571 to £50,270</li>
-        <li><strong>Higher rate (40%)</strong> on taxable income from £50,271 to £125,140</li>
-        <li><strong>Additional rate (45%)</strong> on taxable income above £125,140</li>
-      </ul>
-      <p>If your income exceeds £100,000, your Personal Allowance is reduced by £1 for every £2 over that threshold. By £125,140, it&apos;s gone entirely — meaning your effective marginal rate between £100,000 and £125,140 is actually 60%.</p>
-
-      <h2>Class 4 National Insurance 2025–26</h2>
-      <p>On top of income tax, self-employed people pay Class 4 NICs:</p>
-      <ul>
-        <li><strong>6%</strong> on profits between £12,570 and £50,270</li>
-        <li><strong>2%</strong> on profits above £50,270</li>
-      </ul>
-      <p>These rates were reduced from 9% and 2% in January 2024, so if you&apos;re comparing to previous years, your NIC bill should be lower.</p>
-
-      <h2>What about Class 2 NICs?</h2>
-      <p>Class 2 National Insurance contributions (£3.65/week voluntary rate in 2026–27) became <strong>voluntary</strong> from April 2024. If your profits exceed the Small Profits Threshold (£7,105 for 2026–27), you&apos;re automatically treated as having paid them for state pension purposes — without actually needing to pay. Most self-employed people no longer need to worry about Class 2.</p>
-      <p>You may still choose to pay voluntarily if you want to fill gaps in your National Insurance record, but it&apos;s no longer a mandatory part of your tax bill.</p>
-
-      <h2>Example calculations</h2>
-      <p>Here are a few examples to give you a feel for the numbers:</p>
-
-      <h3>Sole trader earning £35,000 profit</h3>
-      <ul>
-        <li>Income Tax: £4,486 (20% on £22,430 above Personal Allowance)</li>
-        <li>Class 4 NICs: £1,345.80 (6% on £22,430)</li>
-        <li><strong>Total: £5,831.80</strong> — effective rate of 16.7%</li>
-      </ul>
-
-      <h3>Freelancer earning £55,000 profit</h3>
-      <ul>
-        <li>Income Tax: £9,432 (20% on £37,700 + 40% on £4,730)</li>
-        <li>Class 4 NICs: £2,356.60 (6% on £37,700 + 2% on £4,730)</li>
-        <li><strong>Total: £11,788.60</strong> — effective rate of 21.4%</li>
-      </ul>
-
-      <h3>Landlord earning £72,000 profit</h3>
-      <ul>
-        <li>Income Tax: £16,232 (20% on £37,700 + 40% on £21,730)</li>
-        <li>Class 4 NICs: £2,696.60 (6% on £37,700 + 2% on £21,730)</li>
-        <li><strong>Total: £18,928.60</strong> — effective rate of 26.3%</li>
-      </ul>
-
-      <h2>Scottish taxpayers</h2>
-      <p>If you live in Scotland, you pay Scottish Income Tax rates instead of the UK rates above. Scotland has its own bands — starter (19%), basic (20%), intermediate (21%), higher (42%), advanced (45%), and top (48%). The calculator on this site currently covers England, Wales, and Northern Ireland rates only.</p>
-
-      <h2>How Making Tax Digital changes things</h2>
-      <p>From April 2026, self-employed sole traders and landlords with qualifying income over £50,000 must submit quarterly updates to HMRC under Making Tax Digital for Income Tax. The threshold drops to £30,000 in April 2027 and £20,000 in April 2028.</p>
-      <p>This doesn&apos;t change how much tax you owe — MTD is about <strong>reporting</strong>, not calculating. But it does mean you&apos;ll have a clearer picture of your income throughout the year, which makes estimating your tax bill much easier.</p>
-      <p>With Flonancial, you submit your quarterly figures and can see an estimated tax calculation right on your business page — based on the cumulative data you&apos;ve submitted so far. It&apos;s a useful prompt to set money aside each quarter rather than scrambling at the end of the year.</p>
-
-      <h2>Tips for managing your tax bill</h2>
-      <ul>
-        <li><strong>Set aside money each quarter</strong> — a good rule of thumb is 25–30% of your profit. After each quarterly submission, move that amount into a savings account.</li>
-        <li><strong>Claim all allowable expenses</strong> — if you incur costs wholly and exclusively for your business, they reduce your taxable profit. Common ones: materials, tools, vehicle costs, phone bills, insurance, professional subscriptions.</li>
-        <li><strong>Use the trading allowance</strong> — if your total self-employment income is under £1,000, you don&apos;t need to report it at all. Between £1,000 and a few thousand, you can choose between the £1,000 trading allowance or claiming actual expenses — whichever is more favourable.</li>
-        <li><strong>Check if you&apos;re paying too much</strong> — if you have both PAYE employment and self-employment income, your Personal Allowance may already be used by your employer. Make sure you&apos;re not double-counting it.</li>
-        <li><strong>Payments on account</strong> — HMRC collects tax in advance via two payments on account (31 January and 31 July). These are based on last year&apos;s bill, so if your income has dropped, you can apply to reduce them.</li>
-      </ul>
-
-      <h2>Try the calculator</h2>
-      <p>Head to our <a href="/tools/tax-calculator" style="color:#2E88D0;text-decoration:underline;">free self-employed tax calculator</a> to see your estimated 2025–26 tax bill. It takes ten seconds, runs entirely in your browser, and nothing is stored or sent anywhere.</p>
-      <p>If you&apos;re earning above the MTD threshold, Flonancial can help you submit your quarterly updates to HMRC for free — <a href="/signup" style="color:#2E88D0;text-decoration:underline;">create your free account</a> and get started.</p>
-    `,
-  },
-  {
-    slug: "uk-tax-calculator-employed-2025-26",
-    title: "UK Tax Calculator for Employed Workers 2025–26: Salary, NI, Student Loans & Pension",
-    metaDescription: "Free UK tax calculator for employed workers. Calculate your 2025–26 take-home pay including income tax, National Insurance, student loan repayments, and pension contributions.",
-    category: "guide",
-    publishedDate: "2026-03-27",
-    image: "/blog25.png",
-    content: `
-      <p>Whether you&apos;ve just started a new job, received a pay rise, or simply want to understand where your money goes each month, knowing how your salary is taxed is essential. We&apos;ve built a <a href="/tools/tax-calculator" style="color:#2E88D0;text-decoration:underline;">free UK tax calculator</a> that covers everything — income tax, National Insurance, student loan repayments, and pension deductions — all based on the 2025–26 tax year rates.</p>
-
-      <h2>How your salary is taxed</h2>
-      <p>When you receive your salary, your employer deducts income tax and National Insurance before you see a penny. This is the PAYE system (Pay As You Earn). Here&apos;s how each deduction works.</p>
-
-      <h2>Income tax 2025–26</h2>
-      <p>You get a tax-free Personal Allowance of <strong>£12,570</strong>. Everything above that is taxed in bands:</p>
-      <ul>
-        <li><strong>Basic rate (20%)</strong> — on income from £12,571 to £50,270</li>
-        <li><strong>Higher rate (40%)</strong> — on income from £50,271 to £125,140</li>
-        <li><strong>Additional rate (45%)</strong> — on income above £125,140</li>
-      </ul>
-      <p>If you earn over £100,000, your Personal Allowance is reduced by £1 for every £2 above that threshold. This creates an effective 60% marginal tax rate between £100,000 and £125,140 — something many higher earners don&apos;t realise until they see their tax bill.</p>
-
-      <h2>Employee National Insurance (Class 1)</h2>
-      <p>As an employee, you pay Class 1 National Insurance on your earnings:</p>
-      <ul>
-        <li><strong>8%</strong> on earnings between £12,570 and £50,270</li>
-        <li><strong>2%</strong> on earnings above £50,270</li>
-      </ul>
-      <p>Your employer also pays NI on top of your salary (at 13.8%), but that doesn&apos;t come out of your pay — it&apos;s an additional cost to them.</p>
-
-      <h2>Student loan repayments</h2>
-      <p>If you have a student loan, repayments are deducted from your salary once you earn above your plan&apos;s threshold. The amount deducted depends on which plan you&apos;re on:</p>
-      <ul>
-        <li><strong>Plan 1</strong> (started before September 2012) — 9% on income over £26,900</li>
-        <li><strong>Plan 2</strong> (started September 2012 onwards) — 9% on income over £29,385</li>
-        <li><strong>Plan 4</strong> (Scottish students) — 9% on income over £33,795</li>
-        <li><strong>Plan 5</strong> (started September 2023 onwards) — 9% on income over £25,000</li>
-        <li><strong>Postgraduate loan</strong> — 6% on income over £21,000</li>
-      </ul>
-      <p>Not sure which plan you&apos;re on? Check your Student Loans Company account or look at your payslip — it should say Plan 1, Plan 2, Plan 4, or Plan 5.</p>
-      <p>If you have both an undergraduate and postgraduate loan, you&apos;ll make repayments on both simultaneously. Our calculator currently handles one at a time — for dual loans, calculate each separately.</p>
-
-      <h2>Pension contributions</h2>
-      <p>If you&apos;re auto-enrolled in a workplace pension (and most employees are), the minimum employee contribution is <strong>5%</strong> of qualifying earnings (between £6,240 and £50,270). Your employer contributes at least 3% on top.</p>
-      <p>Pension contributions are typically taken before tax (salary sacrifice) or receive tax relief at source. Either way, they reduce your taxable income — which means your actual tax bill is lower than if you had no pension.</p>
-      <p>You can contribute more than 5% if your employer allows it. Every extra percent you put in reduces your income tax. For higher-rate taxpayers, pension contributions are especially tax-efficient because you save 40% on each pound contributed.</p>
-
-      <h2>Example: £35,000 salary with student loan and pension</h2>
-      <p>Here&apos;s what a typical employee on £35,000 with a Plan 2 student loan and 5% pension would take home:</p>
-      <ul>
-        <li>Gross salary: £35,000</li>
-        <li>Pension (5%): −£1,750</li>
-        <li>Taxable income: £33,250</li>
-        <li>Income Tax: £4,136</li>
-        <li>Employee NI: £1,794.40</li>
-        <li>Student loan (Plan 2): £587.70</li>
-        <li><strong>Take-home: £26,731.90</strong> (£2,227.66/month)</li>
-      </ul>
-
-      <h2>Example: £55,000 salary with no student loan, 5% pension</h2>
-      <ul>
-        <li>Gross salary: £55,000</li>
-        <li>Pension (5%): −£2,750</li>
-        <li>Taxable income: £52,250</li>
-        <li>Income Tax: £8,330</li>
-        <li>Employee NI: £3,406</li>
-        <li><strong>Take-home: £40,514</strong> (£3,376.17/month)</li>
-      </ul>
-
-      <h2>How to reduce your tax bill</h2>
-      <ul>
-        <li><strong>Increase your pension contributions</strong> — every pound you put into your pension saves tax at your marginal rate. If you&apos;re on 40%, putting an extra £100 into your pension only &quot;costs&quot; you £60 in take-home pay.</li>
-        <li><strong>Salary sacrifice</strong> — if your employer offers salary sacrifice for pension, childcare vouchers, or cycle-to-work schemes, these reduce your gross pay before NI is calculated, saving you both tax and NI.</li>
-        <li><strong>Marriage allowance</strong> — if one partner earns less than £12,570 and the other is a basic-rate taxpayer, you can transfer up to £1,260 of the unused Personal Allowance, saving up to £252/year.</li>
-        <li><strong>Check your tax code</strong> — if it&apos;s wrong, you could be overpaying. Your tax code should usually be 1257L for 2025–26. Check your payslip or Personal Tax Account on gov.uk.</li>
-      </ul>
-
-      <h2>Try the calculator</h2>
-      <p>Use our <a href="/tools/tax-calculator" style="color:#2E88D0;text-decoration:underline;">free UK tax calculator</a> to see exactly what you&apos;ll take home. Switch between employed and self-employed, add your student loan plan, set your pension contribution, and see a full breakdown instantly. Everything runs in your browser — nothing is stored or sent anywhere.</p>
-    `,
-  },
   {
     slug: "mtd-starts-april-2026-what-to-do",
     title: "MTD Starts in April 2026 — What to Do If You Haven't Signed Up Yet",
@@ -1630,6 +1465,198 @@ export const blogArticles: BlogArticle[] = [
 
       <h2>It takes 5 minutes</h2>
       <p>Sign up for MTD on GOV.UK, connect free bridging software like Flonancial, and submit your first quarterly update when it's due. The whole process takes less time than worrying about it.</p>
+    `,
+  },
+  {
+    slug: "cumulative-quarterly-updates-explained",
+    title: "Cumulative Quarterly Updates: HMRC's New MTD Submission Model Explained",
+    metaDescription: "MTD quarterly updates are now cumulative — each submission replaces the last with year-to-date totals. Here's how HMRC's new model works and why it makes life easier.",
+    category: "reference",
+    publishedDate: "2026-04-21",
+    image: "/blog34.png",
+    content: `
+      <p>If you've read older guides about Making Tax Digital, you might have seen references to "standalone" quarterly updates — submitting just that quarter's figures four times a year. That model is gone. Since April 2025, HMRC moved to a <strong>cumulative</strong> submission model, and it's how every MTD ITSA quarterly update now works.</p>
+
+      <h2>What changed</h2>
+      <p>Under the old (standalone) model, each quarterly submission contained only the figures for that specific three-month period. If you made a mistake in Q1, you had to submit a separate amendment for Q1 to fix it.</p>
+      <p>Under the new cumulative model, each submission contains your <strong>year-to-date totals</strong>. Q1 covers 6 April to 5 July. Q2 covers 6 April to 5 October — the whole period from the start of the tax year, not just July to October. Q3 covers 6 April to 5 January, and Q4 covers the full tax year up to 5 April.</p>
+
+      <h2>Why the change?</h2>
+      <p>HMRC switched to cumulative submissions to make corrections trivially easy. Spotted an error in your Q1 figures when you're preparing Q2? You don't need a special amendment — just submit your Q2 update with the correct year-to-date numbers, and the corrected total replaces whatever was there before.</p>
+      <p>It also reflects how most sole traders and landlords actually think about their finances — you don't reset your books every three months, you watch your year-to-date numbers grow.</p>
+
+      <h2>How it works in practice</h2>
+      <p>Imagine you're a freelance designer with these quarterly turnovers:</p>
+      <ul>
+        <li><strong>Apr–Jun:</strong> £8,000 turnover, £1,500 expenses</li>
+        <li><strong>Jul–Sep:</strong> £12,000 turnover, £2,200 expenses</li>
+        <li><strong>Oct–Dec:</strong> £9,500 turnover, £1,800 expenses</li>
+        <li><strong>Jan–Mar:</strong> £14,500 turnover, £3,000 expenses</li>
+      </ul>
+      <p>Your four MTD submissions would contain:</p>
+      <ul>
+        <li><strong>Q1 (due 7 Aug):</strong> Turnover £8,000, Expenses £1,500</li>
+        <li><strong>Q2 (due 7 Nov):</strong> Turnover £20,000, Expenses £3,700</li>
+        <li><strong>Q3 (due 7 Feb):</strong> Turnover £29,500, Expenses £5,500</li>
+        <li><strong>Q4 (due 7 May):</strong> Turnover £44,000, Expenses £8,500</li>
+      </ul>
+      <p>Each submission replaces the previous one. HMRC always has the latest year-to-date snapshot.</p>
+
+      <h2>What if you spot a mistake?</h2>
+      <p>Just resubmit. There's no separate amendment process and no penalty for correcting your own figures before the Final Declaration. Submit a fresh cumulative update with the right numbers, and the previous submission is overwritten.</p>
+      <p>You can resubmit as many times as you want during the tax year. HMRC just keeps the most recent one.</p>
+
+      <h2>What about Q4?</h2>
+      <p>Your Q4 submission (due 7 May after the tax year ends) is your final cumulative quarterly update — the full year's figures. It's not your Final Declaration; that's a separate end-of-year submission that confirms everything and triggers your tax bill. Some bridging software (Flonancial included) only handles the four quarterly updates and signposts you to HMRC for the Final Declaration.</p>
+
+      <h2>The practical takeaway</h2>
+      <p>You don't need to track quarter-by-quarter increments separately. Your spreadsheet just needs to show your <strong>running totals from 6 April</strong>. Each quarter, upload it, and Flonancial sends the latest year-to-date figures to HMRC. That's the whole process.</p>
+    `,
+  },
+  {
+    slug: "mtd-for-content-creators",
+    title: "MTD for Content Creators: YouTubers, Streamers, TikTokers & Influencers",
+    metaDescription: "Content creators earning over £50,000 from YouTube, Twitch, TikTok, sponsorships, or affiliate income now fall under Making Tax Digital. Here's what you need to know.",
+    category: "guide",
+    publishedDate: "2026-04-22",
+    image: "/blog32.png",
+    content: `
+      <p>If you make money from YouTube ad revenue, Twitch subscriptions, TikTok Creator Fund, brand deals, affiliate links, Patreon, OnlyFans, merch, or any combination of the above — and your total income from self-employment is over £50,000 — you're now in scope for Making Tax Digital for Income Tax.</p>
+      <p>Most "creator economy" income is treated by HMRC as self-employment income. That puts you in the same bucket as a freelance designer or a plumber for tax purposes. Here's what that means in practice.</p>
+
+      <h2>What income counts?</h2>
+      <p>HMRC looks at your <strong>gross income</strong> (total payments received before deductions), not your profit. For content creators, this typically includes:</p>
+      <ul>
+        <li><strong>Ad revenue</strong> — YouTube AdSense, Twitch ads, TikTok Creator Fund, Snap Spotlight bonuses</li>
+        <li><strong>Subscriptions</strong> — Twitch subs, YouTube Memberships, Patreon, Substack, OnlyFans, Ko-fi memberships</li>
+        <li><strong>Brand deals & sponsorships</strong> — paid posts, integrated ads, brand ambassadorships</li>
+        <li><strong>Affiliate income</strong> — Amazon Associates, sponsor codes, link kickbacks</li>
+        <li><strong>Merch</strong> — your store sales, print-on-demand revenue (Spring, Teespring, etc.)</li>
+        <li><strong>Tips & donations</strong> — Streamlabs, Ko-fi tips, super chats, super thanks</li>
+        <li><strong>Licensing</strong> — TV/agency use of your viral clip, music sync deals</li>
+      </ul>
+      <p>If your total from these sources exceeds £50,000 in a tax year, MTD applies from 6 April 2026.</p>
+
+      <h2>What about platforms that pay in dollars or euros?</h2>
+      <p>YouTube, Twitch, Patreon and most major platforms pay creators in USD. Convert to GBP using the exchange rate on the date the money was received (or use HMRC's monthly average rates). Your gross income is the GBP equivalent.</p>
+
+      <h2>Common expenses you can claim</h2>
+      <p>If they're wholly and exclusively for your creator business:</p>
+      <ul>
+        <li>Cameras, microphones, lighting, ring lights, capture cards</li>
+        <li>Editing software (Adobe, Final Cut, DaVinci Resolve)</li>
+        <li>Stock music and sound effects subscriptions (Epidemic Sound, Artlist)</li>
+        <li>Graphic design tools (Canva Pro, Photoshop)</li>
+        <li>Cloud storage and backup (Dropbox, Google Drive, Backblaze)</li>
+        <li>Internet costs (a business proportion if used for streaming)</li>
+        <li>Home office costs (proportion of rent, utilities — if you have a dedicated workspace)</li>
+        <li>Travel for shoots, conventions, brand events</li>
+        <li>Sponsored product costs (if you bought items to review)</li>
+        <li>Accountancy fees, business banking fees, platform commissions</li>
+      </ul>
+      <p>Keep digital receipts for everything. HMRC's record-keeping requirement under MTD is strict — but a spreadsheet with line items and a folder of PDFs is fine.</p>
+
+      <h2>Multi-platform: one business or several?</h2>
+      <p>For most creators, all your platforms together form a single self-employment business — "content creation". You don't need to register a separate business for each platform. One MTD submission per quarter covers everything.</p>
+      <p>The exception is if you have a clearly distinct business — for example, your YouTube channel plus a separate freelance video editing service for clients. In that case, register both with HMRC and submit MTD updates for each.</p>
+
+      <h2>What HMRC actually receives each quarter</h2>
+      <p>Three numbers: total turnover (all platform income for the period), total expenses, and any other business income. Not transaction-level detail. Not platform breakdown. Just the totals.</p>
+
+      <h2>Tracking it all in a spreadsheet</h2>
+      <p>Most creators already track income manually because platform dashboards are scattered. A simple monthly spreadsheet with columns for Platform, Date, Description, Amount (GBP) on the income side, and Date, Vendor, Category, Amount on the expenses side, is enough. Add a totals row, and Flonancial can read those totals straight out of your file.</p>
+
+      <h2>Getting started</h2>
+      <p>If you're already over £50,000 and haven't signed up for MTD yet, do it now via your Government Gateway account. Then create a free Flonancial account, connect HMRC, and you're ready for your first quarterly update due 7 August 2026.</p>
+    `,
+  },
+  {
+    slug: "mtd-itsa-is-live-90-day-action-plan",
+    title: "MTD ITSA Is Live: Your Action Plan for the Next 90 Days",
+    metaDescription: "Making Tax Digital for Income Tax went live on 6 April 2026. Here's exactly what to do over the next 90 days to be ready for your first quarterly update.",
+    category: "guide",
+    publishedDate: "2026-04-22",
+    image: "/blog31.png",
+    content: `
+      <p>Making Tax Digital for Income Tax is now live. As of 6 April 2026, sole traders and landlords with qualifying income over £50,000 are required to keep digital records and submit quarterly updates to HMRC.</p>
+      <p>Your first quarterly update isn't due until <strong>7 August 2026</strong> — so you have around 90 days to get yourself organised. Here's exactly how to use that time.</p>
+
+      <h2>Week 1: Confirm you're in scope</h2>
+      <p>Look at your last Self Assessment return. Add up your <strong>gross</strong> income (total turnover, not profit) from self-employment and UK property. If it's over £50,000, you're in scope from now. Below £50,000? You're not in MTD yet — but the threshold drops to £30,000 in April 2027 and £20,000 in April 2028, so it's coming.</p>
+      <p>If you're unsure whether something counts as qualifying income, the basic test is: would you put it on the self-employment or property pages of a Self Assessment return? If yes, it counts.</p>
+
+      <h2>Week 2: Sign up for MTD on GOV.UK</h2>
+      <p>You can't submit through any software until you've signed up. Go to GOV.UK and search "Sign up for Making Tax Digital for Income Tax". You'll need your Government Gateway login, your National Insurance number, and your business start date.</p>
+      <p>HMRC can take a few days to process your sign-up. Don't leave it to August.</p>
+
+      <h2>Week 3: Get your records into a digital format</h2>
+      <p>If you already keep your books in a spreadsheet, you're done. If you've been using paper notebooks or only loosely tracking via your bank statements, now is the time to move to digital.</p>
+      <p>You don't need accounting software — a spreadsheet (Excel, Google Sheets, Apple Numbers, LibreOffice) is fine. The only requirement is that records are digital and that you can produce running totals for income and expenses.</p>
+
+      <h2>Week 4–6: Pick your software and connect</h2>
+      <p>HMRC publishes a list of compatible MTD software. There are roughly 20 options. The main split is between full accounting platforms (Xero, QuickBooks, FreeAgent — typically £15–£35/month) and bridging software that connects your existing spreadsheet to HMRC.</p>
+      <p>If your records already live in a spreadsheet and you don't need invoicing or bank feeds, free bridging software like Flonancial does the job in minutes. Create an account, connect to HMRC via the official OAuth flow, and you're set up.</p>
+
+      <h2>Month 2: Practice with the demo</h2>
+      <p>Before your first real submission, walk through the process end-to-end with a demo or test scenario. Most software tools have one. You want to know exactly which buttons you'll press in August before there's any urgency.</p>
+      <p>While you're at it, set yourself a calendar reminder for <strong>7 August 2026</strong> — your Q1 deadline.</p>
+
+      <h2>Month 3: Reconcile your Q1 figures</h2>
+      <p>By early July you should have your full Q1 income and expenses recorded. Reconcile against your bank statements. Make sure your spreadsheet totals match what actually came in and went out.</p>
+      <p>Note: under the cumulative model introduced April 2025, your Q1 submission contains your year-to-date figures from 6 April to 5 July. Your spreadsheet should produce those running totals naturally.</p>
+
+      <h2>The grace period — and why it doesn't mean "ignore it"</h2>
+      <p>HMRC has confirmed that late submission penalties for quarterly updates are waived for 2026/27. That means if you genuinely struggle this first year, you won't be fined for a late update. <strong>However</strong>, this does not apply to late tax payments, the Final Declaration, or future tax years. Treat the grace period as breathing space, not a free pass.</p>
+
+      <h2>You have time</h2>
+      <p>Most of this is genuinely a one-time setup. Spend a couple of evenings this month getting your spreadsheet, sign-up, and software in place, and your future quarterly submissions will take five minutes each. The pain is mostly upfront.</p>
+    `,
+  },
+  {
+    slug: "missed-mtd-quarterly-deadline-recovery-plan",
+    title: "Missed an MTD Quarterly Deadline? Your 30-Day Recovery Plan",
+    metaDescription: "Missed your MTD quarterly update deadline? Don't panic. Here's exactly what to do over the next 30 days, what HMRC will (and won't) charge you, and how to get back on track.",
+    category: "guide",
+    publishedDate: "2026-04-23",
+    image: "/blog30.png",
+    content: `
+      <p>You missed your Making Tax Digital quarterly update deadline. First — breathe. The world hasn't ended, and for the 2026/27 tax year you're not going to be fined for being late on a quarterly update. But you do need to get your house in order, and the next 30 days matter.</p>
+
+      <h2>The 2026/27 grace period</h2>
+      <p>HMRC has explicitly waived late submission penalty <strong>points</strong> for quarterly updates during the first MTD year (the 2026/27 tax year). That means missing an August or November deadline this year doesn't earn you a point or trigger a £200 fine.</p>
+      <p>But the grace period only covers the quarterly submissions themselves. It does <strong>not</strong> cover:</p>
+      <ul>
+        <li>Late payment of any tax owed (interest still accrues)</li>
+        <li>The Final Declaration (separate, end-of-year)</li>
+        <li>Submissions for the 2027/28 tax year and beyond</li>
+      </ul>
+
+      <h2>Days 1–7: Submit immediately</h2>
+      <p>The single most important thing is to submit your overdue quarterly update as soon as possible. The longer you leave it, the more your records get out of sync — and the harder the next quarter becomes.</p>
+      <p>Open your spreadsheet, get your year-to-date totals (under the cumulative model, that's everything from 6 April to the end of your missed quarter), and submit through your MTD software. The submission itself takes minutes.</p>
+      <p>If you haven't yet signed up for MTD on GOV.UK or chosen software, do those first — but don't let the setup delay take more than a day or two. Bridging software like Flonancial is free and takes minutes to set up.</p>
+
+      <h2>Days 8–14: Verify HMRC received it</h2>
+      <p>Log into your HMRC online account and check that your submission shows under your MTD obligations. You should see the quarter's status flip from "Open" to "Fulfilled". If it doesn't, contact HMRC or your software provider.</p>
+      <p>Save a copy of your submission's correlation ID — that's the unique reference HMRC returns when you submit. It's your proof.</p>
+
+      <h2>Days 15–30: Set up so it doesn't happen again</h2>
+      <p>The MTD quarterly deadlines for 2026/27 are:</p>
+      <ul>
+        <li><strong>Q1:</strong> 7 August 2026 (covers 6 April – 5 July)</li>
+        <li><strong>Q2:</strong> 7 November 2026 (covers 6 April – 5 October)</li>
+        <li><strong>Q3:</strong> 7 February 2027 (covers 6 April – 5 January)</li>
+        <li><strong>Q4:</strong> 7 May 2027 (covers the full tax year)</li>
+      </ul>
+      <p>Add all four to your calendar with 7-day reminders. Set a recurring monthly reminder to update your spreadsheet — most missed deadlines come from records being weeks behind, not from forgetting the date.</p>
+
+      <h2>What if HMRC sends you a penalty notice anyway?</h2>
+      <p>Mistakes happen. If you receive a £200 penalty notice during the 2026/27 grace period for a late <em>quarterly</em> submission, that's an HMRC error — appeal it. The official guidance is that quarterly penalty points are waived for this tax year. You can appeal online through your Personal Tax Account, citing the published grace period.</p>
+      <p>For penalties that don't fall under the grace period (late payment of tax, late Final Declaration, late submissions in 2027/28+), the appeal process is the same but you'll need a "reasonable excuse" — illness, bereavement, software failure with proof, etc.</p>
+
+      <h2>The bigger picture</h2>
+      <p>The grace period exists because HMRC knows MTD is new for millions of people and the first year will have teething problems. They don't want to penalise people who are genuinely trying. But they will start enforcing properly from April 2027 — which is also when the threshold drops to £30,000 and several million more people enter the system.</p>
+      <p>Use the next 12 months to build the habit. Update your records monthly. Submit each quarter on the day you're prompted. After three or four cycles, the whole process will feel routine.</p>
     `,
   },
 ];
