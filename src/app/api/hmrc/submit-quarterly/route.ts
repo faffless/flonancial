@@ -5,6 +5,7 @@ import {
   hmrcFetchWithAuth,
   getValidHmrcAccessToken,
   getNinoForUser,
+  logHmrcCall,
 } from "@/utils/hmrc/server";
 import {
   buildFraudPreventionHeaders,
@@ -241,6 +242,7 @@ periodExpenses: { consolidatedExpenses: expenses },
   }
 
   const hmrcResponse = hmrcResult.response;
+  await logHmrcCall("PUT", hmrcUrl, hmrcResponse);
 
   if (!hmrcResponse.ok) {
     let hmrcError = "hmrc_submission_failed";

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import { getNinoForUser } from "@/utils/hmrc/server";
+import { getNinoForUser, logHmrcCall } from "@/utils/hmrc/server";
 import {
   buildFraudPreventionHeaders,
   parseFraudDataFromCookie,
@@ -168,18 +168,17 @@ export async function GET(request: NextRequest) {
           user.email
         );
 
-        const listResponse = await fetch(
-          `${HMRC_API_BASE}/individuals/business/details/${nino}/list`,
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/vnd.hmrc.2.0+json",
-              Authorization: `Bearer ${tokenJson.access_token}`,
-              ...fraudHeaders,
-            },
-            cache: "no-store",
-          }
-        );
+        const listUrl = `${HMRC_API_BASE}/individuals/business/details/${nino}/list`;
+        const listResponse = await fetch(listUrl, {
+          method: "GET",
+          headers: {
+            Accept: "application/vnd.hmrc.2.0+json",
+            Authorization: `Bearer ${tokenJson.access_token}`,
+            ...fraudHeaders,
+          },
+          cache: "no-store",
+        });
+        await logHmrcCall("GET", listUrl, listResponse);
 
         if (listResponse.ok) {
           const listJson = (await listResponse.json()) as HMRCBusinessListResponse;
@@ -192,18 +191,17 @@ export async function GET(request: NextRequest) {
             // Get detailed info
             let detail: HMRCBusinessDetail | null = null;
             try {
-              const detailResponse = await fetch(
-                `${HMRC_API_BASE}/individuals/business/details/${nino}/${hmrcBusiness.businessId}`,
-                {
-                  method: "GET",
-                  headers: {
-                    Accept: "application/vnd.hmrc.2.0+json",
-                    Authorization: `Bearer ${tokenJson.access_token}`,
-                    ...fraudHeaders,
-                  },
-                  cache: "no-store",
-                }
-              );
+              const detailUrl = `${HMRC_API_BASE}/individuals/business/details/${nino}/${hmrcBusiness.businessId}`;
+              const detailResponse = await fetch(detailUrl, {
+                method: "GET",
+                headers: {
+                  Accept: "application/vnd.hmrc.2.0+json",
+                  Authorization: `Bearer ${tokenJson.access_token}`,
+                  ...fraudHeaders,
+                },
+                cache: "no-store",
+              });
+              await logHmrcCall("GET", detailUrl, detailResponse);
               if (detailResponse.ok) {
                 detail = (await detailResponse.json()) as HMRCBusinessDetail;
               }

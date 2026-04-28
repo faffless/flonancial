@@ -4,6 +4,7 @@ import {
   applyHmrcCookieMutations,
   hmrcFetchWithAuth,
   getNinoForUser,
+  logHmrcCall,
 } from "@/utils/hmrc/server";
 import {
   buildFraudPreventionHeaders,
@@ -83,6 +84,7 @@ export async function GET(request: Request) {
   }
 
   const hmrcResponse = hmrcResult.response;
+  await logHmrcCall("GET", hmrcUrl, hmrcResponse);
 
   if (!hmrcResponse.ok) {
     let errorBody = null;
