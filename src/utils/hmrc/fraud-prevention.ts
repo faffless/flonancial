@@ -123,10 +123,11 @@ export function buildFraudPreventionHeaders(
   userIdParts.push(`internal=${pct(userId)}`);
   headers["Gov-Client-User-IDs"] = userIdParts.join("&");
 
-  // --- Vendor License IDs ---
-  // Flonancial is free; per-user identifier suffices to satisfy HMRC's
-  // "header required" check. Anonymous routes pass userId="<route>".
-  headers["Gov-Vendor-License-IDs"] = `flonancial=${pct(userId)}`;
+  // Gov-Vendor-License-IDs and Gov-Client-Multi-Factor are intentionally
+  // omitted: HMRC SDST team (ref ITSAJM000101) instructed us in writing
+  // to omit them — the former because Flonancial is free and has no
+  // vendor licences to track, the latter because we use single-factor
+  // (email + password) authentication. SDST will validate accordingly.
 
   // --- Vendor IP + forwarded (only if env var is set) ---
   if (vendorPublicIP) {
