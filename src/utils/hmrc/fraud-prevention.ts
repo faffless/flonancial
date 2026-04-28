@@ -123,6 +123,11 @@ export function buildFraudPreventionHeaders(
   userIdParts.push(`internal=${pct(userId)}`);
   headers["Gov-Client-User-IDs"] = userIdParts.join("&");
 
+  // --- Vendor License IDs ---
+  // Flonancial is free; per-user identifier suffices to satisfy HMRC's
+  // "header required" check. Anonymous routes pass userId="<route>".
+  headers["Gov-Vendor-License-IDs"] = `flonancial=${pct(userId)}`;
+
   // --- Vendor IP + forwarded (only if env var is set) ---
   if (vendorPublicIP) {
     headers["Gov-Vendor-Public-IP"] = vendorPublicIP;
