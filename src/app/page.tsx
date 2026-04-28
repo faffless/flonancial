@@ -16,7 +16,7 @@ type PickTarget = "turnover" | "expenses";
 // ─── FAQs ─────────────────────────────────────────────────────────────────────
 
 const faqs = [
-  { q: "What is Making Tax Digital for Income Tax?", a: "From 6 April 2026, sole traders and landlords earning over £50,000 must keep digital records and submit quarterly updates to HMRC using compatible software. Instead of doing everything in one annual rush, you'll send summary figures four times a year." },
+  { q: "What is Making Tax Digital for Income Tax?", a: "Since 6 April 2026, sole traders and landlords earning over £50,000 must keep digital records and submit quarterly updates to HMRC using compatible software. Instead of doing everything in one annual rush, you send summary figures four times a year." },
   { q: "Do I have to stop using my spreadsheet?", a: "No. Flonancial is bridging software — it connects your existing spreadsheet to HMRC. You keep your records exactly as you do now. When it's time to submit, upload your file and pick the cells containing your turnover and expenses. That's it." },
   { q: "What is the Flo tab?", a: "If you download our free template, it includes a Flo tab with two cells — Turnover and Expenses — already linked to formulas. When you upload, Flonancial reads these automatically so you skip the cell-picking step. You don't need a Flo tab if you use your own spreadsheet — it just makes things faster." },
   { q: "What about the Final Declaration?", a: "Flonancial handles quarterly updates only. For the year-end Final Declaration, you can use HMRC's own online service or another compatible product. This is a common approach — several HMRC-recognised bridging tools work the same way." },
@@ -554,7 +554,7 @@ export default function HomePage() {
         <div className="mt-8 rounded-3xl border border-[#B8D0EB]/60 bg-[#F0F5FB] px-8 py-8 shadow-sm text-center">
           <h2 className="text-xl font-bold text-[#0F1C2E]">How much tax will you owe?</h2>
           <p className="mx-auto mt-2 max-w-[440px] text-sm leading-6 text-[#2E4A63]">
-            Use our free self-employed tax calculator to estimate your income tax and National Insurance for 2025–26.
+            Use our free self-employed tax calculator to estimate your income tax and National Insurance for 2026–27.
           </p>
           <Link href="/tools/tax-calculator" className="mt-5 inline-block rounded-xl bg-[#2E88D0] px-6 py-3 text-sm font-medium text-white transition hover:opacity-90">
             Try the tax calculator

@@ -78,7 +78,7 @@ export default function TaxCalculatorPage() {
   return (
     <SiteShell>
       <section className="mx-auto w-full max-w-[960px] px-6 py-5">
-        <h1 className="text-xl font-semibold tracking-tight text-[#0F1C2E]">UK Tax Calculator 2025–26</h1>
+        <h1 className="text-xl font-semibold tracking-tight text-[#0F1C2E]">UK Tax Calculator 2026–27</h1>
         <p className="mt-1 text-xs text-[#2E4A63]">
           Income tax, National Insurance, student loans, pension — employed or self-employed.
         </p>
@@ -274,11 +274,11 @@ export default function TaxCalculatorPage() {
                 {result.personalAllowance >= 0 && result.personalAllowance < 12_570 && !taxCode && (
                   <p className="text-[10px] text-amber-700">PA reduced to £{fmtShort(result.personalAllowance)} (income over £100k).</p>
                 )}
-                {employmentType === "self-employed" && profit > 6_845 && (
-                  <p className="text-[10px] text-[#5A7A9B]">Class 2 NICs (£182/yr) voluntary since April 2024, not included.</p>
+                {employmentType === "self-employed" && profit > 7_105 && (
+                  <p className="text-[10px] text-[#5A7A9B]">Class 2 NICs auto-credited above the Small Profits Threshold (£7,105) since April 2024 — no payment needed.</p>
                 )}
                 <p className="text-[9px] leading-tight text-[#8BA4BD]">
-                  Estimate — 2025–26 England/Wales/NI rates. Does not include Scottish rates or other reliefs. Your actual liability may differ.
+                  Estimate — 2026–27 England/Wales/NI rates. Does not include Scottish rates or other reliefs. Your actual liability may differ.
                 </p>
               </div>
             ) : isLoss ? (
@@ -300,7 +300,7 @@ export default function TaxCalculatorPage() {
         {/* ── Rate tables ───────────────────────────────────────────── */}
         <div className="mt-6 grid gap-4 lg:grid-cols-2">
           <div className="rounded-xl border border-[#B8D0EB] bg-white p-4">
-            <h2 className="text-sm font-semibold text-[#0F1C2E]">Income Tax Rates 2025–26</h2>
+            <h2 className="text-sm font-semibold text-[#0F1C2E]">Income Tax Rates 2026–27</h2>
             <table className="mt-4 w-full text-sm">
               <thead>
                 <tr className="border-b border-[#B8D0EB]">
@@ -319,7 +319,7 @@ export default function TaxCalculatorPage() {
           </div>
 
           <div className="rounded-xl border border-[#B8D0EB] bg-white p-4">
-            <h2 className="text-sm font-semibold text-[#0F1C2E]">National Insurance 2025–26</h2>
+            <h2 className="text-sm font-semibold text-[#0F1C2E]">National Insurance 2026–27</h2>
             <h3 className="mt-4 text-sm font-medium text-[#0F1C2E]">{employmentType === "employed" ? "Employee (Class 1)" : "Self-employed (Class 4)"}</h3>
             <table className="mt-2 w-full text-sm">
               <tbody className="text-[#0F1C2E]">
@@ -340,9 +340,9 @@ export default function TaxCalculatorPage() {
             <h3 className="mt-5 text-sm font-medium text-[#0F1C2E]">Student Loan Thresholds</h3>
             <table className="mt-2 w-full text-sm">
               <tbody className="text-[#0F1C2E]">
-                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 1</td><td className="py-1.5 text-right">9% over £26,065</td></tr>
-                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 2</td><td className="py-1.5 text-right">9% over £28,470</td></tr>
-                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 4</td><td className="py-1.5 text-right">9% over £31,395</td></tr>
+                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 1</td><td className="py-1.5 text-right">9% over £26,900</td></tr>
+                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 2</td><td className="py-1.5 text-right">9% over £29,385</td></tr>
+                <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 4</td><td className="py-1.5 text-right">9% over £33,795</td></tr>
                 <tr className="border-b border-[#F0F5FB]"><td className="py-1.5">Plan 5</td><td className="py-1.5 text-right">9% over £25,000</td></tr>
                 <tr><td className="py-1.5">Postgraduate</td><td className="py-1.5 text-right">6% over £21,000</td></tr>
               </tbody>
@@ -354,7 +354,7 @@ export default function TaxCalculatorPage() {
         <div className="mt-6 rounded-xl border border-[#2E88D0]/30 bg-[#2E88D0]/10 px-6 py-5 text-center">
           <h2 className="text-sm font-semibold text-[#0F1C2E]">Self-employed? Need to submit to HMRC?</h2>
           <p className="mx-auto mt-2 max-w-[500px] text-sm leading-6 text-[#2E4A63]">
-            From April 2026, sole traders and landlords earning over £50,000 must submit quarterly updates to HMRC.
+            Since April 2026, sole traders and landlords earning over £50,000 must submit quarterly updates to HMRC.
             Flonancial is free bridging software — upload your spreadsheet and submit in minutes.
           </p>
           <Link href="/signup" className="mt-5 inline-block rounded-2xl bg-[#2E88D0] px-6 py-3 text-sm font-medium text-white transition hover:opacity-90">
@@ -366,11 +366,11 @@ export default function TaxCalculatorPage() {
         {/* ── SEO content ───────────────────────────────────────────── */}
         <div className="mt-6 space-y-3 text-xs leading-6 text-[#2E4A63]">
           <h2 className="text-sm font-semibold text-[#0F1C2E]">How is UK tax calculated?</h2>
-          <p>Whether you&apos;re employed or self-employed, you pay income tax on earnings above your Personal Allowance (£12,570 for 2025–26). Employed people also pay Class 1 National Insurance at 8% on earnings between £12,570 and £50,270, and 2% above. Self-employed people pay Class 4 NICs at 6% and 2% on the same bands.</p>
+          <p>Whether you&apos;re employed or self-employed, you pay income tax on earnings above your Personal Allowance (£12,570 for 2026–27). Employed people also pay Class 1 National Insurance at 8% on earnings between £12,570 and £50,270, and 2% above. Self-employed people pay Class 4 NICs at 6% and 2% on the same bands.</p>
           <p>Student loan repayments are deducted at 9% (or 6% for postgraduate loans) on income above your plan&apos;s threshold. You can have multiple student loans simultaneously — for example, a Plan 2 undergraduate loan and a postgraduate loan. Pension contributions reduce your taxable income, saving you tax at your marginal rate.</p>
-          <p>Your tax code determines your Personal Allowance. The standard code for 2025–26 is 1257L, giving you £12,570 tax-free. If you have benefits in kind, underpaid tax from previous years, or other adjustments, HMRC will issue a different code. K codes mean you owe more than your allowance covers, and the excess is added to your taxable income.</p>
+          <p>Your tax code determines your Personal Allowance. The standard code for 2026–27 is 1257L, giving you £12,570 tax-free. If you have benefits in kind, underpaid tax from previous years, or other adjustments, HMRC will issue a different code. K codes mean you owe more than your allowance covers, and the excess is added to your taxable income.</p>
           <h2 className="text-sm font-semibold text-[#0F1C2E]">Making Tax Digital</h2>
-          <p>From April 2026, self-employed sole traders and landlords with qualifying income over £50,000 must keep digital records and submit quarterly updates to HMRC. Flonancial is free MTD bridging software — upload your spreadsheet and submit in minutes.</p>
+          <p>Since April 2026, self-employed sole traders and landlords with qualifying income over £50,000 must keep digital records and submit quarterly updates to HMRC. Flonancial is free MTD bridging software — upload your spreadsheet and submit in minutes.</p>
         </div>
       </section>
     </SiteShell>
