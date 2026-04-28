@@ -26,6 +26,14 @@ function getClientPublicIP(requestHeaders: Headers): string | null {
   return null;
 }
 
+// X-Client-Port is injected by Caddy from {http.request.remote.port} — the
+// end-user's TCP source port. Required by HMRC for Gov-Client-Public-Port.
+function getClientPublicPort(requestHeaders: Headers): string | null {
+  const port = requestHeaders.get("x-client-port");
+  if (!port) return null;
+  return /^\d+$/.test(port) ? port : null;
+}
+
 /**
  * Parse fraud data from X-Fraud-Data header (base64-encoded JSON).
  * Used by GET routes (obligations, retrieve-cumulative) where the business page
@@ -97,11 +105,16 @@ export function buildFraudPreventionHeaders(
     headers["Gov-Client-Window-Size"] = clientData.windowSize;
   }
 
-  // --- Client public IP (Vercel sets x-forwarded-for reliably) ---
+  // --- Client public IP + TCP source port ---
   const clientIP = getClientPublicIP(requestHeaders);
   if (clientIP) {
     headers["Gov-Client-Public-IP"] = clientIP;
     headers["Gov-Client-Public-IP-Timestamp"] = new Date().toISOString();
+  }
+
+  const clientPort = getClientPublicPort(requestHeaders);
+  if (clientPort) {
+    headers["Gov-Client-Public-Port"] = clientPort;
   }
 
   // --- User IDs ---
