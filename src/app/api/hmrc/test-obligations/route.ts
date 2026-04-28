@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import { applyHmrcCookieMutations, hmrcFetchWithAuth, getNinoForUser } from "@/utils/hmrc/server";
+import { applyHmrcCookieMutations, hmrcFetchWithAuth, getNinoForUser, logHmrcCall } from "@/utils/hmrc/server";
 import { buildFraudPreventionHeaders, type ClientFraudData } from "@/utils/hmrc/fraud-prevention";
 import { HMRC_API_BASE } from "@/utils/hmrc/config";
 
@@ -77,6 +77,7 @@ export async function POST(req: NextRequest) {
   }
 
   const hmrcResponse = result.response;
+  await logHmrcCall("GET", hmrcUrl.toString(), hmrcResponse);
   let payload: unknown = null;
   try {
     payload = await hmrcResponse.json();
