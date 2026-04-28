@@ -6,7 +6,7 @@ import { collectFraudData } from "@/utils/hmrc/collect-fraud-data";
 // ── PRODUCTION TOGGLE ────────────────────────────────────────────────────────
 // Set to true when HMRC production credentials are received.
 // This will restore the real OAuth connection flow.
-const HMRC_LIVE = true;
+const HMRC_LIVE = false;
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function ConnectHmrcButton({
