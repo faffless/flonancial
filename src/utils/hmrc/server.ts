@@ -1,35 +1,5 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
-
-// Temporary admin client for logging HMRC calls to a debug table
-// Used during production approval testing to capture correlation IDs
-function getAdminSupabase() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceKey) return null;
-  return createAdminClient(url, serviceKey, { auth: { persistSession: false } });
-}
-
-export async function logHmrcCall(
-  method: string,
-  url: string,
-  response: Response
-) {
-  try {
-    const admin = getAdminSupabase();
-    if (!admin) return;
-    await admin.from("hmrc_call_log").insert({
-      method,
-      url,
-      status: response.status,
-      response_ok: response.ok,
-      correlation_id: response.headers.get("x-correlationid") ?? null,
-    });
-  } catch {
-    // Fire-and-forget — never block on logging
-  }
-}
 
 type HMRCRefreshTokenResponse = {
   access_token: string;
@@ -255,12 +225,6 @@ export async function hmrcFetchWithAuth(
   });
 
   if (response.status !== 401) {
-    // ── TEMP: correlation-ID logger for HMRC production approval testing ──
-    console.log(
-      `[HMRC] ${init?.method ?? "GET"} ${input} → ${response.status} x-correlationid=${response.headers.get("x-correlationid") ?? "(none)"}`
-    );
-    await logHmrcCall(init?.method ?? "GET", input, response);
-    // ──────────────────────────────────────────────────────────────────────
     return {
       ok: true,
       response,
@@ -295,13 +259,6 @@ export async function hmrcFetchWithAuth(
     headers: retryHeaders,
     cache: "no-store",
   });
-
-  // ── TEMP: correlation-ID logger for HMRC production approval testing ──
-  console.log(
-    `[HMRC] ${init?.method ?? "GET"} ${input} → ${response.status} x-correlationid=${response.headers.get("x-correlationid") ?? "(none)"}`
-  );
-  await logHmrcCall(init?.method ?? "GET", input, response);
-  // ──────────────────────────────────────────────────────────────────────
 
   return {
     ok: true,
