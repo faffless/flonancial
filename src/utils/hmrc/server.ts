@@ -1,5 +1,41 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
+
+// Admin client used by logHmrcCall to persist HMRC call evidence to
+// the `hmrc_call_log` table (bypasses RLS via service-role key).
+function getAdminSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return null;
+  return createAdminClient(url, serviceKey, { auth: { persistSession: false } });
+}
+
+/**
+ * Records a single HMRC API call to the `hmrc_call_log` Supabase table.
+ * Captures method, URL, status, response_ok flag and the x-correlationid
+ * response header — used as evidence for HMRC production approval and
+ * fraud-header validation. Fire-and-forget; never blocks or throws.
+ */
+export async function logHmrcCall(
+  method: string,
+  url: string,
+  response: Response
+) {
+  try {
+    const admin = getAdminSupabase();
+    if (!admin) return;
+    await admin.from("hmrc_call_log").insert({
+      method,
+      url,
+      status: response.status,
+      response_ok: response.ok,
+      correlation_id: response.headers.get("x-correlationid") ?? null,
+    });
+  } catch {
+    // Fire-and-forget — never block on logging
+  }
+}
 
 type HMRCRefreshTokenResponse = {
   access_token: string;
